@@ -1,0 +1,60 @@
+---
+import { site } from '@/config/site';
+
+/**
+ * Social profile links driven by src/config/site.ts.
+ * Placeholder URLs contain "REPLACE-WITH-PROFILE"; they still render
+ * so the layout is honest, but CONTENT_GUIDE.md flags them for
+ * replacement before launch.
+ */
+export interface Props {
+  variant?: 'list' | 'inline';
+}
+
+const { variant = 'inline' } = Astro.props;
+---
+
+<ul class:list={['social-links', `social-links--${variant}`]} role="list">
+  {
+    site.socials.map((profile) => (
+      <li>
+        <a
+          href={profile.url}
+          rel="me noopener"
+          data-event={`social-${profile.label.toLowerCase()}`}
+        >
+          {profile.label}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .social-links {
+    padding: 0;
+    list-style: none;
+  }
+
+  .social-links--list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .social-links--inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .social-links a {
+    color: var(--color-ink-secondary);
+    text-decoration: none;
+  }
+
+  .social-links a:hover {
+    color: var(--color-ink);
+    text-decoration: underline;
+  }
+</style>

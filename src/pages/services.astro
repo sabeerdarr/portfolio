@@ -1,0 +1,512 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/common/SectionHeading.astro';
+import { site } from '@/config/site';
+import { breadcrumbSchema } from '@/utils/schema';
+
+/**
+ * Service definitions live here as data so copy edits don't touch
+ * markup. `startingFrom` is optional — pricing renders ONLY when a
+ * real value is set (never invent prices).
+ */
+interface Service {
+  id: string;
+  kicker: string;
+  title: string;
+  intro: string;
+  bestFit: string[];
+  problems: string[];
+  deliverables: string[];
+  process: string[];
+  duration: string;
+  inputs: string[];
+  /** e.g. "Starting from $X" — leave undefined until a real figure exists. */
+  startingFrom?: string;
+}
+
+const services: Service[] = [
+  {
+    id: 'ux-audit',
+    kicker: 'Service 01',
+    title: 'UX Audit & Usability Review',
+    intro:
+      'A structured, evidence-based review of your product that turns "users keep getting stuck" into a prioritised list of specific, fixable problems.',
+    bestFit: [
+      'SaaS products with sign-up or activation drop-off',
+      'Teams inheriting a product without design history',
+      'Founders preparing for a redesign and wanting a map first',
+    ],
+    problems: [
+      'Support tickets keep repeating the same confusion',
+      'Analytics show drop-off but not the reason',
+      'The team disagrees about what to fix first',
+    ],
+    deliverables: [
+      'Full product review of your key journeys',
+      'Heuristic evaluation against established usability principles',
+      'Key-flow assessment (sign-up, activation, core task, billing)',
+      'Accessibility observations with severity ratings',
+      'Annotated findings, screen by screen',
+      'Prioritised recommendations mapped to effort and impact',
+      'Findings presentation and Q&A session',
+      'Optional redesign concepts for the highest-impact fixes',
+    ],
+    process: [
+      'Kick-off call to agree scope and the flows that matter',
+      'Independent expert review and flow walkthroughs',
+      'Findings synthesis and prioritisation',
+      'Presentation, discussion, and handover of the report',
+    ],
+    duration: 'Typically 1–2 weeks depending on product size',
+    inputs: [
+      'Access to the product (demo account or staging)',
+      'Your key user journeys and business goals',
+      'Any existing analytics or support-ticket themes',
+    ],
+  },
+  {
+    id: 'feature-design',
+    kicker: 'Service 02',
+    title: 'Product & Feature Design',
+    intro:
+      'End-to-end design for a new feature or a reworked flow — from ambiguous requirements to a tested prototype and developer-ready specifications.',
+    bestFit: [
+      'Product teams without design capacity for a critical feature',
+      'Startups shaping their first version of a core workflow',
+      'Teams whose feature stalled in endless internal debate',
+    ],
+    problems: [
+      'Requirements exist but nobody has turned them into a coherent flow',
+      'The current design tests badly and needs a rethink',
+      'Engineering needs unambiguous specs to build against',
+    ],
+    deliverables: [
+      'Requirements clarification and success criteria',
+      'Stakeholder workshop to align on scope and constraints',
+      'User flows and information architecture',
+      'Wireframes covering the full journey, including edge cases',
+      'High-fidelity interface design in Figma',
+      'Interactive prototype for review and testing',
+      'Usability-testing support and iteration',
+      'Design specifications and annotations',
+      'Developer handoff and implementation review',
+    ],
+    process: [
+      'Discovery: goals, users, constraints, existing evidence',
+      'Structure: flows and wireframes, reviewed together',
+      'Design: high-fidelity screens and prototype',
+      'Validate: usability testing and iteration',
+      'Deliver: specs, handoff, and build support',
+    ],
+    duration: 'Typically 3–6 weeks per feature, scoped up front',
+    inputs: [
+      'A problem statement or requirements document (rough is fine)',
+      'Access to whoever owns the product decision',
+      'Brand assets and any existing design system',
+    ],
+  },
+  {
+    id: 'design-support',
+    kicker: 'Service 03',
+    title: 'Ongoing Product Design Support',
+    intro:
+      'Recurring design capacity for teams that need a dependable product designer embedded in their workflow — without a full-time hire.',
+    bestFit: [
+      'Startups between design hires',
+      'Product teams with a steady stream of small-to-medium design needs',
+      'Companies maintaining a design system alongside feature work',
+    ],
+    problems: [
+      'Design becomes the bottleneck in every sprint',
+      'The design system decays because nobody owns it',
+      'Engineers make UI decisions alone and inconsistency spreads',
+    ],
+    deliverables: [
+      'Recurring design capacity on an agreed weekly cadence',
+      'Feature design from brief to handoff',
+      'Research support: test scripts, sessions, synthesis',
+      'Design-system maintenance and documentation',
+      'Product-team collaboration in your tools (Slack, Linear, Jira)',
+      'Design critique and review of in-flight work',
+      'Prototyping for stakeholder and user validation',
+      'Handoff support and implementation QA',
+    ],
+    process: [
+      'Trial month with a defined backlog to test the fit',
+      'Weekly planning against your product priorities',
+      'Async updates plus a standing sync that suits your time zone',
+      'Monthly review of what shipped and what changed',
+    ],
+    duration: 'Monthly engagement, minimum one month, cancel anytime',
+    inputs: [
+      'A prioritised backlog or roadmap to draw from',
+      'A product owner for decisions and feedback',
+      'Access to your team tools and design files',
+    ],
+  },
+];
+
+const faqs = [
+  {
+    q: 'What types of projects do you accept?',
+    a: "Primarily SaaS and mobile product work: audits, feature design, design systems, and ongoing support. I decline projects where I can't add real value — if your problem needs a specialist (brand identity, marketing sites at scale, game design), I'll say so and point you elsewhere if I can.",
+  },
+  {
+    q: 'Do you work with international clients?',
+    a: 'Yes. Most collaboration is async — written updates, recorded walkthroughs, and shared Figma files — with scheduled calls for decisions that need discussion.',
+  },
+  {
+    q: 'Which time zones can you support?',
+    a: `I work from ${site.timeZone}. ${site.timeZoneOverlap} We agree overlap hours at kick-off so reviews never block on time-zone gaps.`,
+  },
+  {
+    q: 'Do you also conduct user research?',
+    a: "Yes — interviews, moderated and unmoderated usability tests, and survey design, plus synthesis into actionable findings. For large-scale quantitative studies I'll recommend pairing with a dedicated researcher.",
+  },
+  {
+    q: 'Can you work with an existing design system?',
+    a: "Absolutely, and I prefer it. I design within your system's constraints, flag gaps I find, and can contribute components back with documentation.",
+  },
+  {
+    q: 'Do you provide development?',
+    a: "No — I design, prototype, and support engineers through implementation, but I don't write production code for client projects. I'm comfortable enough with HTML/CSS to make handoff precise.",
+  },
+  {
+    q: 'How do project payments work?',
+    a: 'Fixed-scope projects: typically 50% to book the engagement and 50% on delivery. Ongoing support: monthly invoicing in advance. Exact terms are confirmed in the proposal before any work begins.',
+  },
+  {
+    q: 'What happens after the initial enquiry?',
+    a: 'I reply within two working days. If it looks like a fit, we book a 30-minute call to talk through the problem, then you receive a short written proposal with scope, timeline, and price. No obligation until you approve it.',
+  },
+];
+
+const structuredData = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Services"
+  description="Freelance product design services by Sabeer Darr: UX audits, product and feature design, and ongoing design support for SaaS and mobile teams."
+  structuredData={structuredData}
+>
+  <div class="container">
+    <header class="page-hero">
+      <p class="kicker">Services</p>
+      <h1>Design help that ships, not just decks</h1>
+      <p class="page-hero__lede">
+        I work with SaaS and mobile product teams — usually founders, product managers, or heads of
+        product — on problems where design quality directly affects activation, retention, or
+        support load. Engagements are scoped in writing, delivered remotely, and structured so your
+        team keeps momentum after I leave.
+      </p>
+      <p class="page-hero__start">
+        <strong>How to begin:</strong> send a short note about the problem via the
+        <a href="/contact#freelance">project enquiry form</a>. You'll get a reply within two working
+        days and a clear yes, no, or "here's who can help instead".
+      </p>
+    </header>
+
+    {
+      services.map((service) => (
+        <section class="service section" id={service.id} aria-labelledby={`${service.id}-title`}>
+          <SectionHeading kicker={service.kicker} title={service.title} id={`${service.id}-title`}>
+            {service.intro}
+          </SectionHeading>
+
+          <div class="service__grid">
+            <div class="service__block">
+              <h3>Best fit</h3>
+              <ul role="list">
+                {service.bestFit.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="service__block">
+              <h3>Common problems it solves</h3>
+              <ul role="list">
+                {service.problems.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="service__block service__block--wide">
+              <h3>Deliverables</h3>
+              <ul class="service__deliverables" role="list">
+                {service.deliverables.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="service__block">
+              <h3>Indicative process</h3>
+              <ol>
+                {service.process.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ol>
+            </div>
+
+            <div class="service__block">
+              <h3>What I need from you</h3>
+              <ul role="list">
+                {service.inputs.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+              <p class="service__duration">
+                <strong>Indicative duration:</strong> {service.duration}
+              </p>
+              {service.startingFrom && <p class="service__price">{service.startingFrom}</p>}
+            </div>
+          </div>
+
+          <p class="service__cta">
+            <a
+              class="btn btn--primary"
+              href="/contact#freelance"
+              data-event="freelance-enquiry-start"
+            >
+              Enquire about this service
+            </a>
+          </p>
+        </section>
+      ))
+    }
+
+    <section class="section" aria-labelledby="working-heading">
+      <SectionHeading
+        kicker="How we'll work"
+        title="Collaboration expectations"
+        id="working-heading"
+      />
+      <div class="working-grid">
+        <div>
+          <h3>Communication</h3>
+          <p>
+            Weekly written updates as a minimum, with work shared in Figma as it progresses — no
+            big-reveal moments. Questions get answered within one working day.
+          </p>
+        </div>
+        <div>
+          <h3>Decisions</h3>
+          <p>
+            Every recommendation comes with the reasoning and the alternatives considered, so your
+            team can make informed calls quickly — and disagree productively.
+          </p>
+        </div>
+        <div>
+          <h3>Boundaries</h3>
+          <p>
+            I don't take on work I can't do well: no development retainers, no "unlimited revisions"
+            arrangements, and no timelines that require skipping validation on high-risk changes.
+          </p>
+        </div>
+        <div>
+          <h3>Your team's growth</h3>
+          <p>
+            Files stay organised, decisions stay documented, and I'm happy to pair with in-house
+            designers so capability stays with you after the engagement ends.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-heading">
+      <SectionHeading kicker="FAQ" title="Frequently asked questions" id="faq-heading" />
+      <div class="faq">
+        {
+          faqs.map((faq) => (
+            <details class="faq__item">
+              <summary>{faq.q}</summary>
+              <p>{faq.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <aside class="services-cta">
+      <h2>Ready when you are</h2>
+      <p>
+        Describe the problem, the product, and your rough timeline. I'll tell you honestly whether
+        I'm the right person for it.
+      </p>
+      <a class="btn btn--primary" href="/contact#freelance" data-event="freelance-enquiry-start">
+        Start a project enquiry
+      </a>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-block: var(--space-8) var(--space-6);
+    border-block-end: var(--border-hairline);
+  }
+
+  .page-hero h1 {
+    margin-block-start: var(--space-4);
+  }
+
+  .page-hero__lede {
+    margin-block-start: var(--space-4);
+    max-width: 48em;
+    font-size: var(--text-lead);
+    color: var(--color-ink-secondary);
+  }
+
+  .page-hero__start {
+    margin-block-start: var(--space-5);
+    max-width: 48em;
+    padding: var(--space-4) var(--space-5);
+    border-inline-start: 3px solid var(--color-accent);
+    background-color: var(--color-surface);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: var(--text-small);
+  }
+
+  .service {
+    border-block-end: var(--border-hairline);
+    scroll-margin-top: 5.5rem;
+  }
+
+  .service__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .service__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .service__block h3 {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-block-end: var(--space-3);
+  }
+
+  .service__block ul,
+  .service__block ol {
+    padding-inline-start: 1.2rem;
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .service__block ul[role='list'] {
+    list-style: none;
+    padding: 0;
+  }
+
+  .service__block ul[role='list'] li {
+    padding-inline-start: var(--space-4);
+    position: relative;
+  }
+
+  .service__block ul[role='list'] li::before {
+    content: '—';
+    position: absolute;
+    inset-inline-start: 0;
+    color: var(--color-accent);
+  }
+
+  .service__block--wide {
+    grid-column: 1 / -1;
+  }
+
+  .service__deliverables {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-2) var(--space-5) !important;
+  }
+
+  .service__duration {
+    margin-block-start: var(--space-4);
+    font-size: var(--text-small);
+  }
+
+  .service__price {
+    margin-block-start: var(--space-2);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .service__cta {
+    margin-block-start: var(--space-6);
+  }
+
+  .working-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-6);
+  }
+
+  .working-grid h3 {
+    font-size: var(--text-h4);
+    margin-block-end: var(--space-2);
+  }
+
+  .working-grid p {
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+
+  .faq {
+    max-width: var(--container-narrow);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faq__item {
+    border-block-end: var(--border-hairline);
+  }
+
+  .faq__item summary {
+    padding-block: var(--space-4);
+    font-weight: 600;
+    cursor: pointer;
+    list-style-position: outside;
+  }
+
+  .faq__item summary:hover {
+    color: var(--color-accent);
+  }
+
+  .faq__item p {
+    padding-block-end: var(--space-5);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+    max-width: 60ch;
+  }
+
+  .services-cta {
+    margin-block: var(--space-7);
+    padding: var(--space-7) var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    text-align: center;
+  }
+
+  .services-cta p {
+    margin-block: var(--space-3) var(--space-5);
+    color: var(--color-ink-secondary);
+  }
+</style>

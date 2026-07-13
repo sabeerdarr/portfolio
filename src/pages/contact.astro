@@ -1,0 +1,156 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContactForm from '@/components/forms/ContactForm.astro';
+import { site } from '@/config/site';
+import { breadcrumbSchema } from '@/utils/schema';
+
+const structuredData = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Contact', path: '/contact' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Contact"
+  description={`Contact ${site.name} about remote product design roles or freelance UX projects. Replies within two working days.`}
+  structuredData={structuredData}
+>
+  <div class="container">
+    <header class="page-hero">
+      <p class="kicker">Contact</p>
+      <h1>Let's talk about your product</h1>
+      <p class="page-hero__lede">
+        Two routes below — one for hiring conversations, one for freelance projects. Prefer plain
+        email? Write to <a href={`mailto:${site.email}`}>{site.email}</a>. Either way, you'll hear
+        back within two working days.
+      </p>
+    </header>
+
+    <div class="contact-grid">
+      <section class="contact-panel" id="employment" aria-labelledby="employment-heading">
+        <p class="kicker">For hiring teams</p>
+        <h2 id="employment-heading">Employment enquiry</h2>
+        <p class="contact-panel__intro">
+          Hiring a remote product designer, full-time or contract? Tell me about the role and I'll
+          respond with honest fit — including pointing you elsewhere if I'm not it.
+        </p>
+        <ContactForm kind="employment" />
+      </section>
+
+      <section class="contact-panel" id="freelance" aria-labelledby="freelance-heading">
+        <p class="kicker">For clients</p>
+        <h2 id="freelance-heading">Freelance enquiry</h2>
+        <p class="contact-panel__intro">
+          Planning an audit, a feature, or ongoing design support? A rough description is enough —
+          scoping it properly is my job, not yours.
+        </p>
+        <ContactForm kind="freelance" />
+      </section>
+    </div>
+
+    <aside class="contact-notes">
+      <div>
+        <h2>What happens next</h2>
+        <ol>
+          <li>You get a reply within two working days.</li>
+          <li>If it's a fit, we book a 30-minute intro call.</li>
+          <li>
+            Freelance projects then get a short written proposal; role conversations move to your
+            process.
+          </li>
+        </ol>
+      </div>
+      <div>
+        <h2>Time zones</h2>
+        <p>
+          I work from {site.timeZone}. {site.timeZoneOverlap}
+        </p>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .page-hero h1 {
+    margin-block-start: var(--space-4);
+  }
+
+  .page-hero__lede {
+    margin-block-start: var(--space-4);
+    max-width: 46em;
+    font-size: var(--text-lead);
+    color: var(--color-ink-secondary);
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+
+  @media (min-width: 64rem) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .contact-panel {
+    padding: var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-raised);
+    scroll-margin-top: 5.5rem;
+  }
+
+  .contact-panel h2 {
+    margin-block-start: var(--space-3);
+  }
+
+  .contact-panel__intro {
+    margin-block: var(--space-3) var(--space-6);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+  }
+
+  .contact-notes {
+    display: grid;
+    gap: var(--space-6);
+    margin-block: var(--space-6) var(--space-8);
+    padding: var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+  }
+
+  @media (min-width: 48rem) {
+    .contact-notes {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+
+  .contact-notes h2 {
+    font-size: var(--text-h4);
+    margin-block-end: var(--space-3);
+  }
+
+  .contact-notes ol {
+    padding-inline-start: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+
+  .contact-notes p {
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+</style>

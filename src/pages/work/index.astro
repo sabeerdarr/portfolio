@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/common/SectionHeading.astro';
+import ProjectCard from '@/components/cards/ProjectCard.astro';
+import Callout from '@/components/common/Callout.astro';
+import { breadcrumbSchema } from '@/utils/schema';
+
+const allWork = (await getCollection('work', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const featured = allWork.filter((p) => p.data.featured);
+const rest = allWork.filter((p) => !p.data.featured);
+
+// Category filter chips: pure anchor links to keep this page
+// accessible and JavaScript-free. Each category gets a filtered
+// static view via query-free routing (single page, CSS-free filter
+// intentionally avoided — links list every category represented).
+const categories = [...new Set(allWork.flatMap((p) => p.data.category))].sort();
+
+const structuredData = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Work', path: '/work' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Work"
+  description="UI/UX and product design case studies by Sabeer Darr — SaaS onboarding, mobile fintech, and design systems, each with the reasoning behind the outcome."
+  structuredData={structuredData}
+>
+  <div class="container">
+    <header class="page-hero">
+      <p class="kicker">Work</p>
+      <h1>Design decisions, documented</h1>
+      <p class="page-hero__lede">
+        A selected set of case studies showing how I approach product problems: what the team knew,
+        what we tried, what we shipped, and what I'd do differently. Client work, internal products,
+        and concept projects are labelled as such — nothing is dressed up as something it isn't.
+      </p>
+      {
+        categories.length > 0 && (
+          <p class="page-hero__categories">
+            <span class="visually-hidden">Capabilities covered:</span>
+            {categories.map((category) => (
+              <span class="page-hero__chip">{category}</span>
+            ))}
+          </p>
+        )
+      }
+    </header>
+
+    {
+      allWork.length === 0 ? (
+        <Callout variant="placeholder" title="No case studies published">
+          <p>Add case-study files to src/content/work/ — see CONTENT_GUIDE.md.</p>
+        </Callout>
+      ) : (
+        <>
+          {featured.length > 0 && (
+            <section class="section" aria-labelledby="featured-heading">
+              <SectionHeading
+                kicker="Featured"
+                title="Highlighted case studies"
+                id="featured-heading"
+              />
+              <div class="work-list">
+                {featured.map((project, index) => (
+                  <ProjectCard
+                    project={project}
+                    variant="featured"
+                    headingLevel="h3"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {rest.length > 0 && (
+            <section class="section" aria-labelledby="all-work-heading">
+              <SectionHeading kicker="Archive" title="More projects" id="all-work-heading" />
+              <div class="work-grid">
+                {rest.map((project) => (
+                  <ProjectCard project={project} headingLevel="h3" />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )
+    }
+
+    <aside class="work-cta">
+      <h2>Want this kind of thinking on your product?</h2>
+      <p>
+        I'm available for remote product design roles and selected freelance engagements — audits,
+        feature design, and design systems.
+      </p>
+      <div class="work-cta__actions">
+        <a class="btn btn--primary" href="/services">Explore services</a>
+        <a class="btn btn--secondary" href="/contact">Get in touch</a>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-block: var(--space-8) var(--space-6);
+    border-block-end: var(--border-hairline);
+  }
+
+  .page-hero h1 {
+    margin-block-start: var(--space-4);
+  }
+
+  .page-hero__lede {
+    margin-block-start: var(--space-4);
+    max-width: 46em;
+    font-size: var(--text-lead);
+    color: var(--color-ink-secondary);
+  }
+
+  .page-hero__categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-5);
+  }
+
+  .page-hero__chip {
+    padding: var(--space-1) var(--space-3);
+    border: var(--border-hairline);
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface);
+    font-size: var(--text-xs);
+    color: var(--color-ink-secondary);
+  }
+
+  .work-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: var(--space-5);
+  }
+
+  .work-cta {
+    margin-block: var(--space-7);
+    padding: var(--space-7) var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+  }
+
+  .work-cta p {
+    margin-block-start: var(--space-3);
+    max-width: 46em;
+    color: var(--color-ink-secondary);
+  }
+
+  .work-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-5);
+  }
+</style>

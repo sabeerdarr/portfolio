@@ -1,0 +1,170 @@
+---
+import { site } from '@/config/site';
+
+/**
+ * Provider-neutral newsletter signup. The form only renders when
+ * PUBLIC_NEWSLETTER_ACTION_URL is configured — otherwise an honest
+ * email-based fallback appears, so the site never fakes a
+ * successful subscription.
+ */
+export interface Props {
+  heading?: string;
+}
+
+const { heading = 'Get new articles by email' } = Astro.props;
+const actionUrl = site.newsletter.actionUrl;
+const configured = actionUrl.length > 0;
+
+if (!configured && import.meta.env.DEV) {
+  console.warn(
+    '[newsletter] PUBLIC_NEWSLETTER_ACTION_URL is not set — showing the email fallback.'
+  );
+}
+---
+
+<aside class="newsletter" aria-labelledby="newsletter-heading">
+  <h2 class="newsletter__heading" id="newsletter-heading">{heading}</h2>
+  <p class="newsletter__description">{site.newsletter.description}</p>
+
+  {
+    configured ? (
+      <form class="newsletter__form" method="post" action={actionUrl} data-newsletter-form>
+        <div class="newsletter__row">
+          <label class="visually-hidden" for="newsletter-email">
+            Email address
+          </label>
+          <input
+            class="newsletter__input"
+            type="email"
+            name="email"
+            id="newsletter-email"
+            autocomplete="email"
+            required
+            placeholder="you@example.com"
+            aria-describedby="newsletter-consent"
+          />
+          <button class="btn btn--primary" type="submit" data-event="newsletter-signup">
+            Subscribe
+          </button>
+        </div>
+        <p class="newsletter__consent" id="newsletter-consent">
+          Occasional emails only. Unsubscribe any time. See the
+          <a href="/privacy">privacy notice</a>.
+        </p>
+        <p class="newsletter__status" data-newsletter-status role="status" aria-live="polite" />
+      </form>
+    ) : (
+      <p class="newsletter__fallback">
+        The signup form isn't live yet. Email
+        <a href={`mailto:${site.email}?subject=Newsletter`}>{site.email}</a> with the subject
+        "Newsletter" and I'll add you when it launches.
+      </p>
+    )
+  }
+</aside>
+
+<style>
+  .newsletter {
+    padding: var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+  }
+
+  .newsletter__heading {
+    font-size: var(--text-h3);
+  }
+
+  .newsletter__description {
+    margin-block-start: var(--space-2);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+  }
+
+  .newsletter__form {
+    margin-block-start: var(--space-4);
+  }
+
+  .newsletter__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .newsletter__input {
+    flex: 1 1 14rem;
+    min-height: 2.9rem;
+    padding: var(--space-2) var(--space-4);
+    border: var(--border-strong);
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface-raised);
+  }
+
+  .newsletter__input:focus-visible {
+    border-color: var(--color-focus);
+  }
+
+  .newsletter__consent {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+
+  .newsletter__status {
+    font-size: var(--text-small);
+    font-weight: 600;
+    margin-block-start: var(--space-2);
+  }
+
+  .newsletter__status[data-state='success'] {
+    color: var(--color-ok);
+  }
+
+  .newsletter__status[data-state='error'] {
+    color: var(--color-error);
+  }
+
+  .newsletter__fallback {
+    margin-block-start: var(--space-4);
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+</style>
+
+<script>
+  // Progressive enhancement: submit via fetch for inline feedback.
+  // Without JavaScript the form posts normally to the provider.
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-newsletter-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!status || !button) return;
+
+      button.disabled = true;
+      status.dataset.state = '';
+      status.textContent = 'Subscribing…';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (response.ok) {
+          status.dataset.state = 'success';
+          status.textContent = 'Thanks — check your inbox to confirm your subscription.';
+          form.reset();
+        } else {
+          throw new Error(`Provider responded ${response.status}`);
+        }
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent = 'Something went wrong. Please try again, or email me directly.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>

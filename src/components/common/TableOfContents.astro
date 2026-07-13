@@ -1,0 +1,71 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+/**
+ * Table of contents built from rendered markdown headings (h2 only,
+ * to stay scannable). Sticky beside the article on wide screens.
+ */
+export interface Props {
+  headings: MarkdownHeading[];
+  title?: string;
+}
+
+const { headings, title = 'On this page' } = Astro.props;
+const items = headings.filter((h) => h.depth === 2);
+---
+
+{
+  items.length >= 3 && (
+    <nav class="toc" aria-labelledby="toc-heading" data-toc>
+      <p class="toc__title" id="toc-heading">
+        {title}
+      </p>
+      <ol role="list">
+        {items.map((heading) => (
+          <li>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    padding: var(--space-5);
+    border: var(--border-hairline);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    font-size: var(--text-small);
+  }
+
+  .toc__title {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-block-end: var(--space-3);
+  }
+
+  .toc ol {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .toc a {
+    color: var(--color-ink-secondary);
+    text-decoration: none;
+    display: block;
+    padding-block: 2px;
+  }
+
+  .toc a:hover {
+    color: var(--color-accent);
+  }
+</style>

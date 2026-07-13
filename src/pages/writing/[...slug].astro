@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BlogPostLayout from '@/layouts/BlogPostLayout.astro';
+import Figure from '@/components/common/Figure.astro';
+import Callout from '@/components/common/Callout.astro';
+import Quote from '@/components/common/Quote.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
+  );
+
+  return posts.map((entry, index) => {
+    // Related articles: same category first, then shared tags.
+    const related = posts
+      .filter((p) => p.id !== entry.id)
+      .sort((a, b) => {
+        const score = (post: typeof entry) =>
+          (post.data.category === entry.data.category ? 2 : 0) +
+          post.data.tags.filter((t) => entry.data.tags.includes(t)).length;
+        return score(b) - score(a);
+      })
+      .slice(0, 2);
+
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        related,
+        previous: index < posts.length - 1 ? posts[index + 1] : undefined,
+        next: index > 0 ? posts[index - 1] : undefined,
+      },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+  related: CollectionEntry<'blog'>[];
+  previous?: CollectionEntry<'blog'> | undefined;
+  next?: CollectionEntry<'blog'> | undefined;
+}
+
+const { entry, related, previous, next } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const toNav = (item?: CollectionEntry<'blog'>) =>
+  item ? { title: item.data.title, href: `/writing/${item.id}/` } : undefined;
+---
+
+<BlogPostLayout
+  entry={entry}
+  headings={headings}
+  related={related}
+  previous={toNav(previous)}
+  next={toNav(next)}
+>
+  <Content components={{ Figure, Callout, Quote }} />
+</BlogPostLayout>

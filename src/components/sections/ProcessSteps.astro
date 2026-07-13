@@ -1,0 +1,99 @@
+---
+/**
+ * Design process steps rendered as an accessible ordered list.
+ * The intro copy explains that the process flexes per project —
+ * this component deliberately avoids implying rigid linearity.
+ */
+export interface Props {
+  steps?: { name: string; description: string }[];
+}
+
+const defaultSteps = [
+  {
+    name: 'Understand',
+    description:
+      'Clarify the product goal, the audience, the constraints, and what success looks like before touching any interface.',
+  },
+  {
+    name: 'Research',
+    description:
+      'Gather evidence — user interviews, analytics, support tickets, competitor reviews — proportional to the risk of getting it wrong.',
+  },
+  {
+    name: 'Define',
+    description:
+      'Turn findings into a sharp problem statement, priorities, and measurable design goals the team agrees on.',
+  },
+  {
+    name: 'Explore',
+    description:
+      'Diverge deliberately: flows, sketches, and structural alternatives before committing to a direction.',
+  },
+  {
+    name: 'Prototype',
+    description:
+      'Make the promising direction tangible at the lowest fidelity that can answer the open questions.',
+  },
+  {
+    name: 'Test',
+    description:
+      'Put the prototype in front of real users, watch where it fails, and separate opinion from observation.',
+  },
+  {
+    name: 'Deliver',
+    description:
+      'Ship specs, tokens, and edge cases developers can build from — then stay close through implementation and iteration.',
+  },
+];
+
+const { steps = defaultSteps } = Astro.props;
+---
+
+<ol class="process" role="list">
+  {
+    steps.map((step, index) => (
+      <li class="process__step">
+        <span class="process__number" aria-hidden="true">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <h3 class="process__name">{step.name}</h3>
+        <p class="process__description">{step.description}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .process {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--space-5);
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .process__step {
+    padding: var(--space-5);
+    border: var(--border-hairline);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-raised);
+  }
+
+  .process__number {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    color: var(--color-accent);
+  }
+
+  .process__name {
+    margin-block: var(--space-2) var(--space-2);
+    font-size: var(--text-h4);
+  }
+
+  .process__description {
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+</style>

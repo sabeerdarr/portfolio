@@ -1,0 +1,68 @@
+---
+/**
+ * Outcome metric display. `verified` defaults to FALSE and unverified
+ * metrics render with a visible "unverified sample" tag — the site
+ * never presents placeholder numbers as fact.
+ */
+export interface Props {
+  value: string;
+  label: string;
+  /** Where the number comes from, e.g. "Product analytics, 90 days post-launch". */
+  source?: string;
+  verified?: boolean;
+}
+
+const { value, label, source, verified = false } = Astro.props;
+---
+
+<div class="metric">
+  <p class="metric__value">{value}</p>
+  <p class="metric__label">{label}</p>
+  {source && <p class="metric__source">{source}</p>}
+  {
+    !verified && (
+      <p class="metric__flag">Unverified sample — replace with a real, verified outcome</p>
+    )
+  }
+</div>
+
+<style>
+  .metric {
+    padding: var(--space-5);
+    border: var(--border-hairline);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-raised);
+  }
+
+  .metric__value {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 620;
+    color: var(--color-ink);
+    line-height: 1.1;
+  }
+
+  .metric__label {
+    margin-block-start: var(--space-2);
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+
+  .metric__source {
+    margin-block-start: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+
+  .metric__flag {
+    display: inline-block;
+    margin-block-start: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    border: 1px dashed var(--color-warn);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: var(--color-warn);
+  }
+</style>

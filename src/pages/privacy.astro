@@ -1,0 +1,123 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Callout from '@/components/common/Callout.astro';
+import { site } from '@/config/site';
+
+const hasForms = site.forms.employmentFormId.length > 0 || site.forms.freelanceFormId.length > 0;
+const hasNewsletter = site.newsletter.actionUrl.length > 0;
+const hasAnalytics = site.analytics.cloudflareToken.length > 0;
+const lastUpdated = 'July 2026';
+---
+
+<BaseLayout
+  title="Privacy"
+  description="How sabeerdarr.com handles visitor data: what is collected, why, and by which services."
+  noindex
+>
+  <div class="container container--narrow privacy prose">
+    <header>
+      <p class="kicker">Privacy</p>
+      <h1>Privacy notice</h1>
+      <p>Last updated: {lastUpdated}</p>
+    </header>
+
+    <Callout variant="placeholder" title="Template requiring review">
+      <p>
+        This notice is a plain-language template describing only what the site actually does. It is
+        not legal advice and makes no compliance guarantees — have it reviewed before treating it as
+        final, and update it whenever an integration is added or removed.
+      </p>
+    </Callout>
+
+    <h2>The short version</h2>
+    <p>
+      This is a static portfolio website. It has no user accounts, sets no advertising trackers, and
+      collects nothing about you in the background beyond what's listed below.
+    </p>
+
+    <h2>What this site collects</h2>
+
+    <h3>Contact forms</h3>
+    {
+      hasForms ? (
+        <p>
+          When you submit an enquiry form, the details you type (name, email, and your message
+          fields) are sent to and processed by
+          <a href="https://formspree.io" rel="noopener">
+            Formspree
+          </a>
+          , which forwards them to my email. They're used only to reply to your enquiry and are
+          never sold or added to marketing lists.
+        </p>
+      ) : (
+        <p>
+          The enquiry forms are not currently connected to a form service. Contacting me happens
+          over plain email, which is governed by your and my email providers.
+        </p>
+      )
+    }
+
+    <h3>Newsletter</h3>
+    {
+      hasNewsletter ? (
+        <p>
+          If you subscribe to the newsletter, your email address is stored by the newsletter
+          provider to deliver the emails you asked for. Every email includes an unsubscribe link.
+        </p>
+      ) : (
+        <p>
+          There is currently no live newsletter signup, so no subscriber data is collected. If you
+          email me asking to be added to a future list, I keep that email until the list exists or
+          you ask me to delete it.
+        </p>
+      )
+    }
+
+    <h3>Analytics</h3>
+    {
+      hasAnalytics ? (
+        <p>
+          This site uses Cloudflare Web Analytics, a privacy-focused tool that does not use cookies
+          or track you across sites. It gives me aggregate page-view counts, not personal profiles.
+        </p>
+      ) : (
+        <p>No analytics are currently active on this site.</p>
+      )
+    }
+
+    <h3>Hosting</h3>
+    <p>
+      The site is hosted on GitHub Pages. Like any web host, GitHub may log standard technical
+      request data (such as IP addresses) to operate the service — see
+      <a href="https://docs.github.com/en/site-policy/privacy-policies" rel="noopener"
+        >GitHub's privacy documentation</a
+      >.
+    </p>
+
+    <h2>What this site does not do</h2>
+    <ul>
+      <li>No advertising or cross-site tracking</li>
+      <li>No sale or sharing of personal information</li>
+      <li>
+        No cookies for tracking purposes (the theme preference is stored locally in your browser
+        only)
+      </li>
+    </ul>
+
+    <h2>Questions</h2>
+    <p>
+      Email <a href={`mailto:${site.email}`}>{site.email}</a> to ask what information I hold from your
+      enquiries or to have it deleted.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .privacy {
+    padding-block: var(--space-8);
+  }
+
+  .privacy header h1 {
+    margin-block-start: var(--space-4);
+  }
+</style>

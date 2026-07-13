@@ -1,0 +1,74 @@
+---
+/**
+ * Inline callout for notes, placeholder warnings, and key takeaways.
+ * The 'placeholder' variant marks sample content that must be
+ * replaced before launch — keep using it honestly.
+ */
+export interface Props {
+  variant?: 'note' | 'insight' | 'warning' | 'placeholder';
+  title?: string;
+}
+
+const { variant = 'note', title } = Astro.props;
+
+const defaultTitles: Record<string, string> = {
+  note: 'Note',
+  insight: 'Key insight',
+  warning: 'Caution',
+  placeholder: 'Placeholder content',
+};
+
+const heading = title ?? defaultTitles[variant];
+---
+
+<aside class:list={['callout', `callout--${variant}`]}>
+  <p class="callout__title">{heading}</p>
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-hairline);
+    border-inline-start-width: 3px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    font-size: var(--text-small);
+  }
+
+  .callout--note {
+    border-inline-start-color: var(--color-line-strong);
+  }
+
+  .callout--insight {
+    border-inline-start-color: var(--color-accent);
+    background-color: var(--color-accent-surface);
+  }
+
+  .callout--warning {
+    border-inline-start-color: var(--color-warn);
+    background-color: var(--color-warn-surface);
+  }
+
+  .callout--placeholder {
+    border-style: dashed;
+    border-inline-start-style: solid;
+    border-inline-start-color: var(--color-warn);
+  }
+
+  .callout__title {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-secondary);
+    margin-block-end: var(--space-2);
+  }
+
+  .callout__body :global(> * + *) {
+    margin-block-start: var(--space-3);
+  }
+</style>

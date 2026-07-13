@@ -1,0 +1,96 @@
+---
+/**
+ * Side-by-side before/after (or A/B) comparison used in case studies.
+ * Stacks vertically on small screens.
+ */
+export interface Props {
+  beforeSrc: string;
+  beforeAlt: string;
+  afterSrc: string;
+  afterAlt: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+  caption?: string;
+}
+
+const {
+  beforeSrc,
+  beforeAlt,
+  afterSrc,
+  afterAlt,
+  beforeLabel = 'Before',
+  afterLabel = 'After',
+  caption,
+} = Astro.props;
+---
+
+<figure class="comparison">
+  <div class="comparison__grid">
+    <div class="comparison__item">
+      <p class="comparison__label">{beforeLabel}</p>
+      <img
+        src={beforeSrc}
+        alt={beforeAlt}
+        width="1600"
+        height="1000"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="comparison__item">
+      <p class="comparison__label comparison__label--after">{afterLabel}</p>
+      <img
+        src={afterSrc}
+        alt={afterAlt}
+        width="1600"
+        height="1000"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .comparison {
+    margin: 0;
+  }
+
+  .comparison__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 48rem) {
+    .comparison__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .comparison__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-block-end: var(--space-2);
+  }
+
+  .comparison__label--after {
+    color: var(--color-accent);
+  }
+
+  .comparison__item img {
+    inline-size: 100%;
+    border: var(--border-hairline);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+  }
+
+  .comparison figcaption {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+</style>

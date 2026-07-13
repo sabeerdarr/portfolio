@@ -1,0 +1,66 @@
+# Build and deploy the Astro site to GitHub Pages.
+# Docs: https://docs.astro.build/en/guides/deploy/github/
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Allow manual deploys from the Actions tab.
+  workflow_dispatch:
+
+# Minimum permissions required for Pages deployment.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; superseded runs are cancelled.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+        env:
+          # Optional integrations — configure as repository variables
+          # (Settings → Secrets and variables → Actions → Variables).
+          # The site builds fine when these are unset.
+          PUBLIC_FORMSPREE_EMPLOYMENT_FORM_ID: ${{ vars.PUBLIC_FORMSPREE_EMPLOYMENT_FORM_ID }}
+          PUBLIC_FORMSPREE_FREELANCE_FORM_ID: ${{ vars.PUBLIC_FORMSPREE_FREELANCE_FORM_ID }}
+          PUBLIC_NEWSLETTER_ACTION_URL: ${{ vars.PUBLIC_NEWSLETTER_ACTION_URL }}
+          PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

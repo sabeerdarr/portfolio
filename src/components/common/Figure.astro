@@ -1,0 +1,50 @@
+---
+/**
+ * Image with a descriptive caption for case studies and articles.
+ * 'wide' breaks out of the prose column on large screens.
+ */
+export interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+  variant?: 'default' | 'wide';
+}
+
+const { src, alt, caption, width = 1600, height = 1000, variant = 'default' } = Astro.props;
+---
+
+<figure class:list={['figure', variant === 'wide' && 'figure--wide']}>
+  <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .figure {
+    margin: 0;
+  }
+
+  .figure img {
+    inline-size: 100%;
+    border: var(--border-hairline);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+  }
+
+  .figure figcaption {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+    line-height: 1.5;
+  }
+
+  /* Break out of the narrow prose column on large screens. */
+  @media (min-width: 64rem) {
+    :global(.prose) .figure--wide {
+      inline-size: min(56rem, calc(100vw - 2 * var(--container-gutter)));
+      margin-inline-start: 50%;
+      transform: translateX(-50%);
+    }
+  }
+</style>

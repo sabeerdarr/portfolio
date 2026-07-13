@@ -1,0 +1,22 @@
+{
+  "name": "Sabeer Darr — UI/UX & Product Designer",
+  "short_name": "Sabeer Darr",
+  "description": "Portfolio and writing of Sabeer Darr, UI/UX and product designer.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#fbfaf7",
+  "theme_color": "#211d18",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

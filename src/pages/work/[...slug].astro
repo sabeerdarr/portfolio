@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import CaseStudyLayout from '@/layouts/CaseStudyLayout.astro';
+import Figure from '@/components/common/Figure.astro';
+import Callout from '@/components/common/Callout.astro';
+import Quote from '@/components/common/Quote.astro';
+import MetricCard from '@/components/common/MetricCard.astro';
+import ImageComparison from '@/components/common/ImageComparison.astro';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('work', ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order
+  );
+
+  return projects.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: {
+      entry,
+      previous: index > 0 ? projects[index - 1] : undefined,
+      next: index < projects.length - 1 ? projects[index + 1] : undefined,
+    },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+  previous?: CollectionEntry<'work'> | undefined;
+  next?: CollectionEntry<'work'> | undefined;
+}
+
+const { entry, previous, next } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const toNav = (item?: CollectionEntry<'work'>) =>
+  item ? { title: item.data.title, href: `/work/${item.id}/` } : undefined;
+---
+
+<CaseStudyLayout entry={entry} headings={headings} previous={toNav(previous)} next={toNav(next)}>
+  <Content components={{ Figure, Callout, Quote, MetricCard, ImageComparison }} />
+</CaseStudyLayout>

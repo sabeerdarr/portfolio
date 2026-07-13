@@ -1,0 +1,406 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/common/SectionHeading.astro';
+import ProjectCard from '@/components/cards/ProjectCard.astro';
+import ArticleCard from '@/components/cards/ArticleCard.astro';
+import ServiceCard from '@/components/cards/ServiceCard.astro';
+import ProcessSteps from '@/components/sections/ProcessSteps.astro';
+import FinalCTA from '@/components/sections/FinalCTA.astro';
+import Callout from '@/components/common/Callout.astro';
+import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
+import { site } from '@/config/site';
+import { personSchema, websiteSchema } from '@/utils/schema';
+import { resumePdfExists } from '@/utils/resume';
+
+// Featured case studies (max three), ordered by `order`.
+const allWork = await getCollection('work', ({ data }) => !data.draft);
+const featuredWork = allWork
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+// Latest three published articles.
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const latestPosts = allPosts
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
+  .slice(0, 3);
+
+const hasResume = resumePdfExists();
+
+const valueProps = [
+  {
+    title: 'Product thinking',
+    description:
+      'Design decisions framed around user needs and business goals — not just screens. I ask what a feature is for before asking what it looks like.',
+  },
+  {
+    title: 'UX research',
+    description:
+      'Interviews, usability tests, and analytics reviews sized to the risk of the decision, so the team ships evidence instead of assumptions.',
+  },
+  {
+    title: 'Interaction design',
+    description:
+      'Flows, states, and edge cases worked through end-to-end — including the empty, error, and loading states that make products feel finished.',
+  },
+  {
+    title: 'Visual design',
+    description:
+      'Clear hierarchy, accessible contrast, and restrained aesthetics that keep attention on the task rather than the decoration.',
+  },
+  {
+    title: 'Prototyping',
+    description:
+      'Interactive prototypes at the lowest fidelity that answers the question — from clickable wireframes to high-fidelity flows for testing.',
+  },
+  {
+    title: 'Design systems',
+    description:
+      'Tokens, components, and documentation that scale design across a team and keep the product consistent as it grows.',
+  },
+  {
+    title: 'Developer collaboration',
+    description:
+      'Specs, annotations, and ongoing pairing that respect engineering constraints — handoff as a conversation, not a file drop.',
+  },
+  {
+    title: 'Remote communication',
+    description:
+      'Clear async writing, recorded walkthroughs, and structured critique that keep distributed teams aligned across time zones.',
+  },
+];
+
+const services = [
+  {
+    title: 'Product & UX Design',
+    audience: 'Teams building or reworking a core product flow',
+    problem: 'Features that are hard to use, hard to ship, or hard to agree on',
+    deliverables: [
+      'User flows',
+      'Wireframes',
+      'UI design',
+      'Interactive prototype',
+      'Dev-ready specs',
+    ],
+    href: '/services#feature-design',
+  },
+  {
+    title: 'UX Audits & Usability Reviews',
+    audience: 'Products with drop-off, support load, or usability complaints',
+    problem: 'Knowing something is wrong without knowing exactly what or where',
+    deliverables: [
+      'Heuristic evaluation',
+      'Key-flow assessment',
+      'Annotated findings',
+      'Prioritised fixes',
+    ],
+    href: '/services#ux-audit',
+  },
+  {
+    title: 'Design Systems & Prototyping',
+    audience: 'Growing teams whose UI is drifting out of sync',
+    problem: 'Inconsistent interfaces and slow design–development cycles',
+    deliverables: [
+      'Token architecture',
+      'Component library',
+      'Usage documentation',
+      'Governance model',
+    ],
+    href: '/services#design-support',
+  },
+];
+
+const structuredData = [personSchema(), websiteSchema()];
+---
+
+<BaseLayout
+  rawTitle={site.seo.defaultTitle}
+  description={site.seo.defaultDescription}
+  structuredData={structuredData}
+>
+  <!-- 1 · Hero -->
+  <section class="hero">
+    <div class="container">
+      <p class="hero__badge"><AvailabilityBadge variant="full" /></p>
+      <h1 class="hero__title">
+        UI/UX designer creating <em>clear, useful</em> digital products.
+      </h1>
+      <p class="hero__lede">
+        I help product teams turn complex requirements into intuitive SaaS and mobile experiences
+        through research, interaction design, prototyping, and scalable design systems.
+      </p>
+      <p class="hero__availability">{site.availability.message}</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="/work">View case studies</a>
+        <a class="btn btn--secondary" href="/contact">Discuss a project</a>
+        {
+          hasResume ? (
+            <a class="btn btn--ghost" href={site.resumePath} data-event="resume-download" download>
+              Download resume
+            </a>
+          ) : (
+            <a class="btn btn--ghost" href="/resume">
+              View resume
+            </a>
+          )
+        }
+      </div>
+    </div>
+    <div class="hero__rule" aria-hidden="true"></div>
+  </section>
+
+  <!-- 2 · Selected work -->
+  <section class="section" aria-labelledby="selected-work">
+    <div class="container">
+      <SectionHeading
+        kicker="01 · Selected work"
+        title="Case studies, not just screenshots"
+        id="selected-work"
+      >
+        Each project walks through the problem, the decisions, the trade-offs, and what happened
+        after launch — because the reasoning matters as much as the result.
+        <a slot="action" class="text-link" href="/work">All work</a>
+      </SectionHeading>
+
+      {
+        featuredWork.length > 0 ? (
+          <div class="work-grid">
+            {featuredWork.map((project, index) => (
+              <ProjectCard
+                project={project}
+                variant={index === 0 ? 'featured' : 'compact'}
+                headingLevel="h3"
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+            ))}
+          </div>
+        ) : (
+          <Callout variant="placeholder" title="No featured projects yet">
+            <p>
+              Mark case studies as <code>featured: true</code> in their frontmatter to show them
+              here. See CONTENT_GUIDE.md.
+            </p>
+          </Callout>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 3 · Value proposition -->
+  <section class="section section--alt" aria-labelledby="value-heading">
+    <div class="container">
+      <SectionHeading
+        kicker="02 · What I bring"
+        title="End-to-end product design, grounded in evidence"
+        id="value-heading"
+      >
+        The craft spans research through delivery. The value is in connecting them: every visual
+        decision should trace back to something a user needs or a metric the business watches.
+      </SectionHeading>
+
+      <dl class="value-grid">
+        {
+          valueProps.map((item) => (
+            <div class="value-grid__item">
+              <dt>{item.title}</dt>
+              <dd>{item.description}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- 4 · Services preview -->
+  <section class="section" aria-labelledby="services-heading">
+    <div class="container">
+      <SectionHeading
+        kicker="03 · Freelance services"
+        title="Three ways to work with me"
+        id="services-heading"
+      >
+        Focused engagements with clear deliverables — scoped so you know what you're getting and
+        when.
+        <a slot="action" class="text-link" href="/services">Service details</a>
+      </SectionHeading>
+
+      <div class="services-grid">
+        {services.map((service) => <ServiceCard {...service} headingLevel="h3" />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Process -->
+  <section class="section section--alt" aria-labelledby="process-heading">
+    <div class="container">
+      <SectionHeading
+        kicker="04 · Process"
+        title="A process that adapts to the problem"
+        id="process-heading"
+      >
+        These are the activities, not a conveyor belt. A late-stage usability fix doesn't need
+        discovery interviews; a new product bet does. The mix depends on the product's stage, risk,
+        timeline, and the evidence already available.
+      </SectionHeading>
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <!-- 6 · Proof -->
+  <section class="section" aria-labelledby="proof-heading">
+    <div class="container">
+      <SectionHeading
+        kicker="05 · Proof"
+        title="Trust is earned with evidence"
+        id="proof-heading"
+      />
+      <Callout variant="placeholder" title="Verified proof needed">
+        <p>
+          This section is reserved for genuine testimonials, client and employer references, shipped
+          products, publications, or talks — added only once they're real and cleared for use.
+          Nothing here will ever be fabricated. To add verified material, see the "Testimonials and
+          proof" section of CONTENT_GUIDE.md.
+        </p>
+      </Callout>
+    </div>
+  </section>
+
+  <!-- 7 · Latest writing -->
+  <section class="section section--alt" aria-labelledby="writing-heading">
+    <div class="container">
+      <SectionHeading
+        kicker="06 · Writing"
+        title="Notes on designing useful products"
+        id="writing-heading"
+      >
+        Practical articles on UX process, design systems, and remote collaboration.
+        <a slot="action" class="text-link" href="/writing">All articles</a>
+      </SectionHeading>
+
+      {
+        latestPosts.length > 0 ? (
+          <div class="articles-grid">
+            {latestPosts.map((article) => (
+              <ArticleCard article={article} headingLevel="h3" />
+            ))}
+          </div>
+        ) : (
+          <Callout variant="note" title="Articles coming soon">
+            <p>New writing is in progress and will appear here once published.</p>
+          </Callout>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 8 · Final CTA -->
+  <section class="section">
+    <div class="container">
+      <FinalCTA />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-9) var(--space-8);
+  }
+
+  .hero__badge {
+    margin-block-end: var(--space-5);
+  }
+
+  .hero__title {
+    font-size: var(--text-display);
+    max-width: 16ch;
+  }
+
+  .hero__title em {
+    font-style: italic;
+    color: var(--color-accent);
+  }
+
+  .hero__lede {
+    margin-block-start: var(--space-5);
+    max-width: 44em;
+    font-size: var(--text-lead);
+    color: var(--color-ink-secondary);
+    text-wrap: pretty;
+  }
+
+  .hero__availability {
+    margin-block-start: var(--space-4);
+    font-size: var(--text-small);
+    color: var(--color-ink-faint);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+
+  .hero__rule {
+    margin-block-start: var(--space-8);
+    border-block-end: var(--border-hairline);
+  }
+
+  .section--alt {
+    background-color: var(--color-surface);
+    border-block: var(--border-hairline);
+  }
+
+  .work-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .work-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Featured card spans the full row. */
+    .work-grid > :global(.project-card--featured) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-6) var(--space-7);
+    margin: 0;
+  }
+
+  .value-grid__item {
+    padding-block-start: var(--space-4);
+    border-block-start: 2px solid var(--color-ink);
+  }
+
+  .value-grid__item dt {
+    font-family: var(--font-display);
+    font-size: var(--text-h4);
+    font-weight: 600;
+  }
+
+  .value-grid__item dd {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--space-5);
+  }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--space-6);
+  }
+</style>

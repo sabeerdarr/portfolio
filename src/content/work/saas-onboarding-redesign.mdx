@@ -1,0 +1,297 @@
+---
+title: 'Redesigning B2B SaaS onboarding around the first "aha" moment'
+summary: "A sample case study: reworking a project-management tool's onboarding so new teams reach their first meaningful outcome in minutes instead of days."
+coverImage: '/images/work/saas-onboarding-cover.svg'
+coverAlt: 'Placeholder cover illustration representing a SaaS onboarding flow with progressive setup steps'
+projectType: 'concept'
+status: 'concept'
+featured: true
+category: ['SaaS', 'Product Design', 'UX Research']
+role: 'Product designer (end-to-end)'
+team: '1 designer, 1 PM, 3 engineers (illustrative)'
+duration: '6 weeks (illustrative)'
+platform: 'Web app (responsive)'
+industry: 'B2B SaaS — project management'
+responsibilities:
+  - 'Research and synthesis'
+  - 'Flow and IA redesign'
+  - 'UI design and prototyping'
+  - 'Usability testing'
+  - 'Developer handoff'
+methods:
+  - 'Funnel analysis'
+  - 'User interviews'
+  - 'Usability testing'
+  - 'Journey mapping'
+tools:
+  - 'Figma'
+  - 'Maze'
+  - 'Amplitude'
+outcomeSummary: 'Sample outcome — replace with a verified activation metric from a real project.'
+keyContribution: 'Reframed onboarding from "complete the setup" to "reach the first outcome"'
+publishedDate: 2026-05-10
+seoDescription: 'Sample UX case study: redesigning B2B SaaS onboarding around activation, with research, flows, testing, and handoff.'
+draft: false
+order: 1
+---
+
+<Callout variant="placeholder" title="Sample project">
+  This case study is **illustrative content** demonstrating structure, depth, and voice. The
+  product, team, metrics, and quotes are fictional composites. Replace it with a real project using
+  PROJECT_REPLACEMENT_GUIDE.md.
+</Callout>
+
+## Executive summary
+
+A project-management SaaS was converting trial sign-ups poorly: teams signed up, poked around an
+empty workspace, and left. This project reframed onboarding from _"finish configuring your
+account"_ to _"experience the product's core value once, fast"_ — and rebuilt the first-session
+flow around that goal. The redesign paired a shorter, role-aware setup with a pre-populated
+sample project that let users feel the product working before investing any effort.
+
+<Callout variant="insight">
+  The core reframe: activation is a user outcome, not a checklist completion. Every screen in the
+  first session either moves a new team toward their first real result or it's a candidate for
+  removal.
+</Callout>
+
+## Project context
+
+The product is a project-management tool for small agencies (5–50 people). Growth was
+healthy at the top of the funnel — content marketing brought in steady trial sign-ups — but
+paid conversion lagged behind benchmarks. Leadership's instinct was to add an interactive
+product tour. The design team negotiated two weeks of discovery first to find out what was
+actually failing.
+
+## Problem
+
+Funnel data showed the sharpest drop between account creation and second session: a large share
+of trial teams never came back after day one. Support transcripts and session recordings
+suggested new users hit an empty workspace, faced an eight-step configuration wizard written for
+administrators, and gave up before seeing anything that resembled their work.
+
+The working problem statement:
+
+> New teams abandon the trial before experiencing the product's core value, because the first
+> session demands configuration effort before demonstrating any payoff.
+
+## Users and audience
+
+Two distinct first-run audiences emerged from interviews, with conflicting needs:
+
+- **The evaluator** — usually an operations lead or team manager on a deadline to pick a tool.
+  Wants to judge fit in under 30 minutes. Configuration questions ("What's your team's billing
+  cadence?") feel like obstacles.
+- **The invited teammate** — arrives later via invitation into a half-configured workspace.
+  Wants to find their tasks, not learn the tool's philosophy.
+
+The legacy wizard served neither: it interrogated evaluators as if they were committed
+administrators, and gave invited teammates the same generic tour as founders.
+
+## Business context
+
+Trial-to-paid conversion was the company's primary growth lever for the year. Even a modest
+improvement in activation compounds: activated teams invite more members, and seat expansion was
+the main revenue driver. This gave the project a clear success metric and — usefully — a clear
+non-goal: this was not a visual refresh, and screens that worked would not be redesigned for
+taste.
+
+## Constraints
+
+- **Six weeks** from kick-off to engineering handoff, fixed by the roadmap.
+- **No backend changes** to the permissions model, which ruled out some ideal flows.
+- **Existing design system** components had to be used wherever possible.
+- **Sales-assisted accounts** shared the same entry flow and could not regress.
+
+## Role and responsibilities
+
+I owned the design work end-to-end: discovery interviews and funnel analysis with the PM,
+journey mapping, flow redesign, UI design, prototype construction, moderated usability sessions,
+and annotated handoff. Engineers joined weekly critiques from week one — several flow
+simplifications came directly from their questions.
+
+## Research
+
+Discovery combined three evidence sources, chosen to triangulate cheaply within two weeks:
+
+1. **Funnel analysis** of six months of trial cohorts, to locate _where_ users left.
+2. **Eight interviews** — five with users who abandoned trials, three with recently
+   converted admins — to understand _why_.
+3. **Fifteen session recordings** of first runs, to see the moment-by-moment behaviour users
+   couldn't accurately self-report.
+
+<Quote attribution="Trial abandoner, interview 3 (illustrative)">
+  I signed up to see if it would fit how we run client work. Twenty minutes in, I was still
+  answering questions about time-zone defaults. I never saw a single project board.
+</Quote>
+
+## Key findings
+
+- Users didn't need less onboarding — they needed **earlier proof**. Every abandoner
+  interviewed said some version of "show me it working."
+- The wizard's questions were **administrator questions**, but most first users were
+  evaluators who didn't yet have the authority (or intent) to answer them.
+- Empty states were the real onboarding surface. After the wizard, users landed on a blank
+  dashboard whose only affordance was a "Create project" button with a 12-field form behind it.
+- Invited teammates had the worst experience of all: the product assumed everyone was setting
+  up a workspace, so a teammate's first session began with questions about company size.
+
+## Problem definition
+
+We turned the findings into one design goal with three measurable sub-goals:
+
+**Design goal:** a new user in either audience reaches a populated, personally relevant project
+view in their first session.
+
+1. Time from sign-up to first project view: minutes, not sessions.
+2. Setup questions asked before that moment: only those that change what the user sees.
+3. Invited teammates get a distinct, shorter path.
+
+## User flows and information architecture
+
+The legacy flow was linear: eight wizard steps, then a blank dashboard. The redesign split it by
+intent at the first screen — "Set up my team's workspace" versus "Just exploring" — and moved
+every deferrable question into contextual moments inside the product.
+
+<Figure
+  src="/images/work/placeholder-flow.svg"
+  alt="Placeholder diagram comparing the legacy linear onboarding flow with the redesigned intent-based flow"
+  caption="Legacy flow (top): eight mandatory steps before any product value. Redesign (bottom): two questions, then a working sample project. Replace with your real flow diagram."
+  variant="wide"
+/>
+
+## Design exploration
+
+Three structural directions were explored at wireframe level:
+
+- **A. Guided tour overlay** — leadership's original instinct. Cheapest, but tours explain
+  value instead of demonstrating it, and our research said explanation wasn't the gap.
+- **B. Template-first setup** — pick a template, get a scaffolded project. Better, but still
+  asked users to do the work before feeling the payoff.
+- **C. Sample-project-first** — drop every new user into a realistic, pre-populated sample
+  project themed to their stated use case, with their real setup happening progressively.
+
+## Alternatives considered
+
+Direction A was prototyped anyway — deliberately — because it was the stakeholder favourite and
+deserved a fair test rather than a designer veto. In testing, tour completion looked fine but
+comprehension didn't: users dismissed the tour and then couldn't perform the tasks it had
+described. Watching that footage together did more to align the team than any argument.
+
+## Decisions and trade-offs
+
+- **Sample data over real data.** A pre-populated project demonstrates value instantly but risks
+  feeling like a demo. We mitigated with a persistent, dismissible banner: "This is a sample —
+  start your own project when ready."
+- **Two setup questions, not zero.** Role and use case materially change the sample project
+  shown, so they stayed. Everything else moved into the product.
+- **Deferred, not deleted.** Admin configuration still matters for converting accounts. It
+  moved to a persistent, progress-tracked "Workspace setup" panel that admins could complete
+  across sessions.
+
+## Wireframes
+
+Low-fidelity wireframes covered the full journey for both audiences — including the states that
+usually get skipped: the invited teammate's first view, the sample project's "graduation" moment,
+and what happens when a user finishes the trial without converting.
+
+<ImageComparison
+  beforeSrc="/images/work/placeholder-before.svg"
+  beforeAlt="Placeholder wireframe of the legacy onboarding wizard step with a long settings form"
+  afterSrc="/images/work/placeholder-after.svg"
+  afterAlt="Placeholder wireframe of the redesigned first-run screen showing a populated sample project"
+  caption="First-session screen, before and after. Replace both images with real wireframes at 1600×1000."
+/>
+
+## Prototyping
+
+A clickable Figma prototype covered the full evaluator journey (sign-up → sample project → first
+real project) and the teammate journey (invitation → assigned task). Fidelity was mid-level on
+purpose: real enough to test comprehension, rough enough that participants critiqued the flow
+instead of the colours.
+
+## Testing
+
+Five moderated remote sessions per audience, task-based: _"You're evaluating this tool for your
+agency — decide whether you'd shortlist it."_ We measured task success, time to first project
+view, and asked participants to narrate what they believed the product did at three checkpoints.
+
+## Iterations
+
+Testing produced two significant revisions:
+
+1. The sample project initially opened on a **board view** — evaluators from non-agile teams
+   found it alien. The fix: the use-case question now also selects the default view (board,
+   list, or timeline).
+2. The "start your own project" call-to-action was too quiet; several participants stayed in
+   the sample longer than useful. It became a primary action anchored to the sample banner.
+
+## Final solution
+
+The shipped flow: two questions, a themed sample project as the landing experience, contextual
+setup prompts that appear where their answers take effect, and a separate short path for invited
+teammates that lands them directly on their assigned work.
+
+<Figure
+  src="/images/work/placeholder-final.svg"
+  alt="Placeholder mock-up of the final onboarding landing screen with a populated sample project and setup progress panel"
+  caption="Final first-session screen. Replace with a real, annotated product screenshot."
+  variant="wide"
+/>
+
+## Design-system considerations
+
+The redesign added three patterns to the product's design system rather than one-off screens: a
+progressive-setup panel, a sample-content banner, and an empty-state template with a built-in
+primary action slot. Each shipped with usage documentation so future features could reuse them.
+
+## Accessibility considerations
+
+- The setup panel and banner are native landmarks with correct heading structure, keyboard
+  operability, and visible focus.
+- The onboarding flow was tested with keyboard-only navigation and a screen reader pass;
+  progress announcements use a polite live region.
+- All new components met AA contrast in both product themes.
+
+## Developer handoff
+
+Handoff was a living Figma spec: flows annotated with state logic, component references into the
+existing system, and a written decision log explaining _why_ each screen exists (which
+prevented well-meaning "simplifications" from undoing the research). I stayed embedded through
+the build sprint, reviewing staging builds against the spec.
+
+## Results
+
+<Callout variant="placeholder" title="Replace with verified outcomes">
+  The metrics below are illustrative placeholders showing how results should be presented — with a
+  source and a timeframe. Replace with verified numbers from your real project, or state honestly
+  that results were not measured.
+</Callout>
+
+<div class="metrics-row">
+  <MetricCard
+    value="[X]%"
+    label="Increase in trial teams reaching first project view in session one"
+    source="Product analytics, first 60 days post-launch"
+  />
+  <MetricCard
+    value="[X] min"
+    label="Median time from sign-up to first project view"
+    source="Product analytics, first 60 days post-launch"
+  />
+</div>
+
+## Lessons learned
+
+- **Prototype the stakeholder's idea too.** Testing the tour overlay cost three days and bought
+  total alignment — cheaper than weeks of debate.
+- **Empty states are onboarding.** The wizard got all the attention historically, but the blank
+  dashboard did the real damage.
+- **Progressive setup needs an owner.** Deferring questions works only if something tracks and
+  resurfaces them; the setup panel earned its complexity.
+
+## What I'd do next
+
+With more time: instrument the sample project's "graduation" moment properly, test a variant
+that imports real data from the user's previous tool, and extend the role-aware logic to email
+onboarding, which still sends every user an identical sequence.

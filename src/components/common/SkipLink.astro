@@ -1,0 +1,25 @@
+---
+/** Skip-to-content link — first focusable element on every page. */
+---
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<style>
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-3);
+    inset-inline-start: var(--space-3);
+    z-index: var(--z-toast);
+    padding: var(--space-3) var(--space-5);
+    background-color: var(--color-ink);
+    color: var(--color-bg);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+</style>

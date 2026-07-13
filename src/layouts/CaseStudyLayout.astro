@@ -1,0 +1,263 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import TableOfContents from '@/components/common/TableOfContents.astro';
+import RelatedContent from '@/components/sections/RelatedContent.astro';
+import Callout from '@/components/common/Callout.astro';
+import { formatDate, isoDate } from '@/utils/format';
+import { creativeWorkSchema, breadcrumbSchema } from '@/utils/schema';
+import { site } from '@/config/site';
+
+export interface Props {
+  entry: CollectionEntry<'work'>;
+  headings: MarkdownHeading[];
+  previous?: { title: string; href: string } | undefined;
+  next?: { title: string; href: string } | undefined;
+}
+
+const { entry, headings, previous, next } = Astro.props;
+const { data } = entry;
+const url = new URL(`/work/${entry.id}/`, site.url).href;
+
+const typeLabel: Record<string, string> = {
+  client: 'Client project',
+  internal: 'Internal product',
+  concept: 'Concept case study',
+};
+
+const structuredData = [
+  creativeWorkSchema({
+    title: data.title,
+    description: data.summary,
+    url,
+    image: data.socialImage ?? data.coverImage,
+    publishedDate: data.publishedDate,
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Work', path: '/work' },
+    { name: data.title, path: `/work/${entry.id}/` },
+  ]),
+];
+---
+
+<BaseLayout
+  title={data.seoTitle ?? data.title}
+  description={data.seoDescription ?? data.summary}
+  socialImage={data.socialImage ?? data.coverImage}
+  type="article"
+  publishedDate={data.publishedDate}
+  updatedDate={data.updatedDate}
+  structuredData={structuredData}
+>
+  <article>
+    <header class="cs-hero">
+      <div class="container">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Work', href: '/work' },
+            { label: data.title },
+          ]}
+        />
+
+        <p class="kicker cs-hero__kicker">
+          {typeLabel[data.projectType]} · {data.category.join(' · ')}
+        </p>
+        <h1 class="cs-hero__title">{data.title}</h1>
+        <p class="cs-hero__summary">{data.summary}</p>
+
+        <dl class="cs-hero__meta">
+          <div>
+            <dt>Role</dt>
+            <dd>{data.role}</dd>
+          </div>
+          {
+            data.team && (
+              <div>
+                <dt>Team</dt>
+                <dd>{data.team}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Duration</dt>
+            <dd>{data.duration}</dd>
+          </div>
+          <div>
+            <dt>Platform</dt>
+            <dd>{data.platform}</dd>
+          </div>
+          {
+            data.industry && (
+              <div>
+                <dt>Industry</dt>
+                <dd>{data.industry}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Published</dt>
+            <dd>
+              <time datetime={isoDate(data.publishedDate)}>{formatDate(data.publishedDate)}</time>
+            </dd>
+          </div>
+        </dl>
+
+        {
+          data.projectType === 'concept' && (
+            <Callout variant="placeholder" title="Sample case study">
+              <p>
+                This is illustrative sample content demonstrating structure and depth. Replace it
+                with a real project before sharing the site — see PROJECT_REPLACEMENT_GUIDE.md.
+              </p>
+            </Callout>
+          )
+        }
+      </div>
+
+      <div class="container container--wide">
+        <img
+          class="cs-hero__cover"
+          src={data.coverImage}
+          alt={data.coverAlt}
+          width="1600"
+          height="1000"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+    </header>
+
+    <div class="container cs-body">
+      <aside class="cs-body__sidebar">
+        <TableOfContents headings={headings} title="In this case study" />
+      </aside>
+      <div class="prose cs-body__content">
+        <slot />
+      </div>
+    </div>
+
+    <footer class="container cs-footer">
+      <div class="cs-footer__cta">
+        <h2>Facing a similar problem?</h2>
+        <p>
+          I take on a small number of freelance engagements — audits, feature design, and design
+          systems. If this case study resonates with a challenge on your roadmap, let's talk.
+        </p>
+        <div class="cs-footer__actions">
+          <a class="btn btn--primary" href="/services" data-event="case-study-cta">
+            See how I can help
+          </a>
+          <a class="btn btn--secondary" href="/contact">Get in touch</a>
+        </div>
+      </div>
+      <RelatedContent previous={previous} next={next} label="More case studies" />
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .cs-hero {
+    padding-block-start: var(--space-6);
+  }
+
+  .cs-hero__kicker {
+    margin-block-start: var(--space-6);
+  }
+
+  .cs-hero__title {
+    margin-block-start: var(--space-4);
+    max-width: 20ch;
+  }
+
+  .cs-hero__summary {
+    margin-block-start: var(--space-4);
+    max-width: 46em;
+    font-size: var(--text-lead);
+    color: var(--color-ink-secondary);
+  }
+
+  .cs-hero__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    gap: var(--space-4) var(--space-5);
+    margin-block: var(--space-6);
+    padding-block: var(--space-5);
+    border-block: var(--border-hairline);
+    font-size: var(--text-small);
+  }
+
+  .cs-hero__meta dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-block-end: var(--space-1);
+  }
+
+  .cs-hero__meta dd {
+    margin: 0;
+  }
+
+  .cs-hero__cover {
+    inline-size: 100%;
+    margin-block-start: var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+  }
+
+  .cs-body {
+    display: grid;
+    gap: var(--space-7);
+    padding-block: var(--space-8);
+  }
+
+  @media (min-width: 64rem) {
+    .cs-body {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .cs-body__sidebar {
+      position: sticky;
+      top: 5.5rem;
+    }
+  }
+
+  .cs-body__content {
+    min-width: 0;
+  }
+
+  .cs-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+
+  .cs-footer__cta {
+    padding: var(--space-7) var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    max-width: 100%;
+  }
+
+  .cs-footer__cta p {
+    margin-block-start: var(--space-3);
+    max-width: 46em;
+    color: var(--color-ink-secondary);
+  }
+
+  .cs-footer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-5);
+  }
+</style>

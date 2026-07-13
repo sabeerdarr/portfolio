@@ -1,0 +1,39 @@
+---
+/**
+ * Button — renders an <a> when href is given, otherwise a <button>.
+ * Visual styles are the shared .btn classes in global.css so raw
+ * elements can opt into the same look where a component is overkill.
+ */
+export interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'base' | 'small';
+  type?: 'button' | 'submit';
+  /** data-event name for privacy-conscious analytics hooks. */
+  event?: string;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'base',
+  type = 'button',
+  event,
+  class: className,
+} = Astro.props;
+
+const classes = ['btn', `btn--${variant}`, size === 'small' && 'btn--small', className];
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} data-event={event}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class:list={classes} data-event={event}>
+      <slot />
+    </button>
+  )
+}

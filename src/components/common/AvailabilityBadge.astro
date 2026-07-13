@@ -1,0 +1,55 @@
+---
+import { site } from '@/config/site';
+
+/**
+ * Availability indicator driven entirely by src/config/site.ts.
+ * Change `availability.status` there to update the whole site.
+ */
+export interface Props {
+  /** 'dot' renders compactly for the header; 'full' for footers/heroes. */
+  variant?: 'dot' | 'full';
+}
+
+const { variant = 'dot' } = Astro.props;
+const { status, label } = site.availability;
+---
+
+<span class:list={['availability', `availability--${status}`, `availability--${variant}`]}>
+  <span class="availability__dot" aria-hidden="true"></span>
+  {label}
+</span>
+
+<style>
+  .availability {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-ink-secondary);
+    white-space: nowrap;
+  }
+
+  .availability--full {
+    font-size: var(--text-small);
+    padding: var(--space-2) var(--space-4);
+    border: var(--border-hairline);
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface);
+  }
+
+  .availability__dot {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-ok);
+  }
+
+  .availability--limited .availability__dot {
+    background-color: var(--color-warn);
+  }
+
+  .availability--unavailable .availability__dot {
+    background-color: var(--color-ink-faint);
+  }
+</style>

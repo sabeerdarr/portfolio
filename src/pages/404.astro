@@ -1,0 +1,48 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for doesn't exist."
+  noindex
+>
+  <div class="container not-found">
+    <p class="kicker">404</p>
+    <h1>This page doesn't exist</h1>
+    <p class="not-found__lede">
+      The link may be outdated, or the address may have a typo. Nothing was lost on your end —
+      here's where to go instead:
+    </p>
+    <div class="not-found__actions">
+      <a class="btn btn--primary" href="/">Back to the homepage</a>
+      <a class="btn btn--secondary" href="/work">Browse case studies</a>
+      <a class="btn btn--ghost" href="/contact">Report a broken link</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: var(--space-10);
+    min-height: 50vh;
+  }
+
+  .not-found h1 {
+    margin-block-start: var(--space-4);
+  }
+
+  .not-found__lede {
+    margin-block-start: var(--space-4);
+    max-width: 40em;
+    color: var(--color-ink-secondary);
+    font-size: var(--text-lead);
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+</style>

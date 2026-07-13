@@ -1,0 +1,194 @@
+/* ==================================================================
+   Design tokens — sabeerdarr.com
+   "Editorial ink" identity: warm paper, near-black ink, one rust
+   accent, serif display type, hairline rules, generous whitespace.
+
+   Light theme is the default. Dark theme is applied either by the
+   inline theme script setting [data-theme="dark"], or (for visitors
+   without JavaScript) by the prefers-color-scheme media query.
+   ================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Color: surfaces --------------------------------------- */
+  --color-bg: #fbfaf7;
+  --color-surface: #f3f1ea;
+  --color-surface-raised: #ffffff;
+
+  /* ---- Color: ink -------------------------------------------- */
+  --color-ink: #211d18;
+  --color-ink-secondary: #565047;
+  --color-ink-faint: #6e675d;
+
+  /* ---- Color: lines & borders --------------------------------- */
+  --color-line: #e3dfd5;
+  --color-line-strong: #c6c0b3;
+
+  /* ---- Color: accent (rust) ----------------------------------- */
+  --color-accent: #9c3b0b;
+  --color-accent-strong: #7c2e08;
+  --color-accent-surface: #f5e7dc;
+  --color-accent-contrast: #fbfaf7;
+
+  /* ---- Color: feedback ---------------------------------------- */
+  --color-ok: #1c6b3c;
+  --color-ok-surface: #e2f0e6;
+  --color-warn: #8a4d0f;
+  --color-warn-surface: #f7ecda;
+  --color-error: #b42318;
+  --color-error-surface: #f9e5e2;
+
+  /* ---- Color: focus ------------------------------------------- */
+  --color-focus: #1d4ed8;
+
+  /* ---- Typography: families ----------------------------------- */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Typography: sizes (fluid) ------------------------------ */
+  --text-display: clamp(2.6rem, 1.5rem + 4.6vw, 4.75rem);
+  --text-h1: clamp(2.1rem, 1.5rem + 2.4vw, 3.25rem);
+  --text-h2: clamp(1.55rem, 1.3rem + 1.1vw, 2.1rem);
+  --text-h3: clamp(1.25rem, 1.15rem + 0.45vw, 1.45rem);
+  --text-h4: 1.125rem;
+  --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3rem);
+  --text-body: 1.0625rem;
+  --text-small: 0.9375rem;
+  --text-xs: 0.8125rem;
+  --text-label: 0.75rem;
+
+  /* ---- Typography: rhythm ------------------------------------- */
+  --leading-tight: 1.12;
+  --leading-snug: 1.3;
+  --leading-body: 1.65;
+  --tracking-label: 0.08em;
+
+  /* ---- Spacing scale ------------------------------------------ */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* Section rhythm */
+  --section-gap: clamp(4rem, 3rem + 5vw, 7.5rem);
+
+  /* ---- Containers --------------------------------------------- */
+  --container-max: 72rem;
+  --container-wide: 84rem;
+  --container-narrow: 46rem;
+  --container-gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* ---- Borders & radius ---------------------------------------- */
+  --border-hairline: 1px solid var(--color-line);
+  --border-strong: 1px solid var(--color-line-strong);
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-full: 999px;
+
+  /* ---- Shadows -------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgb(33 29 24 / 0.06);
+  --shadow-md: 0 2px 8px rgb(33 29 24 / 0.07), 0 8px 24px rgb(33 29 24 / 0.06);
+  --shadow-lg: 0 4px 12px rgb(33 29 24 / 0.08), 0 16px 48px rgb(33 29 24 / 0.1);
+
+  /* ---- Motion ---------------------------------------------------
+     Durations pair with the global prefers-reduced-motion override
+     in global.css, which collapses them to near-zero. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 140ms;
+  --duration-base: 240ms;
+  --duration-slow: 420ms;
+
+  /* ---- Z-index scale -------------------------------------------- */
+  --z-below: -1;
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-overlay: 300;
+  --z-toast: 400;
+
+  /* ---- Breakpoints (reference only — CSS custom properties
+     cannot be used inside media queries; keep these values in
+     sync with the @media rules across the codebase)
+       --bp-sm:  30rem   (480px)
+       --bp-md:  48rem   (768px)
+       --bp-lg:  64rem   (1024px)
+       --bp-xl:  80rem   (1280px)
+       --bp-2xl: 90rem   (1440px)
+     ---------------------------------------------------------------- */
+}
+
+/* ==================================================================
+   Dark theme tokens.
+   Applied when the theme script sets data-theme="dark", and for
+   no-JS visitors whose OS prefers dark.
+   ================================================================== */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #14110e;
+  --color-surface: #1d1915;
+  --color-surface-raised: #242019;
+  --color-ink: #ece7df;
+  --color-ink-secondary: #b5ada1;
+  --color-ink-faint: #9a9184;
+  --color-line: #2d2822;
+  --color-line-strong: #48413a;
+  --color-accent: #e79067;
+  --color-accent-strong: #f2ab88;
+  --color-accent-surface: #33241a;
+  --color-accent-contrast: #14110e;
+  --color-ok: #7ed09c;
+  --color-ok-surface: #1a2e21;
+  --color-warn: #e3b06c;
+  --color-warn-surface: #33270f;
+  --color-error: #f0857b;
+  --color-error-surface: #3a1a16;
+  --color-focus: #93b4ff;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 2px 8px rgb(0 0 0 / 0.35), 0 8px 24px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 4px 12px rgb(0 0 0 / 0.4), 0 16px 48px rgb(0 0 0 / 0.45);
+}
+
+/* No-JS fallback: respect the operating system preference when the
+   theme script has not stamped an explicit choice on <html>. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --color-bg: #14110e;
+    --color-surface: #1d1915;
+    --color-surface-raised: #242019;
+    --color-ink: #ece7df;
+    --color-ink-secondary: #b5ada1;
+    --color-ink-faint: #9a9184;
+    --color-line: #2d2822;
+    --color-line-strong: #48413a;
+    --color-accent: #e79067;
+    --color-accent-strong: #f2ab88;
+    --color-accent-surface: #33241a;
+    --color-accent-contrast: #14110e;
+    --color-ok: #7ed09c;
+    --color-ok-surface: #1a2e21;
+    --color-warn: #e3b06c;
+    --color-warn-surface: #33270f;
+    --color-error: #f0857b;
+    --color-error-surface: #3a1a16;
+    --color-focus: #93b4ff;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-md: 0 2px 8px rgb(0 0 0 / 0.35), 0 8px 24px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 4px 12px rgb(0 0 0 / 0.4), 0 16px 48px rgb(0 0 0 / 0.45);
+  }
+}

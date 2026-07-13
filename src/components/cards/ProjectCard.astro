@@ -1,0 +1,229 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+/**
+ * Case-study card used on the homepage and Work index.
+ * 'featured' renders a larger editorial layout with the full
+ * meta grid; 'compact' is the standard grid card.
+ */
+export interface Props {
+  project: CollectionEntry<'work'>;
+  variant?: 'featured' | 'compact';
+  /** Heading level so document outlines stay correct per page. */
+  headingLevel?: 'h2' | 'h3';
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  project,
+  variant = 'compact',
+  headingLevel: Heading = 'h3',
+  loading = 'lazy',
+} = Astro.props;
+const { data } = project;
+const href = `/work/${project.id}/`;
+
+const typeLabel: Record<string, string> = {
+  client: 'Client project',
+  internal: 'Internal product',
+  concept: 'Concept case study',
+};
+---
+
+<article class:list={['project-card', `project-card--${variant}`]}>
+  <a class="project-card__media-link" href={href} tabindex="-1" aria-hidden="true">
+    <img
+      class="project-card__image"
+      src={data.coverImage}
+      alt={data.coverAlt}
+      width="1600"
+      height="1000"
+      loading={loading}
+      decoding="async"
+    />
+  </a>
+
+  <div class="project-card__body">
+    <p class="project-card__meta">
+      <span class="project-card__type">{typeLabel[data.projectType]}</span>
+      <span aria-hidden="true">·</span>
+      <span>{data.category.join(', ')}</span>
+    </p>
+
+    <Heading class="project-card__title">
+      <a href={href} data-event="case-study-open">{data.title}</a>
+    </Heading>
+
+    <p class="project-card__summary">{data.summary}</p>
+
+    {
+      variant === 'featured' && (
+        <dl class="project-card__details">
+          <div>
+            <dt>Role</dt>
+            <dd>{data.role}</dd>
+          </div>
+          <div>
+            <dt>Duration</dt>
+            <dd>{data.duration}</dd>
+          </div>
+          <div>
+            <dt>Platform</dt>
+            <dd>{data.platform}</dd>
+          </div>
+          {data.keyContribution && (
+            <div>
+              <dt>Key contribution</dt>
+              <dd>{data.keyContribution}</dd>
+            </div>
+          )}
+        </dl>
+      )
+    }
+
+    <p class="project-card__outcome">{data.outcomeSummary}</p>
+
+    <p class="project-card__link" aria-hidden="true">
+      <span class="text-link">Read the case study</span>
+    </p>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-raised);
+    overflow: hidden;
+    transition:
+      border-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-line-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .project-card__media-link {
+    display: block;
+    border-block-end: var(--border-hairline);
+    background-color: var(--color-surface);
+  }
+
+  .project-card__image {
+    inline-size: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .project-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    flex: 1;
+  }
+
+  .project-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .project-card__type {
+    color: var(--color-accent);
+  }
+
+  .project-card__title {
+    font-size: var(--text-h3);
+  }
+
+  /* Stretched link: the whole card is clickable, one tab stop. */
+  .project-card__title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .project-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-raised);
+  }
+
+  .project-card__summary {
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+  }
+
+  .project-card__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-2) 0 0;
+    padding-block: var(--space-4);
+    border-block: var(--border-hairline);
+    font-size: var(--text-small);
+  }
+
+  .project-card__details dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-block-end: var(--space-1);
+  }
+
+  .project-card__details dd {
+    margin: 0;
+    color: var(--color-ink);
+  }
+
+  .project-card__outcome {
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-ink);
+    padding-inline-start: var(--space-3);
+    border-inline-start: 3px solid var(--color-accent);
+  }
+
+  .project-card__link {
+    margin-block-start: auto;
+    padding-block-start: var(--space-2);
+  }
+
+  /* Featured variant: media beside content on wide screens. */
+  @media (min-width: 48rem) {
+    .project-card--featured {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+
+    .project-card--featured .project-card__media-link {
+      border-block-end: 0;
+      border-inline-end: var(--border-hairline);
+    }
+
+    .project-card--featured .project-card__image {
+      block-size: 100%;
+      aspect-ratio: auto;
+      min-block-size: 20rem;
+    }
+
+    .project-card--featured .project-card__body {
+      padding: var(--space-6);
+    }
+  }
+</style>

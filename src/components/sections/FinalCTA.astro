@@ -1,0 +1,90 @@
+---
+/**
+ * Split closing CTA addressing the two site audiences:
+ * hiring managers and freelance clients.
+ */
+---
+
+<section class="final-cta" aria-labelledby="final-cta-heading">
+  <h2 class="visually-hidden" id="final-cta-heading">Work with me</h2>
+  <div class="final-cta__grid">
+    <div class="final-cta__panel final-cta__panel--employment">
+      <p class="kicker">For hiring teams</p>
+      <h3>Hiring a remote product designer?</h3>
+      <p>
+        I bring end-to-end product design — research through developer handoff — and communicate
+        clearly across time zones.
+      </p>
+      <a class="btn btn--primary" href="/contact#employment" data-event="employment-enquiry-start">
+        Discuss a role
+      </a>
+    </div>
+    <div class="final-cta__panel">
+      <p class="kicker">For clients</p>
+      <h3>Planning a product, redesign, or UX improvement?</h3>
+      <p>
+        Tell me about the problem you're solving. I take on a small number of freelance engagements
+        where I can make a measurable difference.
+      </p>
+      <a class="btn btn--secondary" href="/contact#freelance" data-event="freelance-enquiry-start">
+        Start a project
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final-cta__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .final-cta__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .final-cta__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-7) var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+  }
+
+  .final-cta__panel--employment {
+    background-color: var(--color-ink);
+    color: var(--color-bg);
+    border-color: var(--color-ink);
+  }
+
+  .final-cta__panel--employment .kicker {
+    color: color-mix(in srgb, var(--color-bg) 65%, transparent);
+  }
+
+  .final-cta__panel--employment .btn--primary {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+  }
+
+  .final-cta__panel--employment .btn--primary:hover {
+    background-color: var(--color-accent-surface);
+  }
+
+  .final-cta__panel h3 {
+    font-size: var(--text-h3);
+  }
+
+  .final-cta__panel p:not(.kicker) {
+    font-size: var(--text-small);
+    opacity: 0.9;
+  }
+
+  .final-cta__panel .btn {
+    margin-block-start: auto;
+  }
+</style>

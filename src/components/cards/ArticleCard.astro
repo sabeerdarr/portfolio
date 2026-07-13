@@ -1,0 +1,145 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, isoDate, slugify } from '@/utils/format';
+import { readingTime } from '@/utils/readingTime';
+
+export interface Props {
+  article: CollectionEntry<'blog'>;
+  headingLevel?: 'h2' | 'h3';
+  /** Show the featured image when the article has one. */
+  showImage?: boolean;
+}
+
+const { article, headingLevel: Heading = 'h3', showImage = false } = Astro.props;
+const { data } = article;
+const href = `/writing/${article.id}/`;
+const rt = readingTime(article.body ?? '');
+---
+
+<article class="article-card">
+  {
+    showImage && data.featuredImage && (
+      <a class="article-card__media" href={href} tabindex="-1" aria-hidden="true">
+        <img
+          src={data.featuredImage}
+          alt={data.featuredImageAlt ?? ''}
+          width="1200"
+          height="675"
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+    )
+  }
+
+  <div class="article-card__body">
+    <p class="article-card__meta">
+      <a class="article-card__category" href={`/writing/category/${slugify(data.category)}/`}>
+        {data.category}
+      </a>
+      <span aria-hidden="true">·</span>
+      <time datetime={isoDate(data.publishedDate)}>{formatDate(data.publishedDate)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{rt.label}</span>
+    </p>
+
+    <Heading class="article-card__title">
+      <a href={href}>{data.title}</a>
+    </Heading>
+
+    <p class="article-card__description">{data.description}</p>
+
+    <p class="article-card__link" aria-hidden="true">
+      <span class="text-link">Read article</span>
+    </p>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-block-start: 2px solid var(--color-ink);
+    padding-block-start: var(--space-4);
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+
+  .article-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .article-card__media {
+    display: block;
+    margin-block-end: var(--space-4);
+    border: var(--border-hairline);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .article-card__media img {
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .article-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+  }
+
+  .article-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  /* Category link sits above the stretched link. */
+  .article-card__category {
+    position: relative;
+    z-index: var(--z-raised);
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .article-card__category:hover {
+    text-decoration: underline;
+  }
+
+  .article-card__title {
+    font-size: var(--text-h3);
+  }
+
+  .article-card__title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .article-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .article-card__title a:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .article-card__description {
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+  }
+
+  .article-card__link {
+    margin-block-start: auto;
+    padding-block-start: var(--space-2);
+  }
+</style>

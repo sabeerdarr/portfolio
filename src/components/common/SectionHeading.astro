@@ -1,0 +1,75 @@
+---
+/**
+ * Editorial section header: numbered mono kicker, display heading,
+ * optional supporting copy, optional trailing action slot.
+ */
+export interface Props {
+  kicker?: string;
+  title: string;
+  /** Heading level for correct document outline. */
+  as?: 'h1' | 'h2' | 'h3';
+  id?: string;
+  align?: 'start' | 'center';
+}
+
+const { kicker, title, as: Tag = 'h2', id, align = 'start' } = Astro.props;
+---
+
+<header class:list={['section-heading', align === 'center' && 'section-heading--center']}>
+  <div class="section-heading__text">
+    {kicker && <p class="kicker">{kicker}</p>}
+    <Tag id={id}>{title}</Tag>
+    {
+      Astro.slots.has('default') && (
+        <div class="section-heading__lede">
+          <slot />
+        </div>
+      )
+    }
+  </div>
+  {
+    Astro.slots.has('action') && (
+      <div class="section-heading__action">
+        <slot name="action" />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-6);
+    margin-block-end: var(--space-7);
+  }
+
+  .section-heading--center {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .section-heading--center .kicker {
+    justify-content: center;
+  }
+
+  .section-heading__text {
+    max-width: 38em;
+  }
+
+  .kicker {
+    margin-block-end: var(--space-3);
+  }
+
+  .section-heading__lede {
+    margin-block-start: var(--space-4);
+    color: var(--color-ink-secondary);
+    max-width: 46em;
+  }
+
+  .section-heading__action {
+    padding-block-end: var(--space-1);
+  }
+</style>

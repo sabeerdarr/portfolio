@@ -1,0 +1,289 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Callout from '@/components/common/Callout.astro';
+import { site } from '@/config/site';
+import { personSchema, breadcrumbSchema } from '@/utils/schema';
+import { resumePdfExists } from '@/utils/resume';
+
+const hasResume = resumePdfExists();
+
+/**
+ * Web resume. Every entry below is a clearly labelled PLACEHOLDER —
+ * replace with verified history only. Print styles make this page
+ * usable as a physical resume via the browser's print dialog.
+ */
+const structuredData = [
+  personSchema(),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Resume', path: '/resume' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Resume"
+  description={`Resume of ${site.name}, UI/UX and product designer — experience, selected projects, skills, and education.`}
+  structuredData={structuredData}
+>
+  <div class="container container--narrow resume">
+    <header class="resume__header">
+      <p class="kicker">Resume</p>
+      <h1>{site.name}</h1>
+      <p class="resume__title">{site.title}</p>
+      <ul class="resume__contact" role="list">
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li>{site.location}</li>
+        <li><a href={site.url}>{site.domain}</a></li>
+      </ul>
+      <div class="resume__actions">
+        {
+          hasResume ? (
+            <a
+              class="btn btn--primary"
+              href={site.resumePath}
+              data-event="resume-download"
+              download
+            >
+              Download PDF resume
+            </a>
+          ) : (
+            <a
+              class="btn btn--primary"
+              href={`mailto:${site.email}?subject=${encodeURIComponent('Resume request')}`}
+            >
+              Request PDF by email
+            </a>
+          )
+        }
+        <button class="btn btn--secondary" type="button" onclick="window.print()">
+          Print this page
+        </button>
+      </div>
+      {
+        !hasResume && (
+          <p class="resume__pdf-note">
+            The PDF version is being updated — the button above emails me directly and I'll send it
+            over.
+          </p>
+        )
+      }
+    </header>
+
+    <Callout variant="placeholder" title="Placeholder resume content">
+      <p>
+        Everything below is sample structure with placeholder entries. Replace each section with
+        verified facts before sharing this page. Never publish invented employment history.
+      </p>
+    </Callout>
+
+    <section class="resume__section" aria-labelledby="summary-heading">
+      <h2 id="summary-heading">Summary</h2>
+      <p>
+        UI/UX designer specialising in SaaS and mobile products. Comfortable owning the full design
+        process — research, flows, interface design, prototyping, and developer handoff — and
+        communicating it clearly in remote, distributed teams.
+        <strong
+          >[Replace with a 2–3 sentence summary reflecting your actual experience level and
+          strongest evidence.]</strong
+        >
+      </p>
+    </section>
+
+    <section class="resume__section" aria-labelledby="experience-heading">
+      <h2 id="experience-heading">Experience</h2>
+      <article class="resume__entry">
+        <div class="resume__entry-head">
+          <h3>[Role title] — [Company]</h3>
+          <p class="resume__period">[Month Year] – Present · [Location / Remote]</p>
+        </div>
+        <ul>
+          <li>[Replace: what you owned — product area, team size, scope]</li>
+          <li>[Replace: one concrete, verified achievement with context]</li>
+          <li>[Replace: one collaboration or process contribution]</li>
+        </ul>
+      </article>
+      <article class="resume__entry">
+        <div class="resume__entry-head">
+          <h3>[Role title] — [Company]</h3>
+          <p class="resume__period">[Month Year] – [Month Year] · [Location / Remote]</p>
+        </div>
+        <ul>
+          <li>[Replace: scope of the role]</li>
+          <li>[Replace: a shipped outcome you can stand behind]</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="resume__section" aria-labelledby="projects-heading">
+      <h2 id="projects-heading">Selected projects</h2>
+      <ul>
+        <li>
+          <a href="/work/saas-onboarding-redesign/">B2B SaaS onboarding redesign</a> — sample case study
+          demonstrating research-to-handoff process. [Replace with real project.]
+        </li>
+        <li>
+          <a href="/work/fintech-money-management/">Mobile fintech money management</a> — sample case
+          study. [Replace with real project.]
+        </li>
+        <li>
+          <a href="/work/scalable-design-system/">Scalable design system</a> — sample case study. [Replace
+          with real project.]
+        </li>
+      </ul>
+    </section>
+
+    <section class="resume__section" aria-labelledby="skills-heading">
+      <h2 id="skills-heading">Skills</h2>
+      <dl class="resume__skills">
+        <dt>Research</dt>
+        <dd>User interviews, usability testing, heuristic evaluation, survey design</dd>
+        <dt>Design</dt>
+        <dd>User flows, information architecture, wireframing, UI design, interaction design</dd>
+        <dt>Systems</dt>
+        <dd>Design tokens, component libraries, accessibility (WCAG 2.2), documentation</dd>
+        <dt>Tools</dt>
+        <dd>Figma, FigJam, prototyping tools, analytics platforms [adjust to your real stack]</dd>
+      </dl>
+    </section>
+
+    <section class="resume__section" aria-labelledby="education-heading">
+      <h2 id="education-heading">Education</h2>
+      <p>
+        [Degree or diploma] — [Institution], [Year]. <strong>[Replace with real education.]</strong>
+      </p>
+    </section>
+
+    <section class="resume__section" aria-labelledby="certifications-heading">
+      <h2 id="certifications-heading">Certifications</h2>
+      <p>[List real certifications here, or delete this section.]</p>
+    </section>
+
+    <section class="resume__section" aria-labelledby="writing-heading">
+      <h2 id="writing-heading">Writing &amp; speaking</h2>
+      <p>
+        I write about UX process and product design at
+        <a href="/writing">{site.domain}/writing</a>. [Add talks, publications, or mentoring here,
+        or delete this section.]
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .resume {
+    padding-block: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+
+  .resume__header h1 {
+    margin-block-start: var(--space-4);
+  }
+
+  .resume__title {
+    margin-block-start: var(--space-2);
+    font-size: var(--text-lead);
+    color: var(--color-ink-secondary);
+  }
+
+  .resume__contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin-block-start: var(--space-4);
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-small);
+    color: var(--color-ink-secondary);
+  }
+
+  .resume__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-5);
+  }
+
+  .resume__pdf-note {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+
+  .resume__section h2 {
+    padding-block-end: var(--space-3);
+    border-block-end: var(--border-strong);
+    margin-block-end: var(--space-5);
+  }
+
+  .resume__entry + .resume__entry {
+    margin-block-start: var(--space-6);
+  }
+
+  .resume__entry-head h3 {
+    font-size: var(--text-h4);
+  }
+
+  .resume__period {
+    margin-block-start: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+
+  .resume__entry ul,
+  .resume__section > ul {
+    margin-block-start: var(--space-3);
+    padding-inline-start: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+  }
+
+  .resume__skills {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3) var(--space-5);
+    margin: 0;
+    font-size: var(--text-small);
+  }
+
+  .resume__skills dt {
+    font-weight: 700;
+  }
+
+  .resume__skills dd {
+    margin: 0;
+    color: var(--color-ink-secondary);
+  }
+
+  /* ---- Print styles: clean single-column resume ---- */
+  @media print {
+    .resume {
+      gap: 1.25rem;
+      padding-block: 0;
+    }
+
+    .resume__actions,
+    .resume__pdf-note,
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.skip-link),
+    :global(.callout) {
+      display: none !important;
+    }
+
+    .resume__section h2 {
+      margin-block-end: 0.75rem;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+</style>

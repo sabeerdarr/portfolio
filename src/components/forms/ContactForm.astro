@@ -1,0 +1,351 @@
+---
+import { site } from '@/config/site';
+
+/**
+ * Formspree-compatible enquiry form. Two kinds share one component:
+ * 'employment' and 'freelance'. When the matching form ID env var
+ * is missing, an honest email fallback renders instead of a form
+ * that silently goes nowhere.
+ *
+ * Accessibility: every field has a visible label, required fields
+ * are marked in text (not colour alone), errors are announced via
+ * a live region, and the honeypot is hidden from assistive tech.
+ */
+export interface Props {
+  kind: 'employment' | 'freelance';
+}
+
+const { kind } = Astro.props;
+
+const formId = kind === 'employment' ? site.forms.employmentFormId : site.forms.freelanceFormId;
+const configured = formId.length > 0;
+const action = configured ? `https://formspree.io/f/${formId}` : '';
+
+if (!configured && import.meta.env.DEV) {
+  console.warn(
+    `[contact] PUBLIC_FORMSPREE_${kind.toUpperCase()}_FORM_ID is not set — the ${kind} form shows an email fallback.`
+  );
+}
+
+const subject =
+  kind === 'employment' ? 'Role enquiry via sabeerdarr.com' : 'Project enquiry via sabeerdarr.com';
+---
+
+{
+  configured ? (
+    <form
+      class="contact-form"
+      method="POST"
+      action={action}
+      data-contact-form
+      data-event={`${kind}-enquiry-start`}
+      novalidate
+    >
+      <input type="hidden" name="_subject" value={subject} />
+      {/* Honeypot — hidden from people and assistive tech; bots fill it. */}
+      <p class="contact-form__hp" aria-hidden="true">
+        <label>
+          Leave this field empty
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+        </label>
+      </p>
+
+      <div class="contact-form__grid">
+        <p class="contact-form__field">
+          <label for={`${kind}-name`}>Name (required)</label>
+          <input type="text" id={`${kind}-name`} name="name" autocomplete="name" required />
+        </p>
+
+        <p class="contact-form__field">
+          <label for={`${kind}-email`}>
+            {kind === 'employment' ? 'Work email (required)' : 'Email (required)'}
+          </label>
+          <input type="email" id={`${kind}-email`} name="email" autocomplete="email" required />
+        </p>
+
+        <p class="contact-form__field">
+          <label for={`${kind}-company`}>Company</label>
+          <input type="text" id={`${kind}-company`} name="company" autocomplete="organization" />
+        </p>
+
+        {kind === 'employment' ? (
+          <>
+            <p class="contact-form__field">
+              <label for="employment-role">Role title (required)</label>
+              <input type="text" id="employment-role" name="role_title" required />
+            </p>
+            <p class="contact-form__field">
+              <label for="employment-type">Employment type</label>
+              <select id="employment-type" name="employment_type">
+                <option value="">Select an option</option>
+                <option>Full-time, remote</option>
+                <option>Full-time, hybrid</option>
+                <option>Contract</option>
+                <option>Contract-to-hire</option>
+              </select>
+            </p>
+            <p class="contact-form__field">
+              <label for="employment-jd">Job description URL</label>
+              <input
+                type="url"
+                id="employment-jd"
+                name="job_description_url"
+                placeholder="https://"
+                aria-describedby="employment-jd-hint"
+              />
+              <span class="contact-form__hint" id="employment-jd-hint">
+                A link to the posting helps me respond faster.
+              </span>
+            </p>
+            <p class="contact-form__field">
+              <label for="employment-start">Expected start date</label>
+              <input
+                type="text"
+                id="employment-start"
+                name="expected_start"
+                placeholder="e.g. September 2026"
+              />
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="contact-form__field">
+              <label for="freelance-website">Website</label>
+              <input type="url" id="freelance-website" name="website" placeholder="https://" />
+            </p>
+            <p class="contact-form__field">
+              <label for="freelance-type">Project type (required)</label>
+              <select id="freelance-type" name="project_type" required>
+                <option value="">Select an option</option>
+                <option>UX audit / usability review</option>
+                <option>Product or feature design</option>
+                <option>Design system / prototyping</option>
+                <option>Ongoing design support</option>
+                <option>Something else</option>
+              </select>
+            </p>
+            <p class="contact-form__field">
+              <label for="freelance-budget">Budget range</label>
+              <select id="freelance-budget" name="budget_range">
+                <option value="">Prefer not to say yet</option>
+                <option>Under $2,000</option>
+                <option>$2,000–$5,000</option>
+                <option>$5,000–$10,000</option>
+                <option>$10,000+</option>
+              </select>
+            </p>
+            <p class="contact-form__field">
+              <label for="freelance-timeline">Desired timeline</label>
+              <input
+                type="text"
+                id="freelance-timeline"
+                name="timeline"
+                placeholder="e.g. kick off within 4 weeks"
+              />
+            </p>
+          </>
+        )}
+      </div>
+
+      {kind === 'freelance' && (
+        <p class="contact-form__field">
+          <label for="freelance-challenge">Main challenge (required)</label>
+          <textarea
+            id="freelance-challenge"
+            name="main_challenge"
+            rows="3"
+            required
+            aria-describedby="freelance-challenge-hint"
+          />
+          <span class="contact-form__hint" id="freelance-challenge-hint">
+            One or two sentences on the problem you're trying to solve.
+          </span>
+        </p>
+      )}
+
+      <p class="contact-form__field">
+        <label for={`${kind}-message`}>Message (required)</label>
+        <textarea id={`${kind}-message`} name="message" rows="5" required />
+      </p>
+
+      <p class="contact-form__privacy">
+        Your details are used only to reply to this enquiry and are processed by Formspree. See the{' '}
+        <a href="/privacy">privacy notice</a>. Please don't include sensitive personal information.
+      </p>
+
+      <p>
+        <button class="btn btn--primary" type="submit">
+          {kind === 'employment' ? 'Send role enquiry' : 'Send project enquiry'}
+        </button>
+      </p>
+
+      <p class="contact-form__status" data-form-status role="status" aria-live="polite" />
+    </form>
+  ) : (
+    <div class="contact-form__fallback">
+      <p>
+        The enquiry form isn't connected yet. Email me directly instead — I reply to every genuine{' '}
+        {kind === 'employment' ? 'role' : 'project'} enquiry:
+      </p>
+      <p>
+        <a
+          class="btn btn--primary"
+          href={`mailto:${site.email}?subject=${encodeURIComponent(subject)}`}
+        >
+          Email {site.email}
+        </a>
+      </p>
+    </div>
+  )
+}
+
+<style>
+  .contact-form,
+  .contact-form__fallback {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .contact-form__hp {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .contact-form__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .contact-form__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .contact-form__field label {
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .contact-form__field input,
+  .contact-form__field select,
+  .contact-form__field textarea {
+    min-height: 2.9rem;
+    padding: var(--space-2) var(--space-4);
+    border: var(--border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface-raised);
+    font-size: var(--text-small);
+  }
+
+  .contact-form__field textarea {
+    resize: vertical;
+  }
+
+  .contact-form__field input:focus-visible,
+  .contact-form__field select:focus-visible,
+  .contact-form__field textarea:focus-visible {
+    border-color: var(--color-focus);
+  }
+
+  .contact-form__field [data-invalid='true'] {
+    border-color: var(--color-error);
+  }
+
+  .contact-form__hint {
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+
+  .contact-form__privacy {
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+    max-width: 46em;
+  }
+
+  .contact-form__status {
+    font-weight: 600;
+  }
+
+  .contact-form__status[data-state='success'] {
+    color: var(--color-ok);
+  }
+
+  .contact-form__status[data-state='error'] {
+    color: var(--color-error);
+  }
+</style>
+
+<script>
+  // Progressive enhancement: client-side validation messages plus
+  // fetch submission for inline success/error feedback. Without
+  // JavaScript, the form posts to Formspree and uses its hosted
+  // confirmation page (novalidate only suppresses browser bubbles
+  // when JS is available to replace them).
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+
+    function validate(): boolean {
+      let firstInvalid: HTMLElement | null = null;
+      form
+        .querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('[required]')
+        .forEach((field) => {
+          const valid = field.checkValidity();
+          field.dataset.invalid = String(!valid);
+          field.setAttribute('aria-invalid', String(!valid));
+          if (!valid && !firstInvalid) firstInvalid = field;
+        });
+      if (firstInvalid) {
+        (firstInvalid as HTMLElement).focus();
+        if (status) {
+          status.dataset.state = 'error';
+          status.textContent = 'Please complete the highlighted required fields.';
+        }
+        return false;
+      }
+      return true;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!validate() || !status) return;
+
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (button) button.disabled = true;
+      status.dataset.state = '';
+      status.textContent = 'Sending…';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (response.ok) {
+          status.dataset.state = 'success';
+          status.textContent =
+            "Thanks — your enquiry is on its way. I'll reply within two working days.";
+          form.reset();
+        } else {
+          throw new Error(`Formspree responded ${response.status}`);
+        }
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent =
+          'The message could not be sent. Please try again in a moment, or email me directly.';
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  });
+</script>

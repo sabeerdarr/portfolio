@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "PATH=\"$HOME/.local/node/bin:$PATH\" npm run dev -- --port \"${PORT:-4321}\""
+      ],
+      "port": 4321,
+      "autoPort": true
+    }
+  ]
+}

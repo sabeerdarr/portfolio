@@ -1,0 +1,68 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Callout from '@/components/common/Callout.astro';
+import { site } from '@/config/site';
+
+const lastUpdated = 'July 2026';
+---
+
+<BaseLayout
+  title="Accessibility"
+  description="Accessibility statement for sabeerdarr.com — what the site aims for, what's implemented, and how to report problems."
+>
+  <div class="container container--narrow a11y prose">
+    <header>
+      <p class="kicker">Accessibility</p>
+      <h1>Accessibility statement</h1>
+      <p>Last updated: {lastUpdated}</p>
+    </header>
+
+    <Callout variant="placeholder" title="Template requiring review">
+      <p>
+        This statement describes intent and implemented measures, not certified conformance. Do not
+        claim a formal WCAG conformance level unless the site has been audited.
+      </p>
+    </Callout>
+
+    <h2>Commitment</h2>
+    <p>
+      This site is built to follow WCAG 2.2 AA practices. Accessibility is treated as part of design
+      quality, not an add-on — the same standard I advocate for in client work.
+    </p>
+
+    <h2>Measures in place</h2>
+    <ul>
+      <li>Semantic HTML landmarks and a logical heading hierarchy on every page</li>
+      <li>A skip-to-content link and full keyboard operability, including the mobile menu</li>
+      <li>Visible focus indicators that are never removed without replacement</li>
+      <li>Colour contrast designed to meet AA in both light and dark themes</li>
+      <li>Form fields with visible labels, described errors, and status announcements</li>
+      <li>Alternative text on meaningful images; decorative images are marked as such</li>
+      <li>Reduced-motion preferences respected across all animation</li>
+      <li>Touch targets sized for comfortable use on small screens</li>
+    </ul>
+
+    <h2>Known limitations</h2>
+    <p>
+      Placeholder imagery may lack final descriptive alt text until real project images are added.
+      If you find anything else, I genuinely want to know.
+    </p>
+
+    <h2>Feedback</h2>
+    <p>
+      If any part of this site is difficult to use with assistive technology, email
+      <a href={`mailto:${site.email}`}>{site.email}</a> with the page address and what happened. I aim
+      to fix reported accessibility issues quickly.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .a11y {
+    padding-block: var(--space-8);
+  }
+
+  .a11y header h1 {
+    margin-block-start: var(--space-4);
+  }
+</style>

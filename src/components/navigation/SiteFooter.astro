@@ -1,0 +1,163 @@
+---
+import { site } from '@/config/site';
+import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
+import SocialLinks from '@/components/common/SocialLinks.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__intro">
+        <p class="site-footer__name">{site.name}</p>
+        <p class="site-footer__statement">
+          Designing clear, useful digital products for teams that care about their users.
+        </p>
+        <AvailabilityBadge variant="full" />
+      </div>
+
+      <nav class="site-footer__nav" aria-label="Footer">
+        <div>
+          <h2 class="site-footer__heading">Explore</h2>
+          <ul role="list">
+            {
+              site.footerLinks.site.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h2 class="site-footer__heading">Elsewhere</h2>
+          <SocialLinks variant="list" />
+        </div>
+        <div>
+          <h2 class="site-footer__heading">Contact</h2>
+          <ul role="list">
+            <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+            <li><a href="/contact">Enquiry forms</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>&copy; {year} {site.name}. All rights reserved.</p>
+      <ul class="site-footer__legal" role="list">
+        {
+          site.footerLinks.legal.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li><a href="#top">Back to top ↑</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-block-start: var(--section-gap);
+    border-block-start: var(--border-hairline);
+    background-color: var(--color-surface);
+    padding-block: var(--space-8) var(--space-6);
+    font-size: var(--text-small);
+  }
+
+  .site-footer__top {
+    display: grid;
+    gap: var(--space-7);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__top {
+      grid-template-columns: 1.2fr 2fr;
+    }
+  }
+
+  .site-footer__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    max-width: 24rem;
+  }
+
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+  }
+
+  .site-footer__statement {
+    color: var(--color-ink-secondary);
+  }
+
+  .site-footer__nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-6);
+  }
+
+  .site-footer__heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-block-end: var(--space-3);
+  }
+
+  .site-footer__nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__nav a {
+    color: var(--color-ink-secondary);
+    text-decoration: none;
+  }
+
+  .site-footer__nav a:hover {
+    color: var(--color-ink);
+    text-decoration: underline;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-5);
+    margin-block-start: var(--space-8);
+    padding-block-start: var(--space-5);
+    border-block-start: var(--border-hairline);
+    color: var(--color-ink-faint);
+    font-size: var(--text-xs);
+  }
+
+  .site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__legal a {
+    color: var(--color-ink-faint);
+  }
+
+  .site-footer__legal a:hover {
+    color: var(--color-ink);
+  }
+</style>
