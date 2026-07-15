@@ -5,6 +5,7 @@ import SEOHead from '@/components/seo/SEOHead.astro';
 import SkipLink from '@/components/common/SkipLink.astro';
 import SiteHeader from '@/components/navigation/SiteHeader.astro';
 import SiteFooter from '@/components/navigation/SiteFooter.astro';
+import CursorBlob from '@/components/common/CursorBlob.astro';
 import type { Props as SEOProps } from '@/components/seo/SEOHead.astro';
 
 /**
@@ -57,6 +58,12 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
         } catch (e) {
           /* no storage access — the CSS media query fallback applies */
         }
+        // Opt into section entry animations before first paint, only
+        // when the browser can actually run them. No-JS and legacy
+        // browsers never get the hidden starting state.
+        if ('IntersectionObserver' in window) {
+          document.documentElement.classList.add('js-reveal');
+        }
       })();
     </script>
 
@@ -75,10 +82,64 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
   </head>
   <body id="top">
     <SkipLink />
+    <CursorBlob />
     <SiteHeader />
     <main id="main-content">
       <slot />
     </main>
     <SiteFooter />
+
+    <script>
+      // Section entry animations. The hidden starting state comes from
+      // global.css (gated on html.js-reveal + motion preference); this
+      // observer only ever ADDS visibility, so content can't get stuck
+      // hidden — and as a belt-and-braces, everything is force-revealed
+      // if the observer somehow never fires.
+      // Keep in sync with the selector list in global.css.
+      const REVEAL_SELECTOR = [
+        'main section',
+        'main .page-hero',
+        'main aside',
+        '.cs-hero',
+        '.cs-body',
+        '.cs-footer',
+        '.post-hero',
+        '.post-body',
+        '.post-footer',
+        '.gallery__item',
+        '.contact-grid',
+        '.resume__section',
+      ].join(', ');
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const targets = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+
+      if (document.documentElement.classList.contains('js-reveal') && !reduceMotion) {
+        let batchIndex = 0;
+        let batchTime = 0;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const now = performance.now();
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              // Stagger elements that arrive in the same moment.
+              if (now - batchTime > 200) batchIndex = 0;
+              batchTime = now;
+              const el = entry.target as HTMLElement;
+              el.style.transitionDelay = `${Math.min(batchIndex * 70, 280)}ms`;
+              el.classList.add('is-revealed');
+              observer.unobserve(el);
+              batchIndex += 1;
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+        );
+
+        targets.forEach((el) => observer.observe(el));
+      } else {
+        targets.forEach((el) => el.classList.add('is-revealed'));
+      }
+    </script>
   </body>
 </html>

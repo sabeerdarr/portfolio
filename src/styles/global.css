@@ -417,3 +417,61 @@ a:hover {
     color: var(--shiki-dark) !important;
   }
 }
+
+/* ---- Section entry animation --------------------------------------
+   Elements listed below fade/rise in as they enter the viewport.
+   The hidden starting state applies ONLY when:
+     - the visitor allows motion (prefers-reduced-motion: no-preference)
+     - JavaScript has stamped .js-reveal on <html> (see BaseLayout) —
+       so no-JS visitors always see fully visible content.
+   Keep this selector list in sync with REVEAL_SELECTOR in BaseLayout. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal
+    :is(
+      main section,
+      main .page-hero,
+      main aside,
+      .cs-hero,
+      .cs-body,
+      .cs-footer,
+      .post-hero,
+      .post-body,
+      .post-footer,
+      .gallery__item,
+      .contact-grid,
+      .resume__section
+    ) {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 650ms var(--ease-out),
+      transform 650ms var(--ease-out);
+  }
+
+  html.js-reveal
+    :is(
+      main section,
+      main .page-hero,
+      main aside,
+      .cs-hero,
+      .cs-body,
+      .cs-footer,
+      .post-hero,
+      .post-body,
+      .post-footer,
+      .gallery__item,
+      .contact-grid,
+      .resume__section
+    ).is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Printing must never inherit a hidden reveal state. */
+@media print {
+  html.js-reveal * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
