@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 960" role="img" aria-label="Placeholder photograph frame 6">
   <rect width="1440" height="960" fill="#f3f1ea"/>
-  <circle cx="360" cy="268.8" r="86.39999999999999" fill="none" stroke="#9c3b0b" stroke-width="2.5"/>
+  <circle cx="360" cy="268.8" r="86.39999999999999" fill="none" stroke="#059e5c" stroke-width="2.5"/>
   <path d="M0 595.2 L 1440 595.2" stroke="#211d18" stroke-width="2"/>
   <path d="M0 768 Q 432 595.2 792.0000000000001 748.8000000000001 T 1440 691.1999999999999" fill="none" stroke="#8a8478" stroke-width="2"/>
   <rect x="1.5" y="1.5" width="1437" height="957" fill="none" stroke="#d8d3c6" stroke-width="3"/>

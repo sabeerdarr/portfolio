@@ -25,17 +25,17 @@
   --color-line: #e3dfd5;
   --color-line-strong: #c6c0b3;
 
-  /* ---- Color: accent (rust) ----------------------------------- */
-  --color-accent: #9c3b0b;
-  --color-accent-strong: #7c2e08;
-  --color-accent-surface: #f5e7dc;
+  /* ---- Color: accent (brand green + lime) ---------------------- */
+  --color-accent: #059e5c;
+  --color-accent-strong: #a4dd0a;
+  --color-accent-surface: #eff5dc;
   --color-accent-contrast: #fbfaf7;
 
   /* ---- Color: feedback ---------------------------------------- */
   --color-ok: #1c6b3c;
   --color-ok-surface: #e2f0e6;
-  --color-warn: #8a4d0f;
-  --color-warn-surface: #f7ecda;
+  --color-warn: #608a0f;
+  --color-warn-surface: #e3f7da;
   --color-error: #b42318;
   --color-error-surface: #f9e5e2;
 
@@ -146,14 +146,14 @@
   --color-ink-faint: #9a9184;
   --color-line: #2d2822;
   --color-line-strong: #48413a;
-  --color-accent: #e79067;
-  --color-accent-strong: #f2ab88;
+  --color-accent: #3db17f;
+  --color-accent-strong: #cafc43;
   --color-accent-surface: #33241a;
   --color-accent-contrast: #14110e;
   --color-ok: #7ed09c;
   --color-ok-surface: #1a2e21;
   --color-warn: #e3b06c;
-  --color-warn-surface: #33270f;
+  --color-warn-surface: #25330f;
   --color-error: #f0857b;
   --color-error-surface: #3a1a16;
   --color-focus: #93b4ff;
@@ -176,14 +176,14 @@
     --color-ink-faint: #9a9184;
     --color-line: #2d2822;
     --color-line-strong: #48413a;
-    --color-accent: #e79067;
-    --color-accent-strong: #f2ab88;
+    --color-accent: #3db17f;
+    --color-accent-strong: #cafc43;
     --color-accent-surface: #33241a;
     --color-accent-contrast: #14110e;
     --color-ok: #7ed09c;
     --color-ok-surface: #1a2e21;
     --color-warn: #e3b06c;
-    --color-warn-surface: #33270f;
+    --color-warn-surface: #25330f;
     --color-error: #f0857b;
     --color-error-surface: #3a1a16;
     --color-focus: #93b4ff;

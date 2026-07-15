@@ -109,8 +109,11 @@ a {
   transition: color var(--duration-fast) var(--ease-out);
 }
 
+/* Hover darkens the link toward ink instead of using accent-strong:
+   the brand lime is too light to be readable as text on paper, and
+   this mix stays accessible in both themes automatically. */
 a:hover {
-  color: var(--color-accent-strong);
+  color: color-mix(in srgb, var(--color-accent) 60%, var(--color-ink));
 }
 
 ::selection {
@@ -216,14 +219,11 @@ a:hover {
   color: var(--color-bg);
 }
 
+/* Hover flips to the brand lime — light in BOTH themes, so the label
+   is always dark ink for contrast (10:1 on #a4dd0a, 14:1 on #cafc43). */
 .btn--primary:hover {
   background-color: var(--color-accent-strong);
-  color: var(--color-accent-contrast);
-}
-
-/* Dark theme: accent-strong is light, so pair it with dark text. */
-[data-theme='dark'] .btn--primary:hover {
-  color: var(--color-bg);
+  color: #14110e;
 }
 
 .btn--secondary {
