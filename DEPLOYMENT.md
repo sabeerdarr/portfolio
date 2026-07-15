@@ -98,14 +98,14 @@ one consistent host.
 
 ## 10. Troubleshooting
 
-| Symptom | Likely cause / fix |
-| --- | --- |
-| `DNS check unsuccessful` in Pages settings | Records not propagated yet, or a stray conflicting record (old `A`/`AAAA`/`CNAME`). Remove conflicts, wait, re-save the domain. |
-| Certificate stuck on "provisioning" | Usually DNS: confirm all four A records and no `AAAA` pointing elsewhere. Remove and re-add the custom domain to retry. |
-| Site loads at `*.github.io` but not the domain | `public/CNAME` missing from the build, or custom domain not saved in settings. |
-| 404 after deploy | Check the Actions run succeeded and the artifact came from `dist/`. |
-| www doesn't redirect | Ensure the `www` CNAME points at `YOUR-USERNAME.github.io` (not at the apex domain or an IP). |
-| Old content after deploy | Hard-refresh; GitHub's CDN can take a minute. |
+| Symptom                                        | Likely cause / fix                                                                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `DNS check unsuccessful` in Pages settings     | Records not propagated yet, or a stray conflicting record (old `A`/`AAAA`/`CNAME`). Remove conflicts, wait, re-save the domain. |
+| Certificate stuck on "provisioning"            | Usually DNS: confirm all four A records and no `AAAA` pointing elsewhere. Remove and re-add the custom domain to retry.         |
+| Site loads at `*.github.io` but not the domain | `public/CNAME` missing from the build, or custom domain not saved in settings.                                                  |
+| 404 after deploy                               | Check the Actions run succeeded and the artifact came from `dist/`.                                                             |
+| www doesn't redirect                           | Ensure the `www` CNAME points at `YOUR-USERNAME.github.io` (not at the apex domain or an IP).                                   |
+| Old content after deploy                       | Hard-refresh; GitHub's CDN can take a minute.                                                                                   |
 
 ## Production environment variables
 

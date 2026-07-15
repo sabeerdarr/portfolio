@@ -13,7 +13,7 @@ const work = defineCollection({
     summary: z.string().min(20, 'Write a 1–2 sentence summary; it appears on cards'),
     coverImage: z.string().default('/images/work/placeholder-cover.svg'),
     coverAlt: z.string().min(4, 'Cover images need descriptive alt text'),
-    projectType: z.enum(['client', 'internal', 'concept']).default('concept'),
+    projectType: z.enum(['client', 'internal', 'employment', 'concept']).default('concept'),
     status: z.enum(['shipped', 'in-progress', 'concept']).default('concept'),
     featured: z.boolean().default(false),
     category: z

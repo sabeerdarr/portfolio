@@ -15,6 +15,41 @@ Everything lives in **`src/config/site.ts`**:
   you don't use. Footer, About, and JSON-LD update automatically.
 - **SEO defaults** — `seo.defaultTitle`, `defaultDescription`, `defaultSocialImage`.
 
+## Hidden pages (Services, About, Resume)
+
+These three pages are currently **hidden**: removed from the navigation and
+footer, excluded from the sitemap, and marked `noindex`. The pages still exist
+at `/services`, `/about`, and `/resume` if you visit them directly.
+
+To restore one:
+
+1. Add it back to `navigation` and `footerLinks.site` in `src/config/site.ts`.
+2. Remove its path from the sitemap `filter` in `astro.config.mjs`.
+3. Remove the `noindex` prop from its `<BaseLayout …>` in `src/pages/`.
+
+## Photography (`/photography`)
+
+The gallery is driven by **`src/data/photography.ts`** — no component edits
+needed.
+
+1. Export your photo as JPG or WebP (long edge ~1600–2000 px, under ~400 KB;
+   [Squoosh](https://squoosh.app) works well).
+2. Drop it in `public/images/photography/` (lowercase-hyphenated filenames).
+3. Add an entry to the `photos` array:
+
+```ts
+{
+  src: '/images/photography/dal-lake-dusk.jpg',
+  alt: 'Fishing boat crossing Dal Lake at dusk, mountains behind',
+  caption: 'Dal Lake, Srinagar — 2025',   // optional
+  orientation: 'landscape',                // or 'portrait'
+},
+```
+
+4. Delete the placeholder entries (and the `placeholder-*.svg` files) once
+   real photos are in — the "placeholder frames" notice disappears
+   automatically when no entry contains "placeholder" in its path.
+
 ## Case studies (`src/content/work/`)
 
 ### Add a project
@@ -23,10 +58,12 @@ Everything lives in **`src/config/site.ts`**:
 2. Copy the frontmatter block from an existing case study and fill it in.
    Required fields: `title`, `summary`, `coverAlt`, `category`, `role`,
    `duration`, `platform`, `outcomeSummary`, `publishedDate`.
-3. Set `projectType` honestly: `'client' | 'internal' | 'concept'` — it renders
-   as a visible label.
+3. Set `projectType` honestly: `'client' | 'internal' | 'employment' | 'concept'`
+   — it renders as a visible label ("Professional work" for employment).
 4. Write the body. Available MDX components (no import needed):
-   `<Figure>`, `<Callout>`, `<Quote>`, `<MetricCard>`, `<ImageComparison>`.
+   `<Figure>`, `<Callout>`, `<Quote>`, `<MetricCard>`, `<ImageComparison>`,
+   `<MediaScroller>` (horizontal-scroll image strip — pass `items={[{src, alt, caption}]}`,
+   or `placeholderCount`/`placeholderLabel` to reserve space before images exist).
 
 ### Edit / reorder / feature / hide
 
@@ -95,11 +132,7 @@ When you have a real, permission-cleared quote, render `TestimonialCard`
 in `src/pages/index.astro`:
 
 ```astro
-<TestimonialCard
-  quote="What they actually said."
-  name="Full Name"
-  attribution="Role, Company"
-/>
+<TestimonialCard quote="What they actually said." name="Full Name" attribution="Role, Company" />
 ```
 
 Never invent quotes, logos, or numbers — the site's credibility depends on it.

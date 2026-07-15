@@ -24,6 +24,7 @@ const url = new URL(`/work/${entry.id}/`, site.url).href;
 const typeLabel: Record<string, string> = {
   client: 'Client project',
   internal: 'Internal product',
+  employment: 'Professional work',
   concept: 'Concept case study',
 };
 
@@ -149,10 +150,8 @@ const structuredData = [
           systems. If this case study resonates with a challenge on your roadmap, let's talk.
         </p>
         <div class="cs-footer__actions">
-          <a class="btn btn--primary" href="/services" data-event="case-study-cta">
-            See how I can help
-          </a>
-          <a class="btn btn--secondary" href="/contact">Get in touch</a>
+          <a class="btn btn--primary" href="/contact" data-event="case-study-cta">Get in touch</a>
+          <a class="btn btn--secondary" href="/work">More case studies</a>
         </div>
       </div>
       <RelatedContent previous={previous} next={next} label="More case studies" />

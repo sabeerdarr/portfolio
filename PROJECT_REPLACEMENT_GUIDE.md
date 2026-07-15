@@ -30,17 +30,17 @@ to real.
 
 ## Image dimensions and locations
 
-| Purpose | Path | Size (px) | Format |
-| --- | --- | --- | --- |
-| Case-study cover (cards + hero) | `public/images/work/<slug>-cover.*` | 1600×1000 | WebP or JPG |
-| In-article wide figures | `public/images/work/…` | 1600×900–1000 | WebP or JPG |
-| Before/after comparison images | `public/images/work/…` | 1600×1000 each | WebP or JPG |
-| Article featured image | `public/images/blog/…` | 1200×675 (16:9) | WebP or JPG |
-| Social-share default | `public/images/social/og-default.png` | **1200×630** | PNG or JPG (not SVG — scrapers reject it) |
-| Per-page social image (optional `socialImage` frontmatter) | anywhere in `public/images/` | 1200×630 | PNG or JPG |
-| Profile photo | `public/images/profile/…` | 640×800 (4:5) | WebP or JPG |
-| Favicon | `public/favicon.svg` | vector | SVG |
-| Apple touch icon | `public/favicon/apple-touch-icon.png` | 180×180 | PNG |
+| Purpose                                                    | Path                                  | Size (px)       | Format                                    |
+| ---------------------------------------------------------- | ------------------------------------- | --------------- | ----------------------------------------- |
+| Case-study cover (cards + hero)                            | `public/images/work/<slug>-cover.*`   | 1600×1000       | WebP or JPG                               |
+| In-article wide figures                                    | `public/images/work/…`                | 1600×900–1000   | WebP or JPG                               |
+| Before/after comparison images                             | `public/images/work/…`                | 1600×1000 each  | WebP or JPG                               |
+| Article featured image                                     | `public/images/blog/…`                | 1200×675 (16:9) | WebP or JPG                               |
+| Social-share default                                       | `public/images/social/og-default.png` | **1200×630**    | PNG or JPG (not SVG — scrapers reject it) |
+| Per-page social image (optional `socialImage` frontmatter) | anywhere in `public/images/`          | 1200×630        | PNG or JPG                                |
+| Profile photo                                              | `public/images/profile/…`             | 640×800 (4:5)   | WebP or JPG                               |
+| Favicon                                                    | `public/favicon.svg`                  | vector          | SVG                                       |
+| Apple touch icon                                           | `public/favicon/apple-touch-icon.png` | 180×180         | PNG                                       |
 
 ### Format & compression
 

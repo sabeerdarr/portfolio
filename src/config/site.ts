@@ -92,23 +92,24 @@ export const site = {
     defaultSocialImage: '/images/social/og-default.png',
   },
 
+  /**
+   * Primary navigation. Services, About, and Resume are hidden for
+   * now — the pages still exist at their URLs (noindexed) and can be
+   * restored by adding them back here and in footerLinks.
+   */
   navigation: [
     { label: 'Home', href: '/' },
     { label: 'Work', href: '/work' },
-    { label: 'Services', href: '/services' },
-    { label: 'About', href: '/about' },
+    { label: 'Photography', href: '/photography' },
     { label: 'Writing', href: '/writing' },
-    { label: 'Resume', href: '/resume' },
     { label: 'Contact', href: '/contact' },
   ] satisfies NavItem[],
 
   footerLinks: {
     site: [
       { label: 'Work', href: '/work' },
-      { label: 'Services', href: '/services' },
-      { label: 'About', href: '/about' },
+      { label: 'Photography', href: '/photography' },
       { label: 'Writing', href: '/writing' },
-      { label: 'Resume', href: '/resume' },
       { label: 'Contact', href: '/contact' },
     ] satisfies NavItem[],
     legal: [

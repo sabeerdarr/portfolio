@@ -6,17 +6,17 @@ hosted free on GitHub Pages at the custom domain **https://sabeerdarr.com**.
 
 ## Technology stack
 
-| Layer      | Choice                                            |
-| ---------- | ------------------------------------------------- |
-| Framework  | [Astro](https://astro.build) 5, static output     |
-| Language   | TypeScript (strict)                               |
-| Content    | Astro Content Collections (Markdown + MDX)        |
-| Styling    | Plain CSS with design tokens (custom properties)  |
-| Fonts      | Fraunces (self-hosted, SIL OFL) + system fonts    |
-| Forms      | Formspree-compatible (optional, env-configured)   |
-| Analytics  | Cloudflare Web Analytics (optional, off default)  |
-| Feeds      | RSS via @astrojs/rss, sitemap via @astrojs/sitemap|
-| Hosting    | GitHub Pages + GitHub Actions                     |
+| Layer     | Choice                                             |
+| --------- | -------------------------------------------------- |
+| Framework | [Astro](https://astro.build) 5, static output      |
+| Language  | TypeScript (strict)                                |
+| Content   | Astro Content Collections (Markdown + MDX)         |
+| Styling   | Plain CSS with design tokens (custom properties)   |
+| Fonts     | Fraunces (self-hosted, SIL OFL) + system fonts     |
+| Forms     | Formspree-compatible (optional, env-configured)    |
+| Analytics | Cloudflare Web Analytics (optional, off default)   |
+| Feeds     | RSS via @astrojs/rss, sitemap via @astrojs/sitemap |
+| Hosting   | GitHub Pages + GitHub Actions                      |
 
 Client-side JavaScript is minimal: theme toggle, mobile menu, and progressive
 form enhancement. Everything works without JavaScript.
@@ -98,11 +98,11 @@ All optional — the site builds and degrades gracefully without them.
 Copy `.env.example` to `.env` for local use; set them as **repository
 variables** in GitHub for production (they're referenced in `deploy.yml`).
 
-| Variable | Purpose |
-| --- | --- |
+| Variable                              | Purpose                             |
+| ------------------------------------- | ----------------------------------- |
 | `PUBLIC_FORMSPREE_EMPLOYMENT_FORM_ID` | Enables the employment contact form |
-| `PUBLIC_FORMSPREE_FREELANCE_FORM_ID`  | Enables the freelance contact form |
-| `PUBLIC_NEWSLETTER_ACTION_URL`        | Enables the newsletter signup form |
+| `PUBLIC_FORMSPREE_FREELANCE_FORM_ID`  | Enables the freelance contact form  |
+| `PUBLIC_NEWSLETTER_ACTION_URL`        | Enables the newsletter signup form  |
 | `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN`   | Enables analytics (production only) |
 
 ## Deployment

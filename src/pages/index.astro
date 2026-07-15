@@ -4,14 +4,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/common/SectionHeading.astro';
 import ProjectCard from '@/components/cards/ProjectCard.astro';
 import ArticleCard from '@/components/cards/ArticleCard.astro';
-import ServiceCard from '@/components/cards/ServiceCard.astro';
 import ProcessSteps from '@/components/sections/ProcessSteps.astro';
 import FinalCTA from '@/components/sections/FinalCTA.astro';
 import Callout from '@/components/common/Callout.astro';
 import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
 import { site } from '@/config/site';
 import { personSchema, websiteSchema } from '@/utils/schema';
-import { resumePdfExists } from '@/utils/resume';
 
 // Featured case studies (max three), ordered by `order`.
 const allWork = await getCollection('work', ({ data }) => !data.draft);
@@ -25,8 +23,6 @@ const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const latestPosts = allPosts
   .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
   .slice(0, 3);
-
-const hasResume = resumePdfExists();
 
 const valueProps = [
   {
@@ -71,46 +67,6 @@ const valueProps = [
   },
 ];
 
-const services = [
-  {
-    title: 'Product & UX Design',
-    audience: 'Teams building or reworking a core product flow',
-    problem: 'Features that are hard to use, hard to ship, or hard to agree on',
-    deliverables: [
-      'User flows',
-      'Wireframes',
-      'UI design',
-      'Interactive prototype',
-      'Dev-ready specs',
-    ],
-    href: '/services#feature-design',
-  },
-  {
-    title: 'UX Audits & Usability Reviews',
-    audience: 'Products with drop-off, support load, or usability complaints',
-    problem: 'Knowing something is wrong without knowing exactly what or where',
-    deliverables: [
-      'Heuristic evaluation',
-      'Key-flow assessment',
-      'Annotated findings',
-      'Prioritised fixes',
-    ],
-    href: '/services#ux-audit',
-  },
-  {
-    title: 'Design Systems & Prototyping',
-    audience: 'Growing teams whose UI is drifting out of sync',
-    problem: 'Inconsistent interfaces and slow design–development cycles',
-    deliverables: [
-      'Token architecture',
-      'Component library',
-      'Usage documentation',
-      'Governance model',
-    ],
-    href: '/services#design-support',
-  },
-];
-
 const structuredData = [personSchema(), websiteSchema()];
 ---
 
@@ -134,17 +90,7 @@ const structuredData = [personSchema(), websiteSchema()];
       <div class="hero__actions">
         <a class="btn btn--primary" href="/work">View case studies</a>
         <a class="btn btn--secondary" href="/contact">Discuss a project</a>
-        {
-          hasResume ? (
-            <a class="btn btn--ghost" href={site.resumePath} data-event="resume-download" download>
-              Download resume
-            </a>
-          ) : (
-            <a class="btn btn--ghost" href="/resume">
-              View resume
-            </a>
-          )
-        }
+        <a class="btn btn--ghost" href="/photography">Photography, for fun</a>
       </div>
     </div>
     <div class="hero__rule" aria-hidden="true"></div>
@@ -212,30 +158,11 @@ const structuredData = [personSchema(), websiteSchema()];
     </div>
   </section>
 
-  <!-- 4 · Services preview -->
-  <section class="section" aria-labelledby="services-heading">
+  <!-- 4 · Process -->
+  <section class="section" aria-labelledby="process-heading">
     <div class="container">
       <SectionHeading
-        kicker="03 · Freelance services"
-        title="Three ways to work with me"
-        id="services-heading"
-      >
-        Focused engagements with clear deliverables — scoped so you know what you're getting and
-        when.
-        <a slot="action" class="text-link" href="/services">Service details</a>
-      </SectionHeading>
-
-      <div class="services-grid">
-        {services.map((service) => <ServiceCard {...service} headingLevel="h3" />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- 5 · Process -->
-  <section class="section section--alt" aria-labelledby="process-heading">
-    <div class="container">
-      <SectionHeading
-        kicker="04 · Process"
+        kicker="03 · Process"
         title="A process that adapts to the problem"
         id="process-heading"
       >
@@ -247,11 +174,11 @@ const structuredData = [personSchema(), websiteSchema()];
     </div>
   </section>
 
-  <!-- 6 · Proof -->
-  <section class="section" aria-labelledby="proof-heading">
+  <!-- 5 · Proof -->
+  <section class="section section--alt" aria-labelledby="proof-heading">
     <div class="container">
       <SectionHeading
-        kicker="05 · Proof"
+        kicker="04 · Proof"
         title="Trust is earned with evidence"
         id="proof-heading"
       />
@@ -266,11 +193,11 @@ const structuredData = [personSchema(), websiteSchema()];
     </div>
   </section>
 
-  <!-- 7 · Latest writing -->
-  <section class="section section--alt" aria-labelledby="writing-heading">
+  <!-- 6 · Latest writing -->
+  <section class="section" aria-labelledby="writing-heading">
     <div class="container">
       <SectionHeading
-        kicker="06 · Writing"
+        kicker="05 · Writing"
         title="Notes on designing useful products"
         id="writing-heading"
       >
@@ -390,12 +317,6 @@ const structuredData = [personSchema(), websiteSchema()];
     margin: var(--space-2) 0 0;
     font-size: var(--text-small);
     color: var(--color-ink-secondary);
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-    gap: var(--space-5);
   }
 
   .articles-grid {
