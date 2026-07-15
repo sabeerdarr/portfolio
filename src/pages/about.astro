@@ -1,76 +1,129 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionHeading from '@/components/common/SectionHeading.astro';
-import Callout from '@/components/common/Callout.astro';
 import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
-import SocialLinks from '@/components/common/SocialLinks.astro';
 import { site } from '@/config/site';
 import { profilePageSchema, breadcrumbSchema } from '@/utils/schema';
-import { resumePdfExists } from '@/utils/resume';
 
-const hasResume = resumePdfExists();
+/**
+ * About Me — the CV page. Content mirrors the downloadable PDF
+ * (public/resume/sabeer-darr-resume.pdf); keep the two in sync when
+ * updating either. The phone number is intentionally left off the
+ * web page (it's in the PDF) to avoid scraping and spam.
+ */
 
-const capabilities = [
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent("Let's chat — via sabeerdarr.com")}`;
+
+const coreSkills = [
+  'Product Design',
+  'UX Strategy',
+  'Interaction Design',
+  'Design Systems',
+  'Design Leadership',
+  'Figma',
+  'Prototyping',
+  'User Flows',
+  'Wireframing',
+  'Design Tokens',
+  'Component Libraries',
+  'Accessibility',
+  'Design Quality Assurance',
+  'Stakeholder Management',
+  'Cross-functional Collaboration',
+  'AI SaaS',
+  'B2B SaaS',
+  'Responsive Web and Mobile Design',
+];
+
+interface Role {
+  company: string;
+  title: string;
+  period: string;
+  location: string;
+  bullets: string[];
+  caseStudy?: { label: string; href: string };
+}
+
+const experience: Role[] = [
   {
-    area: 'Research',
-    items: [
-      'User interviews',
-      'Usability testing',
-      'Heuristic evaluation',
-      'Survey design',
-      'Analytics review',
+    company: 'GrantAssistant.ai',
+    title: 'Product Design Lead',
+    period: 'September 2023 – Present',
+    location: 'Lahore, Pakistan',
+    bullets: [
+      'Lead end-to-end product design for an AI-powered grant-management platform serving nonprofits, INGOs, and international development organizations.',
+      'Own complex workflows from problem definition and user flows through prototyping, developer handoff, implementation review, and continuous improvement.',
+      'Established and maintained a design system with 50+ reusable components, enabling consistent product delivery across a team of 10+ designers and engineers.',
+      'Defined design tokens, typography, color, spacing, layout standards, component states, and reusable interaction patterns in Figma.',
+      'Created component documentation and usage guidelines; partnered with engineers to align Figma components with the production front-end library and improve implementation quality.',
+      'Audited product experiences, resolved visual and interaction inconsistencies, and standardized patterns across core workflows.',
+      'Led design for AI-assisted workflows covering grant discovery, proposal development, collaboration, compliance, and document management.',
+      'Collaborate with product managers, engineers, executives, and stakeholders to define requirements, guide features from discovery through release, and maintain usability, accessibility, consistency, and product quality.',
+    ],
+    caseStudy: { label: 'Read the Grant Assistant case study', href: '/work/grant-assistant/' },
+  },
+  {
+    company: 'OneByte',
+    title: 'Lead UI/UX Designer',
+    period: 'July 2021 – September 2024',
+    location: 'Lahore, Pakistan',
+    bullets: [
+      'Led a multidisciplinary team of UI/UX and graphic designers delivering digital products for internal teams and external clients.',
+      'Provided design direction across SaaS products, e-commerce applications, mobile apps, television applications, games, responsive websites, and brand experiences.',
+      'Translated business and customer requirements into user flows, wireframes, interactive prototypes, and production-ready interfaces.',
+      'Managed workload allocation, design reviews, stakeholder communication, and delivery planning across concurrent projects.',
+      'Collaborated with clients, product stakeholders, and engineers to move product concepts from requirements through implementation.',
+      'Contributed to G2-recognized product experiences for usability and ease of administration.',
+    ],
+    caseStudy: { label: 'Read the Olive case study', href: '/work/olive/' },
+  },
+  {
+    company: 'JinnByte',
+    title: 'Design Team Lead',
+    period: 'July 2020 – July 2021',
+    location: 'Lahore, Pakistan',
+    bullets: [
+      'Progressed from Senior UI/UX Designer to Design Team Lead after seven months, reflecting increased responsibility for design direction and team delivery.',
     ],
   },
   {
-    area: 'Design',
-    items: [
-      'User flows',
-      'Information architecture',
-      'Wireframing',
-      'Interface design',
-      'Interaction design',
-    ],
-  },
-  {
-    area: 'Systems',
-    items: [
-      'Design tokens',
-      'Component libraries',
-      'Documentation',
-      'Accessibility standards',
-      'Figma architecture',
-    ],
-  },
-  {
-    area: 'Collaboration',
-    items: [
-      'Developer handoff',
-      'Design critique',
-      'Workshop facilitation',
-      'Async communication',
-      'Roadmap input',
-    ],
+    company: 'JinnByte',
+    title: 'Senior UI/UX Designer',
+    period: 'January 2020 – July 2020',
+    location: 'Lahore, Pakistan',
+    bullets: [],
   },
 ];
 
-const timeline = [
+const additionalExperience = [
   {
-    period: '[Year]–present',
-    role: '[Current role title]',
-    place: '[Company or independent practice]',
-    note: 'PLACEHOLDER — replace with a one-line summary of what you own and shipped in this role.',
+    company: 'Intellectual Bunch Ltd',
+    title: 'UI/UX Designer',
+    period: 'November 2018 – January 2020',
+    location: 'Lahore, Pakistan',
   },
   {
-    period: '[Year]–[Year]',
-    role: '[Previous role title]',
-    place: '[Company]',
-    note: 'PLACEHOLDER — replace with the scope of the role and one concrete achievement.',
+    company: 'Splendrz',
+    title: 'UI/UX Designer',
+    period: 'January 2017 – October 2018',
+    location: 'Lahore, Pakistan',
   },
   {
-    period: '[Year]–[Year]',
-    role: '[Earlier role or education]',
-    place: '[Company or institution]',
-    note: 'PLACEHOLDER — replace with how this shaped your design practice.',
+    company: 'Devclones',
+    title: 'UI/UX Designer and Game Developer',
+    period: 'November 2014 – December 2016',
+    location: 'Lahore, Pakistan',
+  },
+  {
+    company: 'Event Bazar',
+    title: 'Co-Founder',
+    period: 'October 2015 – April 2016',
+    location: 'LUMS Center for Entrepreneurship, Lahore',
+  },
+  {
+    company: 'PUCIT ACM',
+    title: 'Graphic Designer',
+    period: 'October 2013 – June 2015',
+    location: 'Lahore, Pakistan',
   },
 ];
 
@@ -78,373 +131,277 @@ const structuredData = [
   profilePageSchema(),
   breadcrumbSchema([
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
+    { name: 'About Me', path: '/about' },
   ]),
 ];
 ---
 
 <BaseLayout
-  title="About"
-  description={`About ${site.name} — a UI/UX and product designer focused on clear, evidence-based design for SaaS and mobile products.`}
+  title="About Me"
+  description={`${site.name} — Product Design Lead with 10+ years across AI SaaS, B2B software, e-commerce, and consumer applications. Full CV: experience, skills, education.`}
   structuredData={structuredData}
-  noindex
 >
-  <div class="container">
-    <header class="page-hero">
-      <p class="kicker">About</p>
-      <h1>Design is a decision-making discipline</h1>
-      <div class="about-intro">
-        <div class="about-intro__text">
-          <p>
-            I'm {site.name}, a UI/UX designer working with product teams on SaaS and mobile
-            experiences. My job, as I see it: reduce the gap between what a product demands of
-            people and what people can comfortably give it.
-          </p>
-          <Callout variant="placeholder" title="Personal bio to replace">
-            <p>
-              Replace this paragraph with your real background: how you came to design, the kinds of
-              products you've worked on, and what you're known for. Two or three sentences, first
-              person, no buzzwords.
-            </p>
-          </Callout>
-        </div>
-        <figure class="about-intro__photo">
-          <img
-            src="/images/profile/profile-placeholder.svg"
-            alt="Placeholder for a portrait photograph of Sabeer Darr"
-            width="640"
-            height="800"
-            loading="eager"
-          />
-          <figcaption>
-            Replace with a real photo — 640×800px, see PROJECT_REPLACEMENT_GUIDE.md
-          </figcaption>
-        </figure>
+  <div class="container container--narrow cv">
+    <header class="cv__header">
+      <p class="kicker">About Me</p>
+      <h1>{site.name}</h1>
+      <p class="cv__headline">Product Design Lead · AI SaaS · UX Strategy · Design Systems</p>
+      <ul class="cv__contact" role="list">
+        <li>{site.location}</li>
+        <li><a href={mailto}>{site.email}</a></li>
+        <li><a href="https://www.linkedin.com/in/sabeerdarr" rel="me noopener">LinkedIn</a></li>
+      </ul>
+      <div class="cv__actions">
+        <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
+          Download CV
+        </a>
+        <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
       </div>
+      <p class="cv__badge"><AvailabilityBadge variant="full" /></p>
     </header>
 
-    <section class="section" aria-labelledby="philosophy-heading">
-      <SectionHeading
-        kicker="Philosophy"
-        title="What I believe about design work"
-        id="philosophy-heading"
-      />
-      <div class="philosophy">
-        <div>
-          <h3>Evidence beats taste</h3>
-          <p>
-            Taste breaks ties; evidence sets direction. When a decision is high-risk, I'd rather
-            spend three days testing than three weeks debating.
-          </p>
-        </div>
-        <div>
-          <h3>Users are the point, business is the context</h3>
-          <p>
-            Advocacy for users only works when it's paired with an honest understanding of what the
-            business needs the product to do. Good design serves both or it ships as neither.
-          </p>
-        </div>
-        <div>
-          <h3>Systems over heroics</h3>
-          <p>
-            A brilliant screen matters less than a coherent product. I invest in tokens, patterns,
-            and documentation because consistency is a user-facing feature.
-          </p>
-        </div>
-        <div>
-          <h3>Writing is design work</h3>
-          <p>
-            Interface copy, decision records, handoff notes — the words are part of the product and
-            part of the process. Clear writing is how remote teams stay aligned.
-          </p>
-        </div>
-      </div>
+    <section class="cv__section" aria-labelledby="summary-heading">
+      <h2 id="summary-heading">Summary</h2>
+      <p>
+        Product Design Lead with 10+ years of experience designing and scaling web, mobile, and
+        cross-platform products across AI SaaS, B2B software, e-commerce, and consumer applications.
+        Leads end-to-end product design for complex workflows, from problem definition and user
+        flows to prototyping, developer handoff, implementation review, and continuous improvement.
+        Combines a computer science foundation with UX strategy, interaction design, design systems,
+        design leadership, and cross-functional delivery.
+      </p>
     </section>
 
-    <section class="section section--bordered" aria-labelledby="capabilities-heading">
-      <SectionHeading
-        kicker="Capabilities"
-        title="What I actually do day to day"
-        id="capabilities-heading"
-      >
-        Tools change; these are the skills underneath. (For the curious: mostly Figma for design and
-        prototyping, plus whatever research, whiteboard, and ticketing tools your team already
-        uses.)
-      </SectionHeading>
-      <div class="capabilities">
-        {
-          capabilities.map((group) => (
-            <div class="capabilities__group">
-              <h3>{group.area}</h3>
-              <ul role="list">
-                {group.items.map((item) => (
-                  <li>{item}</li>
+    <section class="cv__section" aria-labelledby="skills-heading">
+      <h2 id="skills-heading">Core skills</h2>
+      <ul class="cv__skills" role="list">
+        {coreSkills.map((skill) => <li>{skill}</li>)}
+      </ul>
+    </section>
+
+    <section class="cv__section" aria-labelledby="experience-heading">
+      <h2 id="experience-heading">Professional experience</h2>
+      {
+        experience.map((role) => (
+          <article class="cv__role">
+            <div class="cv__role-head">
+              <h3>
+                {role.company} · <span class="cv__role-title">{role.title}</span>
+              </h3>
+              <p class="cv__period">
+                {role.period} · {role.location}
+              </p>
+            </div>
+            {role.bullets.length > 0 && (
+              <ul>
+                {role.bullets.map((bullet) => (
+                  <li>{bullet}</li>
                 ))}
               </ul>
-            </div>
-          ))
-        }
-      </div>
+            )}
+            {role.caseStudy && (
+              <p class="cv__case-link">
+                <a class="text-link" href={role.caseStudy.href}>
+                  {role.caseStudy.label}
+                </a>
+              </p>
+            )}
+          </article>
+        ))
+      }
     </section>
 
-    <section class="section" aria-labelledby="remote-heading">
-      <SectionHeading
-        kicker="Working style"
-        title="Built for remote collaboration"
-        id="remote-heading"
-      />
-      <div class="remote-grid">
-        <div>
-          <h3>Async first</h3>
-          <p>
-            Decisions and rationale live in writing — Figma comments, decision docs, recorded
-            walkthroughs — so work moves while teammates sleep.
-          </p>
-        </div>
-        <div>
-          <h3>Overlap where it counts</h3>
-          <p>
-            Based in {site.timeZone}. {site.timeZoneOverlap} Critiques and decision meetings get scheduled
-            in shared hours; everything else doesn't need a meeting.
-          </p>
-        </div>
-        <div>
-          <h3>Visible progress</h3>
-          <p>
-            Work-in-progress is shared early and often. You'll never wonder what I've been doing for
-            two weeks.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--bordered" aria-labelledby="timeline-heading">
-      <SectionHeading kicker="Experience" title="Where I've worked" id="timeline-heading" />
-      <Callout variant="placeholder" title="Timeline placeholders">
-        <p>Replace every entry below with your real history — same fields, real facts.</p>
-      </Callout>
-      <ol class="timeline" role="list">
+    <section class="cv__section" aria-labelledby="additional-heading">
+      <h2 id="additional-heading">Additional experience</h2>
+      <ul class="cv__additional" role="list">
         {
-          timeline.map((entry) => (
-            <li class="timeline__entry">
-              <p class="timeline__period">{entry.period}</p>
-              <div>
-                <h3>
-                  {entry.role} · <span class="timeline__place">{entry.place}</span>
-                </h3>
-                <p>{entry.note}</p>
-              </div>
+          additionalExperience.map((role) => (
+            <li>
+              <span class="cv__additional-role">
+                {role.company} · {role.title}
+              </span>
+              <span class="cv__period">
+                {role.period} · {role.location}
+              </span>
             </li>
           ))
         }
-      </ol>
+      </ul>
     </section>
 
-    <section class="section" aria-labelledby="personal-heading">
-      <SectionHeading kicker="Off the clock" title="Beyond the work" id="personal-heading" />
-      <Callout variant="placeholder" title="Personal interests to replace">
-        <p>
-          Add two or three genuine interests here — the point is to be a person, not a persona.
-          Delete the section entirely if you'd rather keep the site strictly professional.
-        </p>
-      </Callout>
+    <section class="cv__section" aria-labelledby="education-heading">
+      <h2 id="education-heading">Education</h2>
+      <p>
+        <strong>University of the Punjab</strong> — Bachelor of Science in Computer Science, 2011–2015
+      </p>
     </section>
 
-    <aside class="about-cta">
-      <AvailabilityBadge variant="full" />
-      <h2>Currently: {site.availability.message}</h2>
-      <div class="about-cta__actions">
-        <a class="btn btn--primary" href="/contact">Get in touch</a>
-        <a class="btn btn--secondary" href="/work">See the work</a>
-        {
-          hasResume ? (
-            <a class="btn btn--ghost" href={site.resumePath} data-event="resume-download" download>
-              Download resume
-            </a>
-          ) : (
-            <a class="btn btn--ghost" href="/resume">
-              View resume
-            </a>
-          )
-        }
-      </div>
-      <div class="about-cta__social">
-        <p class="kicker">Elsewhere</p>
-        <SocialLinks variant="inline" />
+    <section class="cv__section" aria-labelledby="certification-heading">
+      <h2 id="certification-heading">Certification</h2>
+      <p>User Experience: The Beginner's Guide — Interaction Design Foundation</p>
+    </section>
+
+    <section class="cv__section" aria-labelledby="languages-heading">
+      <h2 id="languages-heading">Languages</h2>
+      <p>English · Urdu</p>
+    </section>
+
+    <aside class="cv__footer-cta">
+      <h2>Sound like a fit for your team?</h2>
+      <div class="cv__actions">
+        <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
+          Download CV
+        </a>
+        <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
+        <a class="btn btn--ghost" href="/work">See the work</a>
       </div>
     </aside>
   </div>
 </BaseLayout>
 
 <style>
-  .page-hero {
-    padding-block: var(--space-8) var(--space-6);
-  }
-
-  .page-hero h1 {
-    margin-block-start: var(--space-4);
-    max-width: 22ch;
-  }
-
-  .about-intro {
-    display: grid;
-    gap: var(--space-6);
-    margin-block-start: var(--space-6);
-  }
-
-  @media (min-width: 48rem) {
-    .about-intro {
-      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-      align-items: start;
-    }
-  }
-
-  .about-intro__text {
+  .cv {
+    padding-block: var(--space-8);
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-7);
+  }
+
+  .cv__header h1 {
+    margin-block-start: var(--space-4);
+  }
+
+  .cv__headline {
+    margin-block-start: var(--space-2);
     font-size: var(--text-lead);
     color: var(--color-ink-secondary);
   }
 
-  .about-intro__photo {
-    margin: 0;
-    max-width: 20rem;
-  }
-
-  .about-intro__photo img {
-    inline-size: 100%;
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface);
-  }
-
-  .about-intro__photo figcaption {
-    margin-block-start: var(--space-2);
-    font-size: var(--text-xs);
-    color: var(--color-ink-faint);
-  }
-
-  .section--bordered {
-    border-block: var(--border-hairline);
-    background-color: var(--color-surface);
-  }
-
-  .philosophy,
-  .remote-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: var(--space-6);
-  }
-
-  .philosophy h3,
-  .remote-grid h3 {
-    font-size: var(--text-h4);
-    margin-block-end: var(--space-2);
-  }
-
-  .philosophy p,
-  .remote-grid p {
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
-  }
-
-  .capabilities {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: var(--space-6);
-  }
-
-  .capabilities__group h3 {
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
-    font-weight: 600;
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    color: var(--color-accent);
-    margin-block-end: var(--space-3);
-  }
-
-  .capabilities__group ul {
+  .cv__contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin-block-start: var(--space-4);
     padding: 0;
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
     font-size: var(--text-small);
     color: var(--color-ink-secondary);
   }
 
-  .timeline {
-    margin-block-start: var(--space-6);
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .timeline__entry {
-    display: grid;
-    gap: var(--space-2) var(--space-6);
-    padding-block: var(--space-5);
-    border-block-end: var(--border-hairline);
-  }
-
-  @media (min-width: 48rem) {
-    .timeline__entry {
-      grid-template-columns: 10rem minmax(0, 1fr);
-    }
-  }
-
-  .timeline__period {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--color-ink-faint);
-    padding-block-start: 0.35rem;
-  }
-
-  .timeline__entry h3 {
-    font-size: var(--text-h4);
-  }
-
-  .timeline__place {
-    color: var(--color-ink-faint);
-    font-weight: 400;
-  }
-
-  .timeline__entry p:not(.timeline__period) {
-    margin-block-start: var(--space-2);
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
-  }
-
-  .about-cta {
-    margin-block: var(--space-7);
-    padding: var(--space-7) var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-  }
-
-  .about-cta h2 {
-    font-size: var(--text-h3);
-    max-width: 30ch;
-  }
-
-  .about-cta__actions {
+  .cv__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
+    margin-block-start: var(--space-5);
   }
 
-  .about-cta__social {
+  .cv__badge {
+    margin-block-start: var(--space-4);
+  }
+
+  .cv__section h2 {
+    padding-block-end: var(--space-3);
+    border-block-end: var(--border-strong);
+    margin-block-end: var(--space-5);
+  }
+
+  .cv__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .cv__skills li {
+    padding: var(--space-1) var(--space-3);
+    border: var(--border-hairline);
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface);
+    font-size: var(--text-xs);
+    color: var(--color-ink-secondary);
+  }
+
+  .cv__role + .cv__role {
+    margin-block-start: var(--space-6);
+    padding-block-start: var(--space-5);
+    border-block-start: var(--border-hairline);
+  }
+
+  .cv__role-head h3 {
+    font-size: var(--text-h4);
+  }
+
+  .cv__role-title {
+    color: var(--color-ink-secondary);
+    font-weight: 500;
+  }
+
+  .cv__period {
+    margin-block-start: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+  }
+
+  .cv__role ul {
+    margin-block-start: var(--space-3);
+    padding-inline-start: 1.2rem;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-2);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-small);
+  }
+
+  .cv__role li::marker {
+    color: var(--color-accent);
+  }
+
+  .cv__case-link {
     margin-block-start: var(--space-3);
+  }
+
+  .cv__additional {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cv__additional li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-block: var(--space-3);
+    border-block-end: var(--border-hairline);
+  }
+
+  .cv__additional-role {
+    font-weight: 600;
+  }
+
+  .cv__footer-cta {
+    padding: var(--space-6);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+  }
+
+  .cv__footer-cta h2 {
+    font-size: var(--text-h3);
+  }
+
+  /* Print cleanly, like the resume page. */
+  @media print {
+    .cv__actions,
+    .cv__badge,
+    .cv__footer-cta,
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.skip-link),
+    :global(.cursor-blob) {
+      display: none !important;
+    }
   }
 </style>

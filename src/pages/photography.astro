@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Callout from '@/components/common/Callout.astro';
 import { photos } from '@/data/photography';
 import { breadcrumbSchema } from '@/utils/schema';
+import { site } from '@/config/site';
 
 /**
  * Photography — a hobby page, deliberately lighter in tone than the
@@ -59,7 +60,8 @@ const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
     <aside class="gallery-footer">
       <p>
         Like one of these, or shoot yourself? I'm always happy to talk photos —
-        <a href="/contact">say hello</a>. (For design work, head to <a href="/work">Work</a>.)
+        <a href={`mailto:${site.email}?subject=${encodeURIComponent('Photography')}`}>say hello</a>.
+        (For design work, head to <a href="/work">Work</a>.)
       </p>
     </aside>
   </div>

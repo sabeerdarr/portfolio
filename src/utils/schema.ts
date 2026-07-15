@@ -10,7 +10,7 @@ export function personSchema(): Record<string, unknown> {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: site.name,
-    jobTitle: 'UI/UX Designer',
+    jobTitle: 'Product Design Lead',
     url: site.url,
     email: `mailto:${site.email}`,
     sameAs: site.socials.map((s) => s.url),

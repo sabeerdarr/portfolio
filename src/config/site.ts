@@ -23,38 +23,30 @@ export interface SocialProfile {
 export const site = {
   name: 'Sabeer Darr',
   /** Professional title shown in the header, footer, and metadata. */
-  title: 'UI/UX & Product Designer',
+  title: 'Product Design Lead',
   domain: 'sabeerdarr.com',
   url: 'https://sabeerdarr.com',
 
-  /** PLACEHOLDER — replace with the real public contact address. */
-  email: 'hello@sabeerdarr.com',
+  email: 'sabeer.darr.93@gmail.com',
 
-  /** PLACEHOLDER — replace with real location and time zone. */
-  location: 'Remote — based in Srinagar, India',
-  timeZone: 'UTC+5:30 (IST)',
-  /** Overlap statement used on Services and About. Adjust to reality. */
+  location: 'Lahore, Pakistan',
+  timeZone: 'UTC+5 (PKT)',
   timeZoneOverlap: 'Comfortable overlapping with European and US-East working hours.',
 
   availability: {
     status: 'available' as AvailabilityStatus,
     /** Short label used in the header badge and footer. */
-    label: 'Available for work',
+    label: 'Open to new roles',
     /** Longer sentence used on the homepage and About page. */
-    message: 'Available for remote product design roles and selected freelance collaborations.',
+    message: 'Open to Product Design Lead and senior product design roles.',
   },
 
   /**
-   * Social profiles. PLACEHOLDER URLS — replace each with the real
-   * profile URL, or delete entries that do not apply. Everything that
-   * consumes this list (footer, about, structured data) updates
-   * automatically.
+   * Social profiles. Everything that consumes this list (footer,
+   * about, structured data) updates automatically.
    */
   socials: [
-    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/REPLACE-WITH-PROFILE' },
-    { label: 'Behance', url: 'https://www.behance.net/REPLACE-WITH-PROFILE' },
-    { label: 'Dribbble', url: 'https://dribbble.com/REPLACE-WITH-PROFILE' },
-    { label: 'GitHub', url: 'https://github.com/REPLACE-WITH-PROFILE' },
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/sabeerdarr' },
   ] satisfies SocialProfile[],
 
   /** Form endpoints come from environment variables — see .env.example. */
@@ -80,10 +72,10 @@ export const site = {
 
   seo: {
     /** Used when a page does not define its own title. */
-    defaultTitle: 'Sabeer Darr — UI/UX & Product Designer',
+    defaultTitle: 'Sabeer Darr — Product Design Lead',
     titleTemplate: '%s — Sabeer Darr',
     defaultDescription:
-      'Sabeer Darr is a UI/UX and product designer helping teams turn complex requirements into clear, useful SaaS and mobile experiences. Available for remote roles and selected freelance work.',
+      'Sabeer Darr is a Product Design Lead with 10+ years of experience designing and scaling AI SaaS, B2B, and mobile products — from problem definition through design systems and delivery. Open to new roles.',
     /**
      * Default social sharing image. The shipped file is a generated
      * placeholder — replace it with a real 1200×630 PNG or JPG
@@ -93,20 +85,22 @@ export const site = {
   },
 
   /**
-   * Primary navigation. Services, About, Contact, Writing and Resume are hidden for
-   * now — the pages still exist at their URLs (noindexed) and can be
-   * restored by adding them back here and in footerLinks.
+   * Primary navigation. Services, Contact, Writing and Resume are
+   * hidden for now — the pages still exist at their URLs (noindexed)
+   * and can be restored by adding them back here and in footerLinks.
    */
   navigation: [
     { label: 'Home', href: '/' },
     { label: 'Work', href: '/work' },
     { label: 'Photography', href: '/photography' },
+    { label: 'About Me', href: '/about' },
   ] satisfies NavItem[],
 
   footerLinks: {
     site: [
       { label: 'Work', href: '/work' },
       { label: 'Photography', href: '/photography' },
+      { label: 'About Me', href: '/about' },
     ] satisfies NavItem[],
     legal: [] as NavItem[],
   },

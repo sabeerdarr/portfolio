@@ -3,9 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/common/SectionHeading.astro';
 import ProjectCard from '@/components/cards/ProjectCard.astro';
-import ArticleCard from '@/components/cards/ArticleCard.astro';
 import ProcessSteps from '@/components/sections/ProcessSteps.astro';
-import FinalCTA from '@/components/sections/FinalCTA.astro';
 import Callout from '@/components/common/Callout.astro';
 import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
 import { site } from '@/config/site';
@@ -18,11 +16,7 @@ const featuredWork = allWork
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
 
-// Latest three published articles.
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-const latestPosts = allPosts
-  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
-  .slice(0, 3);
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent("Let's chat — via sabeerdarr.com")}`;
 
 const valueProps = [
   {
@@ -89,7 +83,7 @@ const structuredData = [personSchema(), websiteSchema()];
       <p class="hero__availability">{site.availability.message}</p>
       <div class="hero__actions">
         <a class="btn btn--primary" href="/work">View case studies</a>
-        <a class="btn btn--secondary" href="/contact">Discuss a project</a>
+        <a class="btn btn--secondary" href="/#hire-me">Hire me</a>
         <a class="btn btn--ghost" href="/photography">Photography, for fun</a>
       </div>
     </div>
@@ -174,57 +168,27 @@ const structuredData = [personSchema(), websiteSchema()];
     </div>
   </section>
 
-  <!-- 5 · Proof -->
-  <section class="section section--alt" aria-labelledby="proof-heading">
+  <!-- 5 · Hire me -->
+  <section class="section section--alt" id="hire-me" aria-labelledby="hire-heading">
     <div class="container">
-      <SectionHeading
-        kicker="04 · Proof"
-        title="Trust is earned with evidence"
-        id="proof-heading"
-      />
-      <Callout variant="placeholder" title="Verified proof needed">
-        <p>
-          This section is reserved for genuine testimonials, client and employer references, shipped
-          products, publications, or talks — added only once they're real and cleared for use.
-          Nothing here will ever be fabricated. To add verified material, see the "Testimonials and
-          proof" section of CONTENT_GUIDE.md.
+      <div class="hire">
+        <p class="kicker">04 · Hire me</p>
+        <h2 id="hire-heading">Hiring a product design lead?</h2>
+        <p class="hire__lede">
+          10+ years designing and scaling AI SaaS, B2B, and mobile products — from problem
+          definition and user flows through design systems, developer handoff, and continuous
+          improvement. {site.availability.message}
         </p>
-      </Callout>
-    </div>
-  </section>
-
-  <!-- 6 · Latest writing -->
-  <section class="section" aria-labelledby="writing-heading">
-    <div class="container">
-      <SectionHeading
-        kicker="05 · Writing"
-        title="Notes on designing useful products"
-        id="writing-heading"
-      >
-        Practical articles on UX process, design systems, and remote collaboration.
-        <a slot="action" class="text-link" href="/writing">All articles</a>
-      </SectionHeading>
-
-      {
-        latestPosts.length > 0 ? (
-          <div class="articles-grid">
-            {latestPosts.map((article) => (
-              <ArticleCard article={article} headingLevel="h3" />
-            ))}
-          </div>
-        ) : (
-          <Callout variant="note" title="Articles coming soon">
-            <p>New writing is in progress and will appear here once published.</p>
-          </Callout>
-        )
-      }
-    </div>
-  </section>
-
-  <!-- 8 · Final CTA -->
-  <section class="section">
-    <div class="container">
-      <FinalCTA />
+        <div class="hire__actions">
+          <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
+            Download CV
+          </a>
+          <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
+        </div>
+        <p class="hire__email">
+          Or write directly: <a href={mailto}>{site.email}</a>
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -319,9 +283,72 @@ const structuredData = [personSchema(), websiteSchema()];
     color: var(--color-ink-secondary);
   }
 
-  .articles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-    gap: var(--space-6);
+  /* Hire section — anchored from the header CTA and hero. */
+  #hire-me {
+    scroll-margin-top: 5.5rem;
+  }
+
+  .hire {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-8) var(--space-7);
+    border: var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-ink);
+    color: var(--color-bg);
+  }
+
+  .hire .kicker {
+    color: color-mix(in srgb, var(--color-bg) 65%, transparent);
+  }
+
+  .hire h2 {
+    font-size: var(--text-h1);
+    max-width: 18ch;
+  }
+
+  .hire__lede {
+    max-width: 46em;
+    font-size: var(--text-lead);
+    opacity: 0.85;
+  }
+
+  .hire__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-3);
+  }
+
+  /* Buttons sit on the inverted (ink) panel, so swap their colors. */
+  .hire .btn--primary {
+    background-color: var(--color-accent-strong);
+    color: #14110e;
+  }
+
+  .hire .btn--primary:hover {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+  }
+
+  .hire .btn--secondary {
+    border-color: color-mix(in srgb, var(--color-bg) 45%, transparent);
+    color: var(--color-bg);
+  }
+
+  .hire .btn--secondary:hover {
+    border-color: var(--color-bg);
+    color: var(--color-bg);
+  }
+
+  .hire__email {
+    font-size: var(--text-small);
+    opacity: 0.75;
+  }
+
+  .hire__email a {
+    color: inherit;
   }
 </style>

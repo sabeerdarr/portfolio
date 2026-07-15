@@ -14,10 +14,10 @@ export default defineConfig({
     sitemap({
       // The 404 route is excluded from sitemaps automatically by Astro.
       // Draft content never builds, so it can never leak into the sitemap.
-      // Services/About/Resume are hidden for now (kept out of nav and
+      // Services/Resume/Contact are hidden for now (kept out of nav and
       // noindexed) — keep them out of the sitemap too.
       filter: (page) =>
-        !['/services/', '/about/', '/resume/'].some((hidden) => page.endsWith(hidden)),
+        !['/services/', '/resume/', '/contact/'].some((hidden) => page.endsWith(hidden)),
     }),
   ],
   markdown: {
