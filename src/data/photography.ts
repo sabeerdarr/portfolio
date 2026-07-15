@@ -22,37 +22,43 @@ export interface Photo {
 
 export const photos: Photo[] = [
   {
-    src: '/images/photography/placeholder-01.svg',
+    src: '/images/photography/placeholder-01.jpg',
     alt: 'Placeholder frame — replace with a real photograph',
     caption: 'Placeholder — swap with a real shot',
     orientation: 'landscape',
   },
   {
-    src: '/images/photography/placeholder-02.svg',
+    src: '/images/photography/placeholder-02.jpg',
     alt: 'Placeholder frame — replace with a real photograph',
     caption: 'Placeholder — swap with a real shot',
     orientation: 'portrait',
   },
   {
-    src: '/images/photography/placeholder-03.svg',
+    src: '/images/photography/placeholder-03.jpg',
     alt: 'Placeholder frame — replace with a real photograph',
     caption: 'Placeholder — swap with a real shot',
     orientation: 'landscape',
   },
   {
-    src: '/images/photography/placeholder-04.svg',
+    src: '/images/photography/placeholder-04.jpg',
     alt: 'Placeholder frame — replace with a real photograph',
     caption: 'Placeholder — swap with a real shot',
     orientation: 'portrait',
   },
   {
-    src: '/images/photography/placeholder-05.svg',
+    src: '/images/photography/placeholder-05.jpg',
     alt: 'Placeholder frame — replace with a real photograph',
     caption: 'Placeholder — swap with a real shot',
     orientation: 'landscape',
   },
   {
-    src: '/images/photography/placeholder-06.svg',
+    src: '/images/photography/placeholder-06.jpg',
+    alt: 'Placeholder frame — replace with a real photograph',
+    caption: 'Placeholder — swap with a real shot',
+    orientation: 'landscape',
+  },
+  {
+    src: '/images/photography/placeholder-07.jpg',
     alt: 'Placeholder frame — replace with a real photograph',
     caption: 'Placeholder — swap with a real shot',
     orientation: 'landscape',

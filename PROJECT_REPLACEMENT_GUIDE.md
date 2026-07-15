@@ -6,7 +6,7 @@ to real.
 
 ## Replacing a sample case study
 
-1. Open the sample, e.g. `src/content/work/saas-onboarding-redesign.mdx`.
+1. Open an existing case study, e.g. `src/content/work/olive.mdx`.
 2. Either edit it in place (keeping the section order) or duplicate it to a
    new filename — the filename is the URL slug, so name it well
    (`checkout-redesign.mdx` → `/work/checkout-redesign/`).

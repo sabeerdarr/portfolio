@@ -93,7 +93,7 @@ export const site = {
   },
 
   /**
-   * Primary navigation. Services, About, and Resume are hidden for
+   * Primary navigation. Services, About, Contact, Writing and Resume are hidden for
    * now — the pages still exist at their URLs (noindexed) and can be
    * restored by adding them back here and in footerLinks.
    */
@@ -101,23 +101,14 @@ export const site = {
     { label: 'Home', href: '/' },
     { label: 'Work', href: '/work' },
     { label: 'Photography', href: '/photography' },
-    { label: 'Writing', href: '/writing' },
-    { label: 'Contact', href: '/contact' },
   ] satisfies NavItem[],
 
   footerLinks: {
     site: [
       { label: 'Work', href: '/work' },
       { label: 'Photography', href: '/photography' },
-      { label: 'Writing', href: '/writing' },
-      { label: 'Contact', href: '/contact' },
     ] satisfies NavItem[],
-    legal: [
-      { label: 'Privacy', href: '/privacy' },
-      { label: 'Accessibility', href: '/accessibility' },
-      { label: 'Sitemap', href: '/sitemap-index.xml' },
-      { label: 'RSS', href: '/rss.xml' },
-    ] satisfies NavItem[],
+    legal: [] as NavItem[],
   },
 } as const;
 

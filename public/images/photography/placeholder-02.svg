@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-label="Placeholder photograph frame 2">
-  <rect width="900" height="1200" fill="#f3f1ea"/>
-  <circle cx="621" cy="336.00000000000006" r="81" fill="none" stroke="#059e5c" stroke-width="2.5"/>
-  <path d="M0 744 L 900 744" stroke="#211d18" stroke-width="2"/>
-  <path d="M0 960 Q 270 744 495.00000000000006 936 T 900 864" fill="none" stroke="#8a8478" stroke-width="2"/>
-  <rect x="1.5" y="1.5" width="897" height="1197" fill="none" stroke="#d8d3c6" stroke-width="3"/>
-  <text x="450" y="1104" text-anchor="middle" font-family="Menlo, monospace" font-size="21" fill="#8a8478" letter-spacing="1">PLACEHOLDER 02 — REPLACE WITH A PHOTO</text>
-</svg>

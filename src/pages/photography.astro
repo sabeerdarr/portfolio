@@ -34,20 +34,6 @@ const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
       </p>
     </header>
 
-    {
-      !hasRealPhotos && (
-        <div class="gallery-note">
-          <Callout variant="placeholder" title="Placeholder frames">
-            <p>
-              These frames are placeholders. Add real photos to{' '}
-              <code>public/images/photography/</code> and list them in{' '}
-              <code>src/data/photography.ts</code> — see CONTENT_GUIDE.md.
-            </p>
-          </Callout>
-        </div>
-      )
-    }
-
     <section class="section" aria-label="Photo gallery">
       <ul class="gallery" role="list">
         {
