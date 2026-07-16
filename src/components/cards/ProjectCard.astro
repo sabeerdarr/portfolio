@@ -73,7 +73,7 @@ const typeLabel: Record<string, string> = {
             <dd>{data.platform}</dd>
           </div>
           {data.keyContribution && (
-            <div>
+            <div class="project-card__details-wide">
               <dt>Key contribution</dt>
               <dd>{data.keyContribution}</dd>
             </div>
@@ -190,6 +190,12 @@ const typeLabel: Record<string, string> = {
   .project-card__details dd {
     margin: 0;
     color: var(--color-ink);
+  }
+
+  /* Long entries (key contribution) span the full row instead of
+     being squeezed into one column. */
+  .project-card__details-wide {
+    grid-column: 1 / -1;
   }
 
   .project-card__outcome {
