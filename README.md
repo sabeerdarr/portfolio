@@ -12,7 +12,7 @@ hosted free on GitHub Pages at the custom domain **https://sabeerdarr.com**.
 | Language  | TypeScript (strict)                                |
 | Content   | Astro Content Collections (Markdown + MDX)         |
 | Styling   | Plain CSS with design tokens (custom properties)   |
-| Fonts     | Fraunces (self-hosted, SIL OFL) + system fonts     |
+| Fonts     | Miriam Libre + JetBrains Mono (self-hosted, OFL)   |
 | Forms     | Formspree-compatible (optional, env-configured)    |
 | Analytics | Cloudflare Web Analytics (optional, off default)   |
 | Feeds     | RSS via @astrojs/rss, sitemap via @astrojs/sitemap |
@@ -73,7 +73,7 @@ src/
   utils/           # readingTime, formatting, schema.org builders
 public/
   CNAME            # custom-domain file for GitHub Pages (sabeerdarr.com)
-  fonts/           # self-hosted Fraunces
+  fonts/           # self-hosted Miriam Libre + JetBrains Mono
   images/          # placeholder images — replace (see PROJECT_REPLACEMENT_GUIDE.md)
   resume/          # put sabeer-darr-resume.pdf here to enable downloads
 .github/workflows/deploy.yml   # build + deploy to GitHub Pages
@@ -139,13 +139,13 @@ reduced-motion support. See `/accessibility` on the site for the statement.
 
 ## Performance
 
-Static HTML, ~zero blocking JS, one preloaded 67 KB variable font subset,
+Static HTML, ~zero blocking JS, ~110 KB of preloaded variable font subsets,
 dimensioned images with lazy loading below the fold. No third-party requests
 unless analytics is enabled.
 
 ## License considerations
 
 - Code: yours; add a LICENSE file if you plan to open-source it.
-- Fraunces font: SIL Open Font License 1.1.
+- Miriam Libre and JetBrains Mono fonts: SIL Open Font License 1.1.
 - Sample case-study and article text: replace with your own before launch —
   it's written as clearly-labelled placeholder content.
