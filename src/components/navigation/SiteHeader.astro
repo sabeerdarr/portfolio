@@ -19,26 +19,27 @@ function isActive(href: string): boolean {
 <header class="site-header" data-site-header>
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <span class="site-header__name">{site.name}</span>
-      <span class="site-header__role">{site.title}</span>
+      <img class="site-header__logo" src="/images/brand/logo.png" alt="" width="512" height="512" />
+      <span class="site-header__brand-text">
+        <span class="site-header__name">{site.name}</span>
+        <span class="site-header__role">{site.title}</span>
+      </span>
     </a>
 
     <nav class="site-header__nav" aria-label="Primary">
       <ul class="site-header__list" role="list">
         {
-          site.navigation
-            .filter((item) => item.href !== '/')
-            .map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  class="site-header__link"
-                  aria-current={isActive(item.href) ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
+          site.navigation.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="site-header__link"
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
         }
       </ul>
     </nav>
@@ -113,10 +114,33 @@ function isActive(href: string): boolean {
 
   .site-header__brand {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
     text-decoration: none;
     color: var(--color-ink);
     line-height: 1.15;
+  }
+
+  .site-header__logo {
+    inline-size: 2rem;
+    block-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  /* The mark is white — invert it to ink on the light theme. */
+  :global(html:not([data-theme='dark'])) .site-header__logo {
+    filter: invert(1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(html:not([data-theme])) .site-header__logo {
+      filter: none;
+    }
+  }
+
+  .site-header__brand-text {
+    display: flex;
+    flex-direction: column;
   }
 
   .site-header__name {

@@ -92,15 +92,15 @@ export const site = {
   navigation: [
     { label: 'Home', href: '/' },
     { label: 'Work', href: '/work' },
-    { label: 'Photography', href: '/photography' },
     { label: 'About Me', href: '/about' },
+    { label: 'Photography', href: '/photography' },
   ] satisfies NavItem[],
 
   footerLinks: {
     site: [
       { label: 'Work', href: '/work' },
-      { label: 'Photography', href: '/photography' },
       { label: 'About Me', href: '/about' },
+      { label: 'Photography', href: '/photography' },
     ] satisfies NavItem[],
     legal: [] as NavItem[],
   },
