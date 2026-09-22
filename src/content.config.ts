@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 /**
  * Case studies. Files live in src/content/work/ as .md or .mdx.
@@ -68,7 +69,7 @@ const work = defineCollection({
     /** Lower numbers appear first on the Work page. */
     order: z.number().int().default(99),
     confidential: z.boolean().default(false),
-    externalUrl: z.string().url().optional(),
+    externalUrl: z.url().optional(),
   }),
 });
 
@@ -101,7 +102,7 @@ const blog = defineCollection({
     featuredImageAlt: z.string().optional(),
     socialImage: z.string().optional(),
     draft: z.boolean().default(false),
-    canonicalUrl: z.string().url().optional(),
+    canonicalUrl: z.url().optional(),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
   }),

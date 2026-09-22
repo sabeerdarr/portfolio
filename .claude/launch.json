@@ -10,6 +10,16 @@
       ],
       "port": 4321,
       "autoPort": true
+    },
+    {
+      "name": "preview",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "PATH=\"$HOME/.local/node/bin:$PATH\" npm run build && PATH=\"$HOME/.local/node/bin:$PATH\" npm run preview -- --port \"${PORT:-4322}\""
+      ],
+      "port": 4322,
+      "autoPort": true
     }
   ]
 }
