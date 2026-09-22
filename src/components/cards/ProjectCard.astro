@@ -2,9 +2,11 @@
 import type { CollectionEntry } from 'astro:content';
 
 /**
- * Case-study card used on the homepage and Work index.
- * 'featured' renders a larger editorial layout with the full
- * meta grid; 'compact' is the standard grid card.
+ * Case-study card used on the homepage. 'featured' renders a larger
+ * editorial layout with the full meta grid; 'compact' is the
+ * standard 2-up grid card. Both carry the hover border-stroke loop
+ * (data-cardstroke): lime → cobalt → orange → lime, border-color
+ * only, so nothing shifts on hover.
  */
 export interface Props {
   project: CollectionEntry<'work'>;
@@ -22,16 +24,10 @@ const {
 } = Astro.props;
 const { data } = project;
 const href = `/work/${project.id}/`;
-
-const typeLabel: Record<string, string> = {
-  client: 'Client project',
-  internal: 'Internal product',
-  employment: 'Professional work',
-  concept: 'Concept case study',
-};
+const categories = data.categories ?? data.category;
 ---
 
-<article class:list={['project-card', `project-card--${variant}`]}>
+<article class:list={['project-card', `project-card--${variant}`]} data-cardstroke>
   <a class="project-card__media-link" href={href} tabindex="-1" aria-hidden="true">
     <img
       class="project-card__image"
@@ -45,17 +41,21 @@ const typeLabel: Record<string, string> = {
   </a>
 
   <div class="project-card__body">
-    <p class="project-card__meta">
-      <span class="project-card__type">{typeLabel[data.projectType]}</span>
-      <span aria-hidden="true">·</span>
-      <span>{data.category.join(', ')}</span>
-    </p>
+    <div class="project-card__main">
+      <p class="project-card__meta">{categories.join(' · ')}</p>
 
-    <Heading class="project-card__title">
-      <a href={href} data-event="case-study-open">{data.title}</a>
-    </Heading>
+      <Heading class="project-card__title">
+        <a href={href} data-event="case-study-open">{data.title}</a>
+      </Heading>
 
-    <p class="project-card__summary">{data.summary}</p>
+      <p class="project-card__summary">{data.summary}</p>
+
+      {variant === 'compact' && <p class="project-card__outcome">{data.outcomeSummary}</p>}
+
+      <p class="project-card__link" aria-hidden="true">
+        <span class="text-link">Read the case study</span>
+      </p>
+    </div>
 
     {
       variant === 'featured' && (
@@ -81,12 +81,6 @@ const typeLabel: Record<string, string> = {
         </dl>
       )
     }
-
-    <p class="project-card__outcome">{data.outcomeSummary}</p>
-
-    <p class="project-card__link" aria-hidden="true">
-      <span class="text-link">Read the case study</span>
-    </p>
   </div>
 </article>
 
@@ -95,26 +89,45 @@ const typeLabel: Record<string, string> = {
     position: relative;
     display: flex;
     flex-direction: column;
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface-raised);
+    border: var(--border-hairline) solid var(--color-border);
+    background-color: var(--color-surface);
     overflow: hidden;
-    transition:
-      border-color var(--duration-base) var(--ease-out),
-      box-shadow var(--duration-base) var(--ease-out),
-      transform var(--duration-base) var(--ease-out);
+    transition: border-color var(--duration-hover) var(--ease);
   }
 
-  .project-card:hover {
-    border-color: var(--color-line-strong);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+  /* Border-stroke loop on hover: color only, width never changes. */
+  @media (hover: hover) {
+    .project-card:hover {
+      animation: cardStroke var(--duration-card-loop) var(--ease) infinite;
+    }
+  }
+
+  @keyframes cardStroke {
+    0% {
+      border-color: var(--color-brand-mark);
+    }
+    33% {
+      border-color: var(--color-accent-solid);
+    }
+    66% {
+      border-color: var(--color-brand-orange);
+    }
+    100% {
+      border-color: var(--color-brand-mark);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card:hover {
+      animation: none;
+      border-color: var(--color-accent-solid);
+    }
   }
 
   .project-card__media-link {
     display: block;
-    border-block-end: var(--border-hairline);
-    background-color: var(--color-surface);
+    border-block-end: var(--border-hairline) solid var(--color-border);
+    background-color: var(--color-surface-2);
   }
 
   .project-card__image {
@@ -125,24 +138,25 @@ const typeLabel: Record<string, string> = {
 
   .project-card__body {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-5);
     padding: var(--space-5);
     flex: 1;
   }
 
-  .project-card__meta {
+  .project-card__main {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    font-family: var(--font-mono);
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1 1 16rem;
+    min-width: 0;
+  }
+
+  .project-card__meta {
     font-size: var(--text-label);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
-  }
-
-  .project-card__type {
+    font-weight: 700;
     color: var(--color-accent);
   }
 
@@ -152,7 +166,7 @@ const typeLabel: Record<string, string> = {
 
   /* Stretched link: the whole card is clickable, one tab stop. */
   .project-card__title a {
-    color: var(--color-ink);
+    color: var(--color-text);
     text-decoration: none;
   }
 
@@ -164,32 +178,34 @@ const typeLabel: Record<string, string> = {
   }
 
   .project-card__summary {
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .project-card__details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    align-content: start;
     gap: var(--space-4);
-    margin: var(--space-2) 0 0;
-    padding-block: var(--space-4);
-    border-block: var(--border-hairline);
-    font-size: var(--text-small);
+    margin: 0;
+    flex: 1 1 14rem;
+    padding-inline-start: var(--space-5);
+    border-inline-start: var(--border-hairline) solid var(--color-border);
+    font-size: var(--text-sm);
   }
 
   .project-card__details dt {
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
     margin-block-end: var(--space-1);
   }
 
   .project-card__details dd {
     margin: 0;
-    color: var(--color-ink);
+    font-weight: 600;
+    color: var(--color-text);
   }
 
   /* Long entries (key contribution) span the full row instead of
@@ -199,34 +215,22 @@ const typeLabel: Record<string, string> = {
   }
 
   .project-card__outcome {
-    font-size: var(--text-small);
+    margin-block-start: auto;
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-hairline) solid var(--color-border);
+    font-size: var(--text-sm);
     font-weight: 600;
-    color: var(--color-ink);
-    padding-inline-start: var(--space-3);
-    border-inline-start: 3px solid var(--color-accent);
+    color: var(--color-text);
   }
 
   .project-card__link {
-    margin-block-start: auto;
-    padding-block-start: var(--space-2);
+    margin-block-start: var(--space-2);
   }
 
-  /* Featured variant: media beside content on wide screens. */
+  /* Featured variant: media beside content on wide screens, 16:7. */
   @media (min-width: 48rem) {
-    .project-card--featured {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    }
-
-    .project-card--featured .project-card__media-link {
-      border-block-end: 0;
-      border-inline-end: var(--border-hairline);
-    }
-
     .project-card--featured .project-card__image {
-      block-size: 100%;
-      aspect-ratio: auto;
-      min-block-size: 20rem;
+      aspect-ratio: 16 / 7;
     }
 
     .project-card--featured .project-card__body {

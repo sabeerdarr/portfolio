@@ -23,7 +23,7 @@ export interface SocialProfile {
 export const site = {
   name: 'Sabeer Darr',
   /** Professional title shown in the header, footer, and metadata. */
-  title: 'Product Design Lead',
+  title: 'Product Designer',
   domain: 'sabeerdarr.com',
   url: 'https://sabeerdarr.com',
 
@@ -35,10 +35,12 @@ export const site = {
 
   availability: {
     status: 'available' as AvailabilityStatus,
-    /** Short label used in the header badge and footer. */
-    label: 'Open to new roles',
-    /** Longer sentence used on the homepage and About page. */
-    message: 'Open to Product Design Lead and senior product design roles.',
+    /** Short label — no longer shown as a standalone badge (2026
+     * redesign dropped the repeated status pill), kept for any
+     * future use that wants a compact form. */
+    label: 'Available for select work',
+    /** Longer sentence folded into the homepage hero lede. */
+    message: 'Available for select work.',
   },
 
   /**
@@ -53,7 +55,18 @@ export const site = {
   forms: {
     employmentFormId: import.meta.env.PUBLIC_FORMSPREE_EMPLOYMENT_FORM_ID ?? '',
     freelanceFormId: import.meta.env.PUBLIC_FORMSPREE_FREELANCE_FORM_ID ?? '',
+    /**
+     * Home page's unified #contact form (2026 redesign). Runs on
+     * FormSubmit (formsubmit.co) rather than Formspree — no account
+     * needed, submissions go straight to this address once the
+     * one-time confirmation email FormSubmit sends on first use is
+     * clicked.
+     */
+    contactRecipient: 'hello@sabeerdarr.com',
   },
+
+  /** Cal.com booking link used on the homepage #contact section. */
+  bookingUrl: 'https://cal.com/sabeer-darr/30min',
 
   newsletter: {
     /** Provider-neutral form action URL; empty string disables the form. */
@@ -72,10 +85,10 @@ export const site = {
 
   seo: {
     /** Used when a page does not define its own title. */
-    defaultTitle: 'Sabeer Darr — Product Design Lead',
+    defaultTitle: 'Sabeer Darr — Product Designer',
     titleTemplate: '%s — Sabeer Darr',
     defaultDescription:
-      'Sabeer Darr is a Product Design Lead with 10+ years of experience designing and scaling AI SaaS, B2B, and mobile products — from problem definition through design systems and delivery. Open to new roles.',
+      'Sabeer Darr is a product designer for complex SaaS and AI products, with 10+ years of experience designing and scaling AI SaaS, B2B, and mobile products — from problem definition through design systems and delivery. Available for select work.',
     /**
      * Default social sharing image. The shipped file is a generated
      * placeholder — replace it with a real 1200×630 PNG or JPG

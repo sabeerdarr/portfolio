@@ -34,19 +34,18 @@ const items = headings.filter((h) => h.depth === 2);
 <style>
   .toc {
     padding: var(--space-5);
-    border: var(--border-hairline);
-    border-radius: var(--radius-md);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
     background-color: var(--color-surface);
-    font-size: var(--text-small);
+    font-size: var(--text-sm);
   }
 
   .toc__title {
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     font-weight: 600;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
     margin-block-end: var(--space-3);
   }
 
@@ -59,7 +58,7 @@ const items = headings.filter((h) => h.depth === 2);
   }
 
   .toc a {
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
     text-decoration: none;
     display: block;
     padding-block: 2px;

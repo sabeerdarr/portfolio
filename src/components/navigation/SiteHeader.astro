@@ -1,7 +1,6 @@
 ---
 import { site } from '@/config/site';
 import ThemeToggle from '@/components/common/ThemeToggle.astro';
-import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
 
 /**
  * Sticky site header with desktop nav and an accessible mobile menu:
@@ -19,7 +18,9 @@ function isActive(href: string): boolean {
 <header class="site-header" data-site-header>
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <img class="site-header__logo" src="/images/brand/logo.png" alt="" width="512" height="512" />
+      <span class="site-header__logo" role="img" aria-label={`${site.name} home`}>
+        <span class="site-header__logo-bolt" aria-hidden="true"></span>
+      </span>
       <span class="site-header__brand-text">
         <span class="site-header__name">{site.name}</span>
         <span class="site-header__role">{site.title}</span>
@@ -45,13 +46,8 @@ function isActive(href: string): boolean {
     </nav>
 
     <div class="site-header__actions">
-      <span class="site-header__availability">
-        <AvailabilityBadge />
-      </span>
       <ThemeToggle />
-      <a class="btn btn--primary btn--small site-header__cta" href="/#hire-me"
-        >Start a conversation</a
-      >
+      <a class="btn btn--primary btn--small site-header__cta" href="/#contact">Get in touch</a>
       <button
         class="site-header__menu-button"
         type="button"
@@ -84,11 +80,8 @@ function isActive(href: string): boolean {
       </ul>
     </nav>
     <div class="mobile-menu__footer">
-      <AvailabilityBadge variant="full" />
-      <div class="mobile-menu__ctas">
-        <a class="btn btn--primary" href="/#hire-me">Start a conversation</a>
-        <a class="btn btn--secondary" href="/work">View work</a>
-      </div>
+      <a class="btn btn--primary" href="/#contact">Get in touch</a>
+      <a class="btn btn--secondary" href="/work">View work</a>
     </div>
   </div>
 </header>
@@ -98,10 +91,8 @@ function isActive(href: string): boolean {
     position: sticky;
     inset-block-start: 0;
     z-index: var(--z-header);
-    background-color: color-mix(in srgb, var(--color-bg) 88%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-block-end: var(--border-hairline);
+    background-color: var(--color-bg);
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
   .site-header__inner {
@@ -117,25 +108,31 @@ function isActive(href: string): boolean {
     align-items: center;
     gap: var(--space-3);
     text-decoration: none;
-    color: var(--color-ink);
+    color: var(--color-text);
     line-height: 1.15;
   }
 
+  /* Recolorable logo mark: a lime ground with the bolt layered on
+     top as a background image (background-image, NOT mask — CSS
+     mask breaks screenshot/PDF export paths). Swapping
+     --color-brand-mark restyles the mark with no new asset. */
   .site-header__logo {
-    inline-size: 2rem;
-    block-size: 2rem;
+    position: relative;
+    display: block;
+    inline-size: 2.375rem;
+    block-size: 2.375rem;
     flex-shrink: 0;
+    background-color: var(--color-brand-mark);
+    border-radius: var(--radius-sm);
   }
 
-  /* The mark is white — invert it to ink on the light theme. */
-  :global(html:not([data-theme='dark'])) .site-header__logo {
-    filter: invert(1);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :global(html:not([data-theme])) .site-header__logo {
-      filter: none;
-    }
+  .site-header__logo-bolt {
+    position: absolute;
+    inset: 22%;
+    background-image: url('/images/brand/logo-bolt-mask.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
   }
 
   .site-header__brand-text {
@@ -144,18 +141,18 @@ function isActive(href: string): boolean {
   }
 
   .site-header__name {
-    font-family: var(--font-display);
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-variation-settings: 'wdth' 108;
     letter-spacing: -0.01em;
   }
 
   .site-header__role {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
+    font-size: var(--text-label);
+    font-weight: 600;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
   }
 
   .site-header__list {
@@ -168,23 +165,22 @@ function isActive(href: string): boolean {
   .site-header__link {
     display: inline-block;
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-small);
-    font-weight: 500;
-    color: var(--color-ink-secondary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
     text-decoration: none;
   }
 
   .site-header__link:hover {
-    color: var(--color-ink);
+    color: var(--color-text);
   }
 
   .site-header__link[aria-current='page'] {
-    color: var(--color-ink);
-    font-weight: 650;
+    color: var(--color-text);
+    font-weight: 700;
     text-decoration: underline;
-    text-decoration-color: var(--color-accent);
-    text-decoration-thickness: 2px;
+    text-decoration-color: var(--color-accent-solid);
+    text-decoration-thickness: var(--border-medium);
     text-underline-offset: 0.45em;
   }
 
@@ -201,11 +197,10 @@ function isActive(href: string): boolean {
     min-height: 2.75rem;
     padding: var(--space-2) var(--space-3);
     background: transparent;
-    border: var(--border-hairline);
+    border: var(--border-hairline) solid var(--color-border);
     border-radius: var(--radius-full);
-    font-size: var(--text-small);
+    font-size: var(--text-sm);
     font-weight: 600;
-    cursor: pointer;
   }
 
   .site-header__menu-icon {
@@ -214,7 +209,7 @@ function isActive(href: string): boolean {
     inline-size: 1rem;
     block-size: 2px;
     background-color: currentColor;
-    transition: background-color var(--duration-fast) var(--ease-out);
+    transition: background-color var(--duration-hover) var(--ease);
   }
 
   .site-header__menu-icon::before,
@@ -224,7 +219,7 @@ function isActive(href: string): boolean {
     inset-inline: 0;
     block-size: 2px;
     background-color: currentColor;
-    transition: transform var(--duration-base) var(--ease-out);
+    transition: transform var(--duration-hover) var(--ease);
   }
 
   .site-header__menu-icon::before {
@@ -249,7 +244,7 @@ function isActive(href: string): boolean {
 
   /* ---- Mobile menu panel ---- */
   .mobile-menu {
-    border-block-start: var(--border-hairline);
+    border-block-start: var(--border-hairline) solid var(--color-border);
     padding: var(--space-5) var(--container-gutter) var(--space-7);
     background-color: var(--color-bg);
     max-block-size: calc(100dvh - 4.25rem);
@@ -266,11 +261,11 @@ function isActive(href: string): boolean {
   .mobile-menu__link {
     display: block;
     padding: var(--space-3) 0;
-    border-block-end: var(--border-hairline);
-    font-family: var(--font-display);
+    border-block-end: var(--border-hairline) solid var(--color-border);
     font-size: var(--text-h3);
-    font-weight: 550;
-    color: var(--color-ink);
+    font-weight: 700;
+    font-variation-settings: 'wdth' 108;
+    color: var(--color-text);
     text-decoration: none;
   }
 
@@ -280,22 +275,14 @@ function isActive(href: string): boolean {
 
   .mobile-menu__footer {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-    margin-block-start: var(--space-6);
-  }
-
-  .mobile-menu__ctas {
-    display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
+    margin-block-start: var(--space-6);
   }
 
   /* ---- Responsive switches ---- */
   @media (max-width: 63.9375rem) {
     .site-header__nav,
-    .site-header__availability,
     .site-header__cta {
       display: none;
     }

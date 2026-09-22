@@ -5,7 +5,7 @@ import SEOHead from '@/components/seo/SEOHead.astro';
 import SkipLink from '@/components/common/SkipLink.astro';
 import SiteHeader from '@/components/navigation/SiteHeader.astro';
 import SiteFooter from '@/components/navigation/SiteFooter.astro';
-import CursorBlob from '@/components/common/CursorBlob.astro';
+import AmbientOrbs from '@/components/common/AmbientOrbs.astro';
 import type { Props as SEOProps } from '@/components/seo/SEOHead.astro';
 
 /**
@@ -25,6 +25,38 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <!--
+      Baseline CSP. GitHub Pages can't set custom HTTP response headers
+      without extra tooling, so this runs as a <meta> tag — which means
+      `frame-ancestors` and report-* directives are silently ignored by
+      the spec (they only work as a real header) and are deliberately
+      left out rather than included for false reassurance.
+
+      'unsafe-inline' is required for script-src and style-src because
+      Astro's static build inlines each page's own bundled JS and some
+      component styles directly into its HTML rather than always
+      extracting them — a hash-based policy would need a distinct,
+      hand-maintained hash per page per script/style and would break
+      silently on any future edit. What this CSP still meaningfully
+      blocks: loading a script or iframe from any origin other than the
+      ones this site actually uses, and submitting any form to an
+      endpoint other than the two enquiry-form services.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content={[
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data:",
+        "connect-src 'self' https://formsubmit.co https://formspree.io https://static.cloudflareinsights.com",
+        'frame-src https://cal.com',
+        "form-action 'self' https://formsubmit.co https://formspree.io",
+        "object-src 'none'",
+        "base-uri 'self'",
+      ].join('; ')}
+    />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
@@ -34,19 +66,11 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
       title={`Writing — ${site.name}`}
       href="/rss.xml"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="preload"
-      href="/fonts/jetbrains-mono-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/miriam-libre-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap"
     />
 
     <!-- Theme bootstrap: runs before paint so there is no flash of
@@ -89,7 +113,7 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
   </head>
   <body id="top">
     <SkipLink />
-    <CursorBlob />
+    <AmbientOrbs />
     <SiteHeader />
     <main id="main-content">
       <slot />
@@ -150,3 +174,13 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
     </script>
   </body>
 </html>
+
+<style>
+  /* AmbientOrbs sits at z-index: 0, decorative and behind everything.
+     Content needs an explicit stacking context above it. */
+  #main-content,
+  :global(.site-footer) {
+    position: relative;
+    z-index: var(--z-content);
+  }
+</style>

@@ -1,63 +1,46 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionHeading from '@/components/common/SectionHeading.astro';
 import ProjectCard from '@/components/cards/ProjectCard.astro';
-import ProcessSteps from '@/components/sections/ProcessSteps.astro';
+import TestimonialCard from '@/components/cards/TestimonialCard.astro';
+import SkillsTicker from '@/components/sections/SkillsTicker.astro';
 import Callout from '@/components/common/Callout.astro';
-import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
+import ContactSection from '@/components/sections/ContactSection.astro';
 import { site } from '@/config/site';
 import { personSchema, websiteSchema } from '@/utils/schema';
 
-// Featured case studies (max three), ordered by `order`.
+// Featured case studies (max three), ordered by `order`. First is the
+// full-width feature card, the rest sit in a 2-up row.
 const allWork = await getCollection('work', ({ data }) => !data.draft);
 const featuredWork = allWork
   .filter((p) => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
 
-const mailto = `mailto:${site.email}?subject=${encodeURIComponent("Let's chat — via sabeerdarr.com")}`;
-
-const valueProps = [
+const testimonials = [
   {
-    title: 'Product thinking',
-    description:
-      'Design decisions framed around user needs and business goals — not just screens. I ask what a feature is for before asking what it looks like.',
+    quote:
+      'Sabeer worked closely with my team to design just what we were looking for in our product. He also brought so many fresh ideas that helped us turn our project into something truly new!',
+    name: 'Jon Brown',
+    attribution: 'CTO, Groom AI',
+    avatar: '/images/testimonials/jon-brown.webp',
+    avatarAlt: 'Jon Brown, CTO at Groom AI, in a black shirt and glasses in a bright atrium.',
   },
   {
-    title: 'UX research',
-    description:
-      'Interviews, usability tests, and analytics reviews sized to the risk of the decision, so the team ships evidence instead of assumptions.',
+    quote:
+      "We've had the pleasure of working with Sabeer on numerous projects, and he's consistently demonstrated exceptional design skills. His strong work ethic and sense of responsibility make him an invaluable asset to any team. I highly recommend him.",
+    name: 'Frank Diaz',
+    attribution: 'President and CEO, Pagertec',
+    avatar: '/images/testimonials/frank-diaz.webp',
+    avatarAlt: 'Frank Diaz, President and CEO of Pagertec, in a black Pagertec polo shirt.',
   },
   {
-    title: 'Interaction design',
-    description:
-      'Flows, states, and edge cases worked through end-to-end — including the empty, error, and loading states that make products feel finished.',
-  },
-  {
-    title: 'Visual design',
-    description:
-      'Clear hierarchy, accessible contrast, and restrained aesthetics that keep attention on the task rather than the decoration.',
-  },
-  {
-    title: 'Prototyping',
-    description:
-      'Interactive prototypes at the lowest fidelity that answers the question — from clickable wireframes to high-fidelity flows for testing.',
-  },
-  {
-    title: 'Design systems',
-    description:
-      'Tokens, components, and documentation that scale design across a team and keep the product consistent as it grows.',
-  },
-  {
-    title: 'Developer collaboration',
-    description:
-      'Specs, annotations, and ongoing pairing that respect engineering constraints — handoff as a conversation, not a file drop.',
-  },
-  {
-    title: 'Remote communication',
-    description:
-      'Clear async writing, recorded walkthroughs, and structured critique that keep distributed teams aligned across time zones.',
+    quote:
+      'I worked with Sabeer on the design of our internal systems at Mastercard Canada. He took the time to understand how our teams operate, and the result was a set of tools that streamlined our processes with banks. He is a talented designer with a strong sense of responsibility, and he brought good ideas to the project. He communicated clearly and delivered on time. I highly recommend him.',
+    name: 'Rafique Awan',
+    attribution: 'Product Owner, Mastercard CA',
+    avatar: '/images/testimonials/rafique-awan.webp',
+    avatarAlt: 'Rafique Awan, Product Owner at Mastercard Canada, in a wetsuit on a beach.',
   },
 ];
 
@@ -69,39 +52,42 @@ const structuredData = [personSchema(), websiteSchema()];
   description={site.seo.defaultDescription}
   structuredData={structuredData}
 >
-  <!-- 1 · Hero -->
+  <!-- Hero -->
   <section class="hero">
-    <div class="container">
-      <p class="hero__badge"><AvailabilityBadge variant="full" /></p>
-      <h1 class="hero__title">
-        Designing <em>clear, scaleable </em> products for complex problems
-      </h1>
+    <div class="hero__text">
+      <p class="kicker">{site.location} · Remote</p>
+      <h1 class="text-display">Product designer for complex SaaS and AI products</h1>
+      <span class="section-rule"></span>
       <p class="hero__lede">
-        I partner with product and engineering teams to shape intuitive SaaS and mobile experiences,
-        combining research, systems thinking, interaction design, and rapid prototyping.
+        10+ years designing and scaling B2B, AI and mobile products. {site.availability.message}
       </p>
-      <p class="hero__availability">{site.availability.message}</p>
       <div class="hero__actions">
-        <a class="btn btn--primary" href="/work">View case studies</a>
-        <a class="btn btn--secondary" href="/#hire-me">Start a conversation</a>
-        <a class="btn btn--ghost" href="/photography">Photography, for fun</a>
+        <a class="btn btn--primary btn--large" href="/work">View case studies</a>
+        <a class="btn btn--secondary btn--large" href="/#contact">Get in touch</a>
       </div>
     </div>
-    <div class="hero__rule" aria-hidden="true"></div>
+    <div class="hero__portrait">
+      <img
+        src="/images/profile/sabeer-portrait.webp"
+        alt="Sabeer Darr, seated, wearing a white linen shirt, in a dark room with diagonal window light behind him."
+        width="900"
+        height="900"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
   </section>
 
-  <!-- 2 · Selected work -->
+  <SkillsTicker />
+
+  <!-- Selected work -->
   <section class="section" aria-labelledby="selected-work">
     <div class="container">
-      <SectionHeading
-        kicker="01 · Selected work"
-        title="Case studies, not just screenshots"
-        id="selected-work"
-      >
-        Each project walks through the problem, the decisions, the trade-offs, and what happened
-        after launch — because the reasoning matters as much as the result.
-        <a slot="action" class="text-link" href="/work">All work</a>
-      </SectionHeading>
+      <div class="work-heading">
+        <h2 id="selected-work">Three products, from problem to shipped</h2>
+        <a class="text-link" href="/work">All work</a>
+      </div>
 
       {
         featuredWork.length > 0 ? (
@@ -127,128 +113,117 @@ const structuredData = [personSchema(), websiteSchema()];
     </div>
   </section>
 
-  <!-- 3 · Value proposition -->
-  <section class="section section--alt" aria-labelledby="value-heading">
+  <!-- Testimonials -->
+  <section class="section" aria-label="Testimonials">
     <div class="container">
-      <SectionHeading
-        kicker="02 · What I bring"
-        title="End-to-end product design, grounded in evidence"
-        id="value-heading"
-      >
-        The craft spans research through delivery. The value is in connecting them: every visual
-        decision should trace back to something a user needs or a metric the business watches.
-      </SectionHeading>
-
-      <dl class="value-grid">
+      <h2 class="testimonials-heading">What it is like to work with me</h2>
+      <div class="testimonials-grid">
         {
-          valueProps.map((item) => (
-            <div class="value-grid__item">
-              <dt>{item.title}</dt>
-              <dd>{item.description}</dd>
-            </div>
+          testimonials.map((t) => (
+            <TestimonialCard
+              quote={t.quote}
+              name={t.name}
+              attribution={t.attribution}
+              avatar={t.avatar}
+              avatarAlt={t.avatarAlt}
+            />
           ))
         }
-      </dl>
-    </div>
-  </section>
-
-  <!-- 4 · Process -->
-  <section class="section" aria-labelledby="process-heading">
-    <div class="container">
-      <SectionHeading
-        kicker="03 · Process"
-        title="A process that adapts to the problem"
-        id="process-heading"
-      >
-        These are the activities, not a conveyor belt. A late-stage usability fix doesn't need
-        discovery interviews; a new product bet does. The mix depends on the product's stage, risk,
-        timeline, and the evidence already available.
-      </SectionHeading>
-      <ProcessSteps />
-    </div>
-  </section>
-
-  <!-- 5 · Hire me -->
-  <section class="section section--alt" id="hire-me" aria-labelledby="hire-heading">
-    <div class="container">
-      <div class="hire">
-        <p class="kicker">04 · Hire me</p>
-        <h2 id="hire-heading">Hiring a product design lead?</h2>
-        <p class="hire__lede">
-          10+ years designing and scaling AI SaaS, B2B, and mobile products — from problem
-          definition and user flows through design systems, developer handoff, and continuous
-          improvement. {site.availability.message}
-        </p>
-        <div class="hire__actions">
-          <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
-            Download CV
-          </a>
-          <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
-        </div>
-        <p class="hire__email">
-          Or write directly: <a href={mailto}>{site.email}</a>
-        </p>
       </div>
     </div>
   </section>
+
+  <!-- Choose your path -->
+  <section class="path-cards" aria-label="Choose your path">
+    <a class="path-card path-card--hiring" href="/about">
+      <span class="path-card__motif path-card__motif--circle" aria-hidden="true"></span>
+      <span class="path-card__title">Hiring? See my experience and CV</span>
+      <span class="path-card__hint">Background, experience and how I work. → /about</span>
+    </a>
+    <a class="path-card path-card--client" href="/work">
+      <span class="path-card__motif path-card__motif--square" aria-hidden="true"></span>
+      <span class="path-card__title">Have a project? See how I work</span>
+      <span class="path-card__hint">Recent case studies and what I worked on. → /work</span>
+    </a>
+  </section>
+
+  <ContactSection />
 </BaseLayout>
 
 <style>
   .hero {
-    padding-block: var(--space-9) var(--space-8);
+    display: flex;
+    flex-wrap: wrap;
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
-  .hero__badge {
-    margin-block-end: var(--space-5);
+  .hero__text {
+    flex: 1 1 26rem;
+    min-width: 0;
+    padding: clamp(2.25rem, 5vw, 5.5rem) clamp(1.25rem, 4vw, 4rem);
+    border-inline-end: var(--border-hairline) solid var(--color-border);
   }
 
-  .hero__title {
-    font-size: var(--text-display);
+  .hero__text .text-display {
     max-width: 16ch;
   }
 
-  .hero__title em {
-    font-style: italic;
-    color: var(--color-accent);
+  .hero .section-rule {
+    margin-block: var(--space-6);
   }
 
   .hero__lede {
-    margin-block-start: var(--space-5);
     max-width: 44em;
     font-size: var(--text-lead);
-    color: var(--color-ink-secondary);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
     text-wrap: pretty;
-  }
-
-  .hero__availability {
-    margin-block-start: var(--space-4);
-    font-size: var(--text-small);
-    color: var(--color-ink-faint);
   }
 
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-    margin-block-start: var(--space-6);
+    margin-block-start: var(--space-7);
   }
 
-  .hero__rule {
-    margin-block-start: var(--space-8);
-    border-block-end: var(--border-hairline);
+  .hero__portrait {
+    position: relative;
+    flex: 1 1 18rem;
+    min-width: 0;
+    min-height: 21.25rem;
+    background-color: var(--color-accent-solid);
+    overflow: hidden;
   }
 
-  .section--alt {
-    background-color: var(--color-surface);
-    border-block: var(--border-hairline);
+  .hero__portrait img {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: 50% 14%;
+  }
+
+  .work-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5);
+    margin-block-end: var(--space-8);
+  }
+
+  .work-heading h2 {
+    flex: 1 1 20rem;
   }
 
   .work-grid {
     display: grid;
-    gap: var(--space-5);
+    gap: var(--space-6);
   }
 
-  @media (min-width: 48rem) {
+  @media (min-width: 40rem) {
     .work-grid {
       grid-template-columns: 1fr 1fr;
     }
@@ -259,96 +234,67 @@ const structuredData = [personSchema(), websiteSchema()];
     }
   }
 
-  .value-grid {
+  .testimonials-heading {
+    margin-block-end: var(--space-7);
+  }
+
+  .testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: var(--space-6) var(--space-7);
-    margin: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-5);
   }
 
-  .value-grid__item {
-    padding-block-start: var(--space-4);
-    border-block-start: 2px solid var(--color-ink);
+  .path-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   }
 
-  .value-grid__item dt {
-    font-family: var(--font-display);
-    font-size: var(--text-h4);
-    font-weight: 600;
-  }
-
-  .value-grid__item dd {
-    margin: var(--space-2) 0 0;
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
-  }
-
-  /* Hire section — anchored from the header CTA and hero. */
-  #hire-me {
-    scroll-margin-top: 5.5rem;
-  }
-
-  .hire {
+  .path-card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: var(--space-4);
-    padding: var(--space-8) var(--space-7);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-ink);
-    color: var(--color-bg);
+    padding: clamp(1.75rem, 3.6cqw, 4rem) clamp(1.25rem, 3.4cqw, 3.5rem);
+    color: var(--color-text);
+    text-decoration: none;
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
-  .hire .kicker {
-    color: color-mix(in srgb, var(--color-bg) 65%, transparent);
+  @media (min-width: 40rem) {
+    .path-card--hiring {
+      border-inline-end: var(--border-hairline) solid var(--color-border);
+    }
   }
 
-  .hire h2 {
-    font-size: var(--text-h1);
-    max-width: 18ch;
+  .path-card:hover {
+    background-color: var(--color-surface);
+    text-decoration: none;
   }
 
-  .hire__lede {
-    max-width: 46em;
-    font-size: var(--text-lead);
-    opacity: 0.85;
+  .path-card__motif {
+    display: block;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    background-color: var(--color-accent-solid);
   }
 
-  .hire__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-block-start: var(--space-3);
+  .path-card__motif--circle {
+    border-radius: var(--radius-full);
   }
 
-  /* Buttons sit on the inverted (ink) panel, so swap their colors. */
-  .hire .btn--primary {
-    background-color: var(--color-accent-strong);
-    color: #14110e;
+  .path-card__motif--square {
+    background-color: var(--color-text);
   }
 
-  .hire .btn--primary:hover {
-    background-color: var(--color-bg);
-    color: var(--color-ink);
+  .path-card__title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    font-variation-settings: 'wdth' 108;
+    line-height: var(--leading-snug);
+    letter-spacing: -0.02em;
   }
 
-  .hire .btn--secondary {
-    border-color: color-mix(in srgb, var(--color-bg) 45%, transparent);
-    color: var(--color-bg);
-  }
-
-  .hire .btn--secondary:hover {
-    border-color: var(--color-bg);
-    color: var(--color-bg);
-  }
-
-  .hire__email {
-    font-size: var(--text-small);
-    opacity: 0.75;
-  }
-
-  .hire__email a {
-    color: inherit;
+  .path-card__hint {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 </style>

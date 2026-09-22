@@ -4,12 +4,18 @@ import type { MarkdownHeading } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
 import TableOfContents from '@/components/common/TableOfContents.astro';
-import RelatedContent from '@/components/sections/RelatedContent.astro';
 import Callout from '@/components/common/Callout.astro';
 import { formatDate, isoDate } from '@/utils/format';
 import { creativeWorkSchema, breadcrumbSchema } from '@/utils/schema';
 import { site } from '@/config/site';
 
+/**
+ * Shared case-study template. Ends on a two-card path block routing
+ * to /about and /work (not prev/next case-study navigation) — the
+ * 2026 redesign deliberately drops Trade-offs and per-project
+ * testimonial sections, matching README's scope over Handoff's
+ * component inventory.
+ */
 export interface Props {
   entry: CollectionEntry<'work'>;
   headings: MarkdownHeading[];
@@ -17,7 +23,7 @@ export interface Props {
   next?: { title: string; href: string } | undefined;
 }
 
-const { entry, headings, previous, next } = Astro.props;
+const { entry, headings } = Astro.props;
 const { data } = entry;
 const url = new URL(`/work/${entry.id}/`, site.url).href;
 
@@ -65,7 +71,7 @@ const structuredData = [
         />
 
         <p class="kicker cs-hero__kicker">
-          {typeLabel[data.projectType]} · {data.category.join(' · ')}
+          {typeLabel[data.projectType]} · {(data.categories ?? data.category).join(' · ')}
         </p>
         <h1 class="cs-hero__title">{data.title}</h1>
         <p class="cs-hero__summary">{data.summary}</p>
@@ -143,20 +149,18 @@ const structuredData = [
     </div>
 
     <footer class="container cs-footer">
-      <div class="cs-footer__cta">
-        <h2>Want this kind of thinking on your team?</h2>
-        <p>
-          I'm open to Product Design Lead and senior product design roles. If this case study
-          resonates with the problems your team is solving, let's talk.
-        </p>
-        <div class="cs-footer__actions">
-          <a class="btn btn--primary" href="/#hire-me" data-event="case-study-cta"
-            >Start a conversation</a
-          >
-          <a class="btn btn--secondary" href="/work">More case studies</a>
-        </div>
+      <div class="cs-path-cards" aria-label="Choose your path">
+        <a class="cs-path-card" href="/about">
+          <span class="cs-path-card__motif cs-path-card__motif--circle" aria-hidden="true"></span>
+          <span class="cs-path-card__title">Hiring? See my experience and CV</span>
+          <span class="cs-path-card__hint">Background, experience and how I work. → /about</span>
+        </a>
+        <a class="cs-path-card" href="/work">
+          <span class="cs-path-card__motif cs-path-card__motif--square" aria-hidden="true"></span>
+          <span class="cs-path-card__title">Have a project? See how I work</span>
+          <span class="cs-path-card__hint">More case studies and what I worked on. → /work</span>
+        </a>
       </div>
-      <RelatedContent previous={previous} next={next} label="More case studies" />
     </footer>
   </article>
 </BaseLayout>
@@ -179,7 +183,7 @@ const structuredData = [
     margin-block-start: var(--space-4);
     max-width: 46em;
     font-size: var(--text-lead);
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 
   .cs-hero__meta {
@@ -188,28 +192,29 @@ const structuredData = [
     gap: var(--space-4) var(--space-5);
     margin-block: var(--space-6);
     padding-block: var(--space-5);
-    border-block: var(--border-hairline);
-    font-size: var(--text-small);
+    border-block: var(--border-hairline) solid var(--color-border);
+    font-size: var(--text-sm);
   }
 
   .cs-hero__meta dt {
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
     margin-block-end: var(--space-1);
   }
 
   .cs-hero__meta dd {
     margin: 0;
+    font-weight: 600;
   }
 
   .cs-hero__cover {
     inline-size: 100%;
     margin-block-start: var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border: var(--border-hairline) solid var(--color-border);
     background-color: var(--color-surface);
   }
 
@@ -241,24 +246,62 @@ const structuredData = [
     gap: var(--space-7);
   }
 
-  .cs-footer__cta {
-    padding: var(--space-7) var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface);
-    max-width: 100%;
+  .cs-path-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    border: var(--border-hairline) solid var(--color-border);
   }
 
-  .cs-footer__cta p {
-    margin-block-start: var(--space-3);
-    max-width: 46em;
-    color: var(--color-ink-secondary);
-  }
-
-  .cs-footer__actions {
+  .cs-path-card {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-block-start: var(--space-5);
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: clamp(1.5rem, 3.4cqw, 3rem);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .cs-path-card + .cs-path-card {
+    border-inline-start: var(--border-hairline) solid var(--color-border);
+  }
+
+  @media (max-width: 39.9375rem) {
+    .cs-path-card + .cs-path-card {
+      border-inline-start: 0;
+      border-block-start: var(--border-hairline) solid var(--color-border);
+    }
+  }
+
+  .cs-path-card:hover {
+    background-color: var(--color-surface);
+    text-decoration: none;
+  }
+
+  .cs-path-card__motif {
+    display: block;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    background-color: var(--color-accent-solid);
+  }
+
+  .cs-path-card__motif--circle {
+    border-radius: var(--radius-full);
+  }
+
+  .cs-path-card__motif--square {
+    background-color: var(--color-text);
+  }
+
+  .cs-path-card__title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    font-variation-settings: 'wdth' 108;
+    line-height: var(--leading-snug);
+    letter-spacing: -0.02em;
+  }
+
+  .cs-path-card__hint {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 </style>

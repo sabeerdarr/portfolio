@@ -38,7 +38,7 @@
       <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
     </svg>
   </span>
-  <span class="visually-hidden" data-theme-toggle-label>Switch to dark theme</span>
+  <span class="visually-hidden" data-theme-toggle-label>Switch to light theme</span>
 </button>
 
 <style>
@@ -48,19 +48,18 @@
     justify-content: center;
     inline-size: 2.75rem;
     block-size: 2.75rem;
-    border: var(--border-hairline);
+    border: var(--border-hairline) solid var(--color-border);
     border-radius: var(--radius-full);
     background: transparent;
-    color: var(--color-ink-secondary);
-    cursor: pointer;
+    color: var(--color-text-muted);
     transition:
-      color var(--duration-fast) var(--ease-out),
-      border-color var(--duration-fast) var(--ease-out);
+      color var(--duration-hover) var(--ease),
+      border-color var(--duration-hover) var(--ease);
   }
 
   .theme-toggle:hover {
-    color: var(--color-ink);
-    border-color: var(--color-line-strong);
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
   }
 
   .theme-toggle__icon {
@@ -70,30 +69,38 @@
   .theme-toggle__icon svg {
     grid-area: 1 / 1;
     transition:
-      opacity var(--duration-base) var(--ease-out),
-      transform var(--duration-base) var(--ease-out);
+      opacity var(--duration-hover) var(--ease),
+      transform var(--duration-hover) var(--ease);
   }
 
-  /* Light theme shows the moon (the thing you can switch to). */
+  /* Light theme shows the moon (the thing you can switch to). Dark
+     is the site default, so the sun (switch-to-light icon) starts
+     visible and only hides once data-theme="light" is stamped. */
   .theme-toggle__sun {
+    opacity: 1;
+  }
+
+  .theme-toggle__moon {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.6);
+  }
+
+  :global([data-theme='light']) .theme-toggle__sun {
     opacity: 0;
     transform: rotate(-45deg) scale(0.6);
   }
 
-  :global([data-theme='dark']) .theme-toggle__sun {
+  :global([data-theme='light']) .theme-toggle__moon {
     opacity: 1;
     transform: none;
-  }
-
-  :global([data-theme='dark']) .theme-toggle__moon {
-    opacity: 0;
-    transform: rotate(45deg) scale(0.6);
   }
 </style>
 
 <script>
+  // Dark is the site default, so the "current" theme for an unset
+  // attribute is dark — only an explicit data-theme="light" flips it.
   function currentTheme(): string {
-    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
   }
 
   function updateLabels() {

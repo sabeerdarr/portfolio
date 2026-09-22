@@ -27,7 +27,7 @@ const { src, alt, caption, width = 1600, height = 1000, variant = 'default' } = 
 
   .figure img {
     inline-size: 100%;
-    border: var(--border-hairline);
+    border: var(--border-hairline) solid var(--color-border);
     border-radius: var(--radius-sm);
     background-color: var(--color-surface);
   }
@@ -35,7 +35,7 @@ const { src, alt, caption, width = 1600, height = 1000, variant = 'default' } = 
   .figure figcaption {
     margin-block-start: var(--space-3);
     font-size: var(--text-xs);
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
     line-height: 1.5;
   }
 

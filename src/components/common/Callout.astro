@@ -31,20 +31,20 @@ const heading = title ?? defaultTitles[variant];
 <style>
   .callout {
     padding: var(--space-4) var(--space-5);
-    border: var(--border-hairline);
+    border: var(--border-hairline) solid var(--color-border);
     border-inline-start-width: 3px;
     border-radius: var(--radius-sm);
-    background-color: var(--color-surface);
-    font-size: var(--text-small);
+    background-color: var(--color-surface-2);
+    font-size: var(--text-sm);
   }
 
   .callout--note {
-    border-inline-start-color: var(--color-line-strong);
+    border-inline-start-color: var(--color-border-strong);
   }
 
   .callout--insight {
     border-inline-start-color: var(--color-accent);
-    background-color: var(--color-accent-surface);
+    background-color: var(--color-accent-quiet);
   }
 
   .callout--warning {
@@ -59,12 +59,11 @@ const heading = title ?? defaultTitles[variant];
   }
 
   .callout__title {
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     font-weight: 600;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
     margin-block-end: var(--space-2);
   }
 

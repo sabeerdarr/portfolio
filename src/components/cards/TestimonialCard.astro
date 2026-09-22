@@ -9,18 +9,39 @@ export interface Props {
   name: string;
   /** Role and company, e.g. "Product Manager, [Company]". */
   attribution: string;
+  avatar?: string;
+  avatarAlt?: string;
+  /** 'grid' = Home's 3-up row and Work's closing quote (body size).
+   *  'feature' = a larger, centred pull-quote treatment. */
+  variant?: 'grid' | 'feature';
 }
 
-const { quote, name, attribution } = Astro.props;
+const { quote, name, attribution, avatar, avatarAlt, variant = 'grid' } = Astro.props;
 ---
 
-<figure class="testimonial">
+<figure class:list={['testimonial', `testimonial--${variant}`]}>
+  <span class="testimonial__rule" aria-hidden="true"></span>
   <blockquote>
     <p>{quote}</p>
   </blockquote>
   <figcaption>
-    <span class="testimonial__name">{name}</span>
-    <span class="testimonial__attribution">{attribution}</span>
+    {
+      avatar && (
+        <img
+          class="testimonial__avatar"
+          src={avatar}
+          alt={avatarAlt ?? ''}
+          width="52"
+          height="52"
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    }
+    <span class="testimonial__identity">
+      <span class="testimonial__name">{name}</span>
+      <span class="testimonial__attribution">{attribution}</span>
+    </span>
   </figcaption>
 </figure>
 
@@ -28,42 +49,80 @@ const { quote, name, attribution } = Astro.props;
   .testimonial {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    padding: var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface-raised);
+    gap: var(--space-5);
+    padding: clamp(1.375rem, 2.4cqw, 2rem);
+    border: var(--border-hairline) solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .testimonial__rule {
+    display: block;
+    inline-size: 1.75rem;
+    block-size: var(--border-heavy);
+    background-color: var(--color-accent-solid);
   }
 
   blockquote {
-    font-family: var(--font-display);
-    font-size: var(--text-lead);
-    line-height: 1.5;
-    color: var(--color-ink);
-  }
-
-  blockquote p::before {
-    content: '\201C';
-    color: var(--color-accent);
-  }
-
-  blockquote p::after {
-    content: '\201D';
-    color: var(--color-accent);
+    font-size: var(--text-body);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text);
   }
 
   figcaption {
+    margin-block-start: auto;
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-hairline) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .testimonial__avatar {
+    inline-size: 3.25rem;
+    block-size: 3.25rem;
+    flex: none;
+    object-fit: cover;
+    object-position: 50% 20%;
+    border: var(--border-hairline) solid var(--color-border);
+  }
+
+  .testimonial__identity {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
-    font-size: var(--text-small);
+    gap: 0.2em;
+    min-width: 0;
   }
 
   .testimonial__name {
-    font-weight: 650;
+    font-weight: 700;
+    color: var(--color-text);
   }
 
   .testimonial__attribution {
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
+  }
+
+  /* Feature: larger, centred pull-quote. */
+  .testimonial--feature {
+    align-items: center;
+    text-align: center;
+    max-width: 76ch;
+    margin-inline: auto;
+    padding: clamp(2rem, 3.6cqw, 3.5rem) clamp(1.5rem, 3cqw, 2.75rem);
+    background-color: var(--color-bg-inset);
+  }
+
+  .testimonial--feature blockquote {
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    letter-spacing: -0.015em;
+  }
+
+  .testimonial--feature figcaption {
+    border-block-start: 0;
+    padding-block-start: 0;
+    justify-content: center;
   }
 </style>
