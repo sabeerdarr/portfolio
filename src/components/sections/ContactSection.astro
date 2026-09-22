@@ -1,0 +1,148 @@
+---
+import { site } from '@/config/site';
+import HomeContactForm from '@/components/forms/HomeContactForm.astro';
+
+/**
+ * Home page's #contact section: a details row (email x2 + LinkedIn —
+ * no phone, kept off every public page per site policy) above a
+ * two-track grid of the message form and a Cal.com booking embed.
+ *
+ * Cal.com verification: serving the booking page inside a plain
+ * iframe from the production domain hasn't been confirmed yet — if
+ * it refuses to embed, swap to Cal's official embed script instead.
+ */
+const embedUrl = `${site.bookingUrl}?embed=true&layout=month_view`;
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-heading">
+  <div class="container">
+    <div class="contact__intro">
+      <div class="contact__intro-text">
+        <h2 id="contact-heading">Get in touch</h2>
+        <p>Tell me what you are working on. I reply to everything, usually within two days.</p>
+      </div>
+      <dl class="contact__details">
+        <div>
+          <dt>Email</dt>
+          <dd>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </dd>
+        </div>
+        <div>
+          <dt>LinkedIn</dt>
+          <dd>
+            <a href="https://www.linkedin.com/in/sabeerdarr" rel="me noopener">
+              linkedin.com/in/sabeerdarr
+            </a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="contact__grid">
+      <div class="contact__panel">
+        <h3 class="kicker">Write a message</h3>
+        <HomeContactForm />
+      </div>
+      <div class="contact__panel">
+        <div class="contact__booking-head">
+          <h3 class="kicker">Or pick a time</h3>
+          <a href={site.bookingUrl} target="_blank" rel="noopener" class="contact__booking-link">
+            Open in a new tab ↗
+          </a>
+        </div>
+        <div class="contact__booking-frame">
+          <iframe src={embedUrl} title={`Book a 30-minute call with ${site.name}`} loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block: var(--section-gap);
+  }
+
+  .contact__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5) clamp(2rem, 4cqw, 4.5rem);
+    margin-block-end: clamp(1.75rem, 3.4cqw, 3.25rem);
+  }
+
+  .contact__intro-text {
+    flex: 1 1 20rem;
+  }
+
+  .contact__intro-text p {
+    margin-block-start: var(--space-4);
+    max-width: 44ch;
+    color: var(--color-text-muted);
+  }
+
+  .contact__details {
+    flex: 1 1 24rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5) var(--space-7);
+    margin: 0;
+  }
+
+  .contact__details dt {
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .contact__details dd {
+    margin: 0.4rem 0 0;
+    font-weight: 600;
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+    gap: clamp(1.5rem, 3cqw, 2.75rem);
+    align-items: start;
+  }
+
+  .contact__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  .contact__booking-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-5);
+  }
+
+  .contact__booking-link {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .contact__booking-frame {
+    border: var(--border-hairline) solid var(--color-border);
+    background-color: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .contact__booking-frame iframe {
+    display: block;
+    inline-size: 100%;
+    block-size: clamp(35rem, 64cqh, 43.75rem);
+    border: none;
+  }
+</style>

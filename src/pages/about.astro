@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
 import { site } from '@/config/site';
 import { profilePageSchema, breadcrumbSchema } from '@/utils/schema';
 
@@ -138,32 +137,44 @@ const structuredData = [
 
 <BaseLayout
   title="About Me"
-  description={`${site.name} — Product Design Lead with 10+ years across AI SaaS, B2B software, e-commerce, and consumer applications. Full CV: experience, skills, education.`}
+  description={`${site.name} — Product Designer with 10+ years across AI SaaS, B2B software, e-commerce, and consumer applications. Full CV: experience, skills, education.`}
   structuredData={structuredData}
 >
   <div class="container container--narrow cv">
     <header class="cv__header">
-      <p class="kicker">About Me</p>
-      <h1>{site.name}</h1>
-      <p class="cv__headline">Product Design Lead · AI SaaS · UX Strategy · Design Systems</p>
-      <ul class="cv__contact" role="list">
-        <li>{site.location}</li>
-        <li><a href={mailto}>{site.email}</a></li>
-        <li><a href="https://www.linkedin.com/in/sabeerdarr" rel="me noopener">LinkedIn</a></li>
-      </ul>
-      <div class="cv__actions">
-        <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
-          Download CV
-        </a>
-        <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
+      <div class="cv__portrait">
+        <img
+          src="/images/profile/sabeer-portrait.png"
+          alt="Sabeer Darr, seated, wearing a white linen shirt, in a dark room with diagonal window light behind him."
+          width="720"
+          height="900"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
       </div>
-      <p class="cv__badge"><AvailabilityBadge variant="full" /></p>
+      <div class="cv__header-text">
+        <p class="kicker">About Me</p>
+        <h1>{site.name}</h1>
+        <p class="cv__headline">Product Designer · AI SaaS · UX Strategy · Design Systems</p>
+        <ul class="cv__contact" role="list">
+          <li>{site.location}</li>
+          <li><a href={mailto}>{site.email}</a></li>
+          <li><a href="https://www.linkedin.com/in/sabeerdarr" rel="me noopener">LinkedIn</a></li>
+        </ul>
+        <div class="cv__actions">
+          <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
+            Download CV
+          </a>
+          <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
+        </div>
+      </div>
     </header>
 
     <section class="cv__section" aria-labelledby="summary-heading">
       <h2 id="summary-heading">Summary</h2>
       <p>
-        Product Design Lead with 10+ years of experience designing and scaling web, mobile, and
+        Product designer with 10+ years of experience designing and scaling web, mobile, and
         cross-platform products across AI SaaS, B2B software, e-commerce, and consumer applications.
         Leads end-to-end product design for complex workflows, from problem definition and user
         flows to prototyping, developer handoff, implementation review, and continuous improvement.
@@ -245,17 +256,6 @@ const structuredData = [
       <h2 id="languages-heading">Languages</h2>
       <p>English · Urdu</p>
     </section>
-
-    <aside class="cv__footer-cta">
-      <h2>Sound like a fit for your team?</h2>
-      <div class="cv__actions">
-        <a class="btn btn--primary" href={site.resumePath} data-event="resume-download" download>
-          Download CV
-        </a>
-        <a class="btn btn--secondary" href={mailto} data-event="hire-email">Let's chat</a>
-        <a class="btn btn--ghost" href="/work">See the work</a>
-      </div>
-    </aside>
   </div>
 </BaseLayout>
 
@@ -267,14 +267,34 @@ const structuredData = [
     gap: var(--space-7);
   }
 
-  .cv__header h1 {
-    margin-block-start: var(--space-4);
+  .cv__header {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: var(--space-7);
+    align-items: flex-end;
+  }
+
+  .cv__header-text {
+    flex: 1 1 20rem;
+  }
+
+  .cv__portrait {
+    flex: 1 1 14rem;
+    max-inline-size: 16rem;
+  }
+
+  .cv__portrait img {
+    inline-size: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 14%;
+    border: var(--border-hairline) solid var(--color-border);
   }
 
   .cv__headline {
     margin-block-start: var(--space-2);
     font-size: var(--text-lead);
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 
   .cv__contact {
@@ -284,8 +304,8 @@ const structuredData = [
     margin-block-start: var(--space-4);
     padding: 0;
     list-style: none;
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 
   .cv__actions {
@@ -295,13 +315,9 @@ const structuredData = [
     margin-block-start: var(--space-5);
   }
 
-  .cv__badge {
-    margin-block-start: var(--space-4);
-  }
-
   .cv__section h2 {
     padding-block-end: var(--space-3);
-    border-block-end: var(--border-strong);
+    border-block-end: var(--border-medium) solid var(--color-border-strong);
     margin-block-end: var(--space-5);
   }
 
@@ -315,17 +331,16 @@ const structuredData = [
 
   .cv__skills li {
     padding: var(--space-1) var(--space-3);
-    border: var(--border-hairline);
-    border-radius: var(--radius-full);
+    border: var(--border-hairline) solid var(--color-border);
     background-color: var(--color-surface);
     font-size: var(--text-xs);
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 
   .cv__role + .cv__role {
     margin-block-start: var(--space-6);
     padding-block-start: var(--space-5);
-    border-block-start: var(--border-hairline);
+    border-block-start: var(--border-hairline) solid var(--color-border);
   }
 
   .cv__role-head h3 {
@@ -333,15 +348,15 @@ const structuredData = [
   }
 
   .cv__role-title {
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
     font-weight: 500;
   }
 
   .cv__period {
     margin-block-start: var(--space-1);
-    font-family: var(--font-mono);
     font-size: var(--text-xs);
-    color: var(--color-ink-faint);
+    letter-spacing: var(--tracking-label);
+    color: var(--color-text-muted);
   }
 
   .cv__role ul {
@@ -350,8 +365,8 @@ const structuredData = [
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .cv__role li::marker {
@@ -374,33 +389,19 @@ const structuredData = [
     flex-direction: column;
     gap: var(--space-1);
     padding-block: var(--space-3);
-    border-block-end: var(--border-hairline);
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
   .cv__additional-role {
     font-weight: 600;
   }
 
-  .cv__footer-cta {
-    padding: var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface);
-  }
-
-  .cv__footer-cta h2 {
-    font-size: var(--text-h3);
-  }
-
   /* Print cleanly, like the resume page. */
   @media print {
     .cv__actions,
-    .cv__badge,
-    .cv__footer-cta,
     :global(.site-header),
     :global(.site-footer),
-    :global(.skip-link),
-    :global(.cursor-blob) {
+    :global(.skip-link) {
       display: none !important;
     }
   }

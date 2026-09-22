@@ -6,41 +6,9 @@
 
 @import './tokens.css';
 
-/* ---- Self-hosted fonts (SIL OFL) --------------------------------
-   Miriam Libre (variable 400–700) for display/headings;
-   JetBrains Mono (variable 100–800, + italic) for body and labels. */
-@font-face {
-  font-family: 'Miriam Libre';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/fonts/miriam-libre-latin.woff2') format('woff2');
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
-    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 100 800;
-  font-display: swap;
-  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
-    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: italic;
-  font-weight: 100 800;
-  font-display: swap;
-  src: url('/fonts/jetbrains-mono-italic-latin.woff2') format('woff2');
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
-    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
+/* Archivo is loaded via <link> tags in BaseLayout.astro (preconnect +
+   stylesheet), not @import here, so the browser can start fetching it
+   before it parses this file. */
 
 /* ---- Reset ------------------------------------------------------ */
 *,
@@ -64,10 +32,10 @@ html {
 body {
   min-height: 100dvh;
   background-color: var(--color-bg);
-  color: var(--color-ink);
+  color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--text-body);
-  line-height: var(--leading-body);
+  line-height: var(--leading-relaxed);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -103,26 +71,38 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display);
-  font-weight: 560;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.015em;
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
 h1 {
   font-size: var(--text-h1);
+  font-variation-settings: 'wdth' 112;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.025em;
 }
 h2 {
   font-size: var(--text-h2);
+  font-variation-settings: 'wdth' 110;
 }
 h3 {
   font-size: var(--text-h3);
-  line-height: var(--leading-snug);
+  font-variation-settings: 'wdth' 108;
 }
 h4 {
   font-size: var(--text-h4);
-  line-height: var(--leading-snug);
+  font-variation-settings: 'wdth' 106;
+}
+
+/* Display-scale headline (hero). Use alongside an <h1>. */
+.text-display {
+  font-size: var(--text-display);
+  font-variation-settings: 'wdth' 112;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.025em;
 }
 
 a {
@@ -130,28 +110,29 @@ a {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.16em;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition:
+    color var(--duration-hover) var(--ease),
+    background-color var(--duration-hover) var(--ease),
+    border-color var(--duration-hover) var(--ease);
 }
 
-/* Hover darkens the link toward ink instead of using accent-strong:
-   the brand lime is too light to be readable as text on paper, and
-   this mix stays accessible in both themes automatically. */
 a:hover {
-  color: color-mix(in srgb, var(--color-accent) 60%, var(--color-ink));
+  color: var(--color-text);
 }
 
 ::selection {
-  background-color: var(--color-accent);
-  color: var(--color-accent-contrast);
+  background-color: var(--color-accent-solid);
+  color: var(--color-accent-ink);
 }
 
 /* ---- Focus ------------------------------------------------------
-   Outlines are never removed without replacement: every focusable
-   element gets a visible two-tone ring via :focus-visible. */
+   Outlines are never removed without replacement, and are never
+   suppressed by the custom cursor: every focusable element gets a
+   visible cobalt ring via :focus-visible. */
 :focus-visible {
-  outline: 2px solid var(--color-focus);
+  outline: 3px solid var(--color-accent);
   outline-offset: 3px;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
 }
 
 /* ---- Reduced motion --------------------------------------------- */
@@ -189,99 +170,105 @@ a:hover {
   padding-block: calc(var(--section-gap) / 2);
 }
 
-/* ---- Small caps kicker label ------------------------------------ */
+/* ---- Uppercase label / kicker -------------------------------------
+   Plain eyebrow text, no numbering. */
 .kicker {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-mono);
   font-size: var(--text-label);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--color-ink-faint);
+  color: var(--color-text-muted);
 }
 
-.kicker::before {
-  content: '';
-  display: inline-block;
-  inline-size: 1.5rem;
-  block-size: 1px;
-  background-color: var(--color-line-strong);
+/* 120x4 accent rule — the section-opener alternative to a kicker. */
+.section-rule {
+  display: block;
+  inline-size: 7.5rem;
+  block-size: var(--border-heavy);
+  background-color: var(--color-accent-solid);
 }
 
 /* ---- Buttons -----------------------------------------------------
-   Shared classes so <a> and <button> render identically. */
+   Shared classes so <a> and <button> render identically. Flat, 0
+   radius, hard-offset shadow on hover instead of a color/background
+   shift, 48px minimum target (52px in hero/forms — apply .btn--large
+   at the call site). */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 2.9rem;
-  padding: 0.65rem 1.35rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius-full);
+  min-height: 3rem;
+  padding: 0.8rem 1.35rem;
+  border: var(--border-hairline) solid transparent;
+  border-radius: var(--radius-none);
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+    background-color var(--duration-hover) var(--ease),
+    border-color var(--duration-hover) var(--ease),
+    color var(--duration-hover) var(--ease),
+    box-shadow var(--duration-hover) var(--ease);
 }
 
-.btn:active {
-  transform: translateY(1px);
+.btn:hover {
+  box-shadow: var(--shadow-hard-quiet);
 }
 
 .btn--primary {
-  background-color: var(--color-ink);
-  color: var(--color-bg);
+  background-color: var(--color-accent-solid);
+  color: var(--color-accent-ink);
 }
 
-/* Hover flips to the brand lime — light in BOTH themes, so the label
-   is always dark ink for contrast (10:1 on #a4dd0a, 14:1 on #cafc43). */
 .btn--primary:hover {
-  background-color: var(--color-accent-strong);
-  color: #14110e;
+  box-shadow: var(--shadow-hard);
 }
 
 .btn--secondary {
   background-color: transparent;
-  border-color: var(--color-line-strong);
-  color: var(--color-ink);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
 }
 
 .btn--secondary:hover {
-  border-color: var(--color-ink);
-  color: var(--color-ink);
+  border-color: var(--color-text);
 }
 
 .btn--ghost {
   background-color: transparent;
-  color: var(--color-ink-secondary);
-  padding-inline: var(--space-3);
+  border-color: transparent;
+  color: var(--color-text-muted);
+  box-shadow: none;
 }
 
 .btn--ghost:hover {
-  color: var(--color-ink);
+  color: var(--color-text);
+  box-shadow: none;
 }
 
 .btn--small {
-  min-height: 2.25rem;
-  padding: 0.35rem 1rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
   font-size: var(--text-xs);
+}
+
+.btn--large {
+  min-height: 3.25rem;
+  padding: 0.95rem 1.6rem;
 }
 
 .btn[aria-disabled='true'],
 .btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
-  transform: none;
+  box-shadow: none;
 }
 
 /* ---- Text link with arrow ---------------------------------------- */
@@ -289,19 +276,59 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
-  font-weight: 600;
-  font-size: var(--text-small);
-  color: var(--color-accent);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--color-text);
   text-decoration: none;
+  border-block-end: var(--border-medium) solid var(--color-accent-solid);
+  padding-block-end: 0.2em;
 }
 
 .text-link::after {
   content: '\2192';
-  transition: transform var(--duration-fast) var(--ease-out);
+  transition: transform var(--duration-hover) var(--ease);
 }
 
 .text-link:hover::after {
   transform: translateX(0.2em);
+}
+
+/* ---- Pill chip group (filters, contact topic selector) -------------
+   Real <button>s in role="group", aria-pressed reflects state. */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: 0.6rem 1.1rem;
+  border: var(--border-hairline) solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-hover) var(--ease),
+    color var(--duration-hover) var(--ease),
+    border-color var(--duration-hover) var(--ease);
+}
+
+.chip[aria-pressed='true'] {
+  background-color: var(--color-accent-solid);
+  color: var(--color-accent-ink);
+  border-color: var(--color-accent-solid);
+}
+
+.chip__count {
+  font-size: var(--text-xs);
+  opacity: 0.7;
 }
 
 /* ---- Visually hidden (screen-reader-only) ------------------------ */
@@ -321,7 +348,7 @@ a:hover {
 .prose {
   max-width: var(--container-narrow);
   font-size: var(--text-body);
-  line-height: var(--leading-body);
+  line-height: var(--leading-relaxed);
 }
 
 .prose > * + * {
@@ -331,7 +358,7 @@ a:hover {
 .prose h2 {
   margin-block-start: var(--space-8);
   padding-block-start: var(--space-5);
-  border-block-start: var(--border-hairline);
+  border-block-start: var(--border-hairline) solid var(--color-border);
 }
 
 .prose h3 {
@@ -357,30 +384,29 @@ a:hover {
 }
 
 .prose blockquote {
-  border-inline-start: 3px solid var(--color-accent);
+  border-inline-start: var(--border-medium) solid var(--color-accent-solid);
   padding-inline-start: var(--space-5);
-  color: var(--color-ink-secondary);
-  font-family: var(--font-display);
+  color: var(--color-text-muted);
   font-size: var(--text-lead);
   line-height: 1.5;
 }
 
 .prose code {
-  font-family: var(--font-mono);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.875em;
-  background-color: var(--color-surface);
-  border: var(--border-hairline);
-  border-radius: var(--radius-xs);
+  background-color: var(--color-surface-2);
+  border: var(--border-hairline) solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 0.1em 0.35em;
 }
 
 .prose pre {
-  background-color: var(--color-surface) !important;
-  border: var(--border-hairline);
+  background-color: var(--color-surface-2) !important;
+  border: var(--border-hairline) solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: var(--space-4) var(--space-5);
   overflow-x: auto;
-  font-size: var(--text-small);
+  font-size: var(--text-sm);
 }
 
 .prose pre code {
@@ -391,30 +417,30 @@ a:hover {
 
 .prose img {
   border-radius: var(--radius-sm);
-  border: var(--border-hairline);
+  border: var(--border-hairline) solid var(--color-border);
 }
 
 .prose hr {
   border: 0;
-  border-block-start: var(--border-hairline);
+  border-block-start: var(--border-hairline) solid var(--color-border);
 }
 
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-small);
+  font-size: var(--text-sm);
 }
 
 .prose th,
 .prose td {
   text-align: start;
   padding: var(--space-2) var(--space-3);
-  border-block-end: var(--border-hairline);
+  border-block-end: var(--border-hairline) solid var(--color-border);
 }
 
 .prose th {
-  font-weight: 600;
-  border-block-end: var(--border-strong);
+  font-weight: 700;
+  border-block-end: var(--border-medium) solid var(--color-border-strong);
 }
 
 /* Wide tables scroll inside their own container on small screens. */
@@ -429,16 +455,21 @@ a:hover {
   gap: var(--space-4);
 }
 
-/* Dark theme: swap Shiki's dual-theme variables. */
-[data-theme='dark'] .prose pre,
-[data-theme='dark'] .prose pre span {
+/* Dark theme (default): swap Shiki's dual-theme variables. */
+.prose pre,
+.prose pre span {
   color: var(--shiki-dark) !important;
 }
 
-@media (prefers-color-scheme: dark) {
+[data-theme='light'] .prose pre,
+[data-theme='light'] .prose pre span {
+  color: var(--shiki-light, inherit) !important;
+}
+
+@media (prefers-color-scheme: light) {
   :root:not([data-theme]) .prose pre,
   :root:not([data-theme]) .prose pre span {
-    color: var(--shiki-dark) !important;
+    color: var(--shiki-light, inherit) !important;
   }
 }
 
@@ -466,10 +497,10 @@ a:hover {
       .resume__section
     ) {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(26px);
     transition:
-      opacity 650ms var(--ease-out),
-      transform 650ms var(--ease-out);
+      opacity var(--duration-reveal) var(--ease),
+      transform var(--duration-reveal) var(--ease);
   }
 
   html.js-reveal

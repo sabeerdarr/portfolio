@@ -29,6 +29,25 @@ const work = defineCollection({
         ])
       )
       .min(1),
+    /**
+     * Work-page filter taxonomy (2026 redesign). Distinct from
+     * `category` above — a fixed 6-value vocabulary that drives the
+     * /work filter chips and their live counts. Optional so draft
+     * entries (e.g. digitt-plus, hidden via draft: true) don't need
+     * it; every published entry should set it.
+     */
+    categories: z
+      .array(
+        z.enum([
+          'AI',
+          'Web app / SaaS',
+          'Mobile apps',
+          'Web design',
+          'UX research',
+          'Design systems',
+        ])
+      )
+      .optional(),
     role: z.string(),
     team: z.string().optional(),
     duration: z.string(),

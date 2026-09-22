@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Callout from '@/components/common/Callout.astro';
 import { photos } from '@/data/photography';
 import { breadcrumbSchema } from '@/utils/schema';
 import { site } from '@/config/site';
@@ -8,7 +7,8 @@ import { site } from '@/config/site';
 /**
  * Photography — a hobby page, deliberately lighter in tone than the
  * rest of the site. Gallery entries come from src/data/photography.ts;
- * the layout is a JS-free masonry-style column grid.
+ * each tile is a button opening a fullscreen lightbox (focus-trapped,
+ * closes on backdrop/button/Escape, restores focus to the trigger).
  */
 const structuredData = [
   breadcrumbSchema([
@@ -16,8 +16,6 @@ const structuredData = [
     { name: 'Photography', path: '/photography' },
   ]),
 ];
-
-const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
 ---
 
 <BaseLayout
@@ -27,20 +25,25 @@ const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
 >
   <div class="container">
     <header class="page-hero">
-      <p class="kicker">Photography</p>
       <h1>Off duty, behind a lens</h1>
+      <span class="section-rule"></span>
       <p class="page-hero__lede">
         Design is the job; this is the hobby. No client, no brief, no design system — just shots I
-        liked enough to keep. Expect an unedited mix of places, light, and whatever caught my eye.
+        liked enough to keep.
       </p>
     </header>
 
     <section class="section" aria-label="Photo gallery">
       <ul class="gallery" role="list">
         {
-          photos.map((photo) => (
+          photos.map((photo, index) => (
             <li class:list={['gallery__item', `gallery__item--${photo.orientation}`]}>
-              <figure>
+              <button
+                type="button"
+                class="gallery__trigger"
+                data-lightbox-trigger
+                data-index={index}
+              >
                 <img
                   src={photo.src}
                   alt={photo.alt}
@@ -49,8 +52,8 @@ const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
                   loading="lazy"
                   decoding="async"
                 />
-                {photo.caption && <figcaption>{photo.caption}</figcaption>}
-              </figure>
+                {photo.caption && <span class="gallery__caption">{photo.caption}</span>}
+              </button>
             </li>
           ))
         }
@@ -65,27 +68,39 @@ const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
       </p>
     </aside>
   </div>
+
+  <div class="lightbox" data-lightbox hidden>
+    <button
+      type="button"
+      class="lightbox__backdrop"
+      data-lightbox-close
+      aria-hidden="true"
+      tabindex="-1"></button>
+    <div class="lightbox__panel" role="dialog" aria-modal="true" aria-label="Photo viewer">
+      <button type="button" class="lightbox__close" data-lightbox-close>
+        <span aria-hidden="true">✕</span>
+        <span class="visually-hidden">Close</span>
+      </button>
+      <img class="lightbox__image" data-lightbox-image src="" alt="" />
+      <p class="lightbox__caption" data-lightbox-caption></p>
+    </div>
+  </div>
 </BaseLayout>
 
 <style>
   .page-hero {
     padding-block: var(--space-8) var(--space-6);
-    border-block-end: var(--border-hairline);
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
-  .page-hero h1 {
-    margin-block-start: var(--space-4);
+  .page-hero .section-rule {
+    margin-block: var(--space-6);
   }
 
   .page-hero__lede {
-    margin-block-start: var(--space-4);
     max-width: 46em;
     font-size: var(--text-lead);
-    color: var(--color-ink-secondary);
-  }
-
-  .gallery-note {
-    margin-block-start: var(--space-6);
+    color: var(--color-text-muted);
   }
 
   /* JS-free masonry: CSS columns. Items keep natural aspect ratios. */
@@ -113,40 +128,191 @@ const hasRealPhotos = photos.some((p) => !p.src.includes('placeholder'));
     margin-block-end: var(--space-5);
   }
 
-  .gallery__item figure {
-    margin: 0;
+  .gallery__trigger {
+    display: block;
+    inline-size: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: start;
+    cursor: pointer;
+    min-height: 44px;
   }
 
-  .gallery__item img {
+  .gallery__trigger img {
     inline-size: 100%;
     block-size: auto;
-    border: var(--border-hairline);
-    border-radius: var(--radius-sm);
+    border: var(--border-hairline) solid var(--color-border);
     background-color: var(--color-surface);
-    transition:
-      transform var(--duration-base) var(--ease-out),
-      box-shadow var(--duration-base) var(--ease-out);
+    transition: border-color var(--duration-hover) var(--ease);
   }
 
-  .gallery__item:hover img {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+  .gallery__trigger:hover img,
+  .gallery__trigger:focus-visible img {
+    border-color: var(--color-border-strong);
   }
 
-  .gallery__item figcaption {
+  .gallery__caption {
+    display: block;
     margin-block-start: var(--space-2);
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     letter-spacing: 0.04em;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
   }
 
   .gallery-footer {
     margin-block: var(--space-6) var(--space-8);
     padding-block-start: var(--space-5);
-    border-block-start: var(--border-hairline);
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    border-block-start: var(--border-hairline) solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
     max-width: 46em;
   }
+
+  /* ---- Lightbox ------------------------------------------------- */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    padding: 0;
+    background-color: rgb(8 8 7 / 0.95);
+    cursor: pointer;
+  }
+
+  .lightbox__panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    max-inline-size: min(92vw, 64rem);
+    max-block-size: 90vh;
+    padding: var(--space-5);
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--border-hairline) solid var(--color-border-strong);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .lightbox__image {
+    max-block-size: 74vh;
+    max-inline-size: 100%;
+    width: auto;
+    object-fit: contain;
+    border: var(--border-hairline) solid var(--color-border);
+  }
+
+  .lightbox__caption {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    text-align: center;
+  }
 </style>
+
+<script>
+  interface LightboxPhoto {
+    src: string;
+    alt: string;
+    caption?: string;
+  }
+
+  const triggers = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[data-lightbox-trigger]')
+  );
+  const lightbox = document.querySelector<HTMLElement>('[data-lightbox]');
+  const image = lightbox?.querySelector<HTMLImageElement>('[data-lightbox-image]');
+  const caption = lightbox?.querySelector<HTMLElement>('[data-lightbox-caption]');
+  const closeButtons = lightbox?.querySelectorAll<HTMLButtonElement>('[data-lightbox-close]');
+  const panel = lightbox?.querySelector<HTMLElement>('.lightbox__panel');
+
+  let lastTrigger: HTMLElement | null = null;
+
+  function photoFromTrigger(trigger: HTMLButtonElement): LightboxPhoto {
+    const img = trigger.querySelector('img');
+    const captionEl = trigger.querySelector('.gallery__caption');
+    return {
+      src: img?.getAttribute('src') ?? '',
+      alt: img?.getAttribute('alt') ?? '',
+      caption: captionEl?.textContent ?? undefined,
+    };
+  }
+
+  function open(trigger: HTMLButtonElement) {
+    if (!lightbox || !image) return;
+    const photo = photoFromTrigger(trigger);
+    image.src = photo.src;
+    image.alt = photo.alt;
+    if (caption) caption.textContent = photo.caption ?? '';
+    lastTrigger = trigger;
+    lightbox.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+    closeButtons?.[0]?.focus();
+  }
+
+  function close() {
+    if (!lightbox) return;
+    lightbox.hidden = true;
+    document.documentElement.style.overflow = '';
+    lastTrigger?.focus();
+  }
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => open(trigger));
+  });
+
+  closeButtons?.forEach((button) => {
+    button.addEventListener('click', close);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!lightbox || lightbox.hidden) return;
+
+    if (event.key === 'Escape') {
+      close();
+      return;
+    }
+
+    // Focus trap: cycle Tab/Shift+Tab within the panel's focusable set.
+    if (event.key === 'Tab' && panel) {
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>('button, [href], [tabindex]:not([tabindex="-1"])')
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+</script>

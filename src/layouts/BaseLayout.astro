@@ -5,7 +5,8 @@ import SEOHead from '@/components/seo/SEOHead.astro';
 import SkipLink from '@/components/common/SkipLink.astro';
 import SiteHeader from '@/components/navigation/SiteHeader.astro';
 import SiteFooter from '@/components/navigation/SiteFooter.astro';
-import CursorBlob from '@/components/common/CursorBlob.astro';
+import CustomCursor from '@/components/common/CustomCursor.astro';
+import AmbientOrbs from '@/components/common/AmbientOrbs.astro';
 import type { Props as SEOProps } from '@/components/seo/SEOHead.astro';
 
 /**
@@ -34,19 +35,11 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
       title={`Writing — ${site.name}`}
       href="/rss.xml"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="preload"
-      href="/fonts/jetbrains-mono-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/miriam-libre-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap"
     />
 
     <!-- Theme bootstrap: runs before paint so there is no flash of
@@ -89,7 +82,8 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
   </head>
   <body id="top">
     <SkipLink />
-    <CursorBlob />
+    <AmbientOrbs />
+    <CustomCursor />
     <SiteHeader />
     <main id="main-content">
       <slot />
@@ -150,3 +144,13 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
     </script>
   </body>
 </html>
+
+<style>
+  /* AmbientOrbs sits at z-index: 0, decorative and behind everything.
+     Content needs an explicit stacking context above it. */
+  #main-content,
+  :global(.site-footer) {
+    position: relative;
+    z-index: var(--z-content);
+  }
+</style>

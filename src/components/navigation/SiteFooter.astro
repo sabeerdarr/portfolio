@@ -1,6 +1,5 @@
 ---
 import { site } from '@/config/site';
-import AvailabilityBadge from '@/components/common/AvailabilityBadge.astro';
 import SocialLinks from '@/components/common/SocialLinks.astro';
 
 const year = new Date().getFullYear();
@@ -10,11 +9,11 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="site-footer__top">
       <div class="site-footer__intro">
+        <span class="site-footer__logo" role="img" aria-hidden="true">
+          <span class="site-footer__logo-bolt" aria-hidden="true"></span>
+        </span>
         <p class="site-footer__name">{site.name}</p>
-        <p class="site-footer__statement">
-          Designing clear, useful digital products for teams that care about their users.
-        </p>
-        <AvailabilityBadge variant="full" />
+        <p class="site-footer__statement">Product designer for complex SaaS and AI products.</p>
       </div>
 
       <nav class="site-footer__nav" aria-label="Footer">
@@ -38,7 +37,7 @@ const year = new Date().getFullYear();
           <h2 class="site-footer__heading">Contact</h2>
           <ul role="list">
             <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-            <li><a href="/#hire-me">Start a conversation</a></li>
+            <li><a href="/#contact">Get in touch</a></li>
           </ul>
         </div>
       </nav>
@@ -63,10 +62,10 @@ const year = new Date().getFullYear();
 <style>
   .site-footer {
     margin-block-start: var(--section-gap);
-    border-block-start: var(--border-hairline);
-    background-color: var(--color-surface);
+    border-block-start: var(--border-heavy) solid var(--color-accent-solid);
+    background-color: var(--color-bg-inset);
     padding-block: var(--space-8) var(--space-6);
-    font-size: var(--text-small);
+    font-size: var(--text-sm);
   }
 
   .site-footer__top {
@@ -85,18 +84,36 @@ const year = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-4);
+    gap: var(--space-3);
     max-width: 24rem;
   }
 
+  .site-footer__logo {
+    position: relative;
+    display: block;
+    inline-size: 2.125rem;
+    block-size: 2.125rem;
+    background-color: var(--color-brand-mark);
+    border-radius: var(--radius-sm);
+  }
+
+  .site-footer__logo-bolt {
+    position: absolute;
+    inset: 22%;
+    background-image: url('/images/brand/logo-bolt-mask.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
   .site-footer__name {
-    font-family: var(--font-display);
     font-size: var(--text-h3);
-    font-weight: 600;
+    font-weight: 700;
+    font-variation-settings: 'wdth' 108;
   }
 
   .site-footer__statement {
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 
   .site-footer__nav {
@@ -106,12 +123,11 @@ const year = new Date().getFullYear();
   }
 
   .site-footer__heading {
-    font-family: var(--font-mono);
     font-size: var(--text-label);
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
     margin-block-end: var(--space-3);
   }
 
@@ -124,12 +140,12 @@ const year = new Date().getFullYear();
   }
 
   .site-footer__nav a {
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
     text-decoration: none;
   }
 
   .site-footer__nav a:hover {
-    color: var(--color-ink);
+    color: var(--color-text);
     text-decoration: underline;
   }
 
@@ -140,8 +156,8 @@ const year = new Date().getFullYear();
     gap: var(--space-3) var(--space-5);
     margin-block-start: var(--space-8);
     padding-block-start: var(--space-5);
-    border-block-start: var(--border-hairline);
-    color: var(--color-ink-faint);
+    border-block-start: var(--border-hairline) solid var(--color-border);
+    color: var(--color-text-muted);
     font-size: var(--text-xs);
   }
 
@@ -154,10 +170,10 @@ const year = new Date().getFullYear();
   }
 
   .site-footer__legal a {
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
   }
 
   .site-footer__legal a:hover {
-    color: var(--color-ink);
+    color: var(--color-text);
   }
 </style>

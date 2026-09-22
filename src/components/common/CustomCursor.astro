@@ -1,0 +1,194 @@
+---
+/**
+ * Custom cursor — replaces the native pointer with a three-layer
+ * follower: an unclipped blurred glow, a 13px shape that morphs
+ * octagon → square → triangle on a colour loop, and a pixel-art hand
+ * that crossfades in over interactive elements.
+ *
+ * Guard rails:
+ *  - only initializes for mouse-style pointers (hover + fine), never
+ *    touch, and only when the visitor allows motion — checked in JS,
+ *    not just CSS, since positioning is imperative (pointermove)
+ *  - :focus-visible is never suppressed — keyboard navigation and the
+ *    custom cursor are independent; removing one never removes the
+ *    other
+ *  - pointer-events: none on every layer, so it can never intercept
+ *    interaction
+ *  - the glow is a separate sibling element, not a box-shadow on the
+ *    shape layer — clip-path (used for the shape morph) would clip a
+ *    box-shadow, so the glow has to live outside the clipped element
+ */
+---
+
+<div class="custom-cursor" aria-hidden="true" data-custom-cursor>
+  <div class="custom-cursor__glow" data-glow></div>
+  <div class="custom-cursor__shape" data-cursor></div>
+  <div class="custom-cursor__hand" data-hand></div>
+</div>
+
+<style>
+  /* Only devices with a real mouse-style pointer get the custom
+     cursor at all — everything else keeps the native one. */
+  @media (hover: hover) and (pointer: fine) {
+    :global(html[data-cursor-active]) {
+      cursor: none;
+    }
+
+    :global(html[data-cursor-active] a),
+    :global(html[data-cursor-active] button),
+    :global(html[data-cursor-active] input),
+    :global(html[data-cursor-active] select),
+    :global(html[data-cursor-active] textarea),
+    :global(html[data-cursor-active] label) {
+      cursor: none;
+    }
+  }
+
+  .custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    inline-size: 0;
+    block-size: 0;
+    pointer-events: none;
+    z-index: var(--z-overlay);
+    opacity: 0;
+    transition: opacity var(--duration-crossfade) var(--ease);
+    will-change: transform;
+  }
+
+  .custom-cursor.is-active {
+    opacity: 1;
+  }
+
+  .custom-cursor__glow,
+  .custom-cursor__shape,
+  .custom-cursor__hand {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Unclipped glow — a separate sibling, never a box-shadow on the
+     clip-path shape below it. */
+  .custom-cursor__glow {
+    inline-size: 58px;
+    block-size: 58px;
+    border-radius: 50%;
+    filter: blur(7px);
+    mix-blend-mode: screen;
+    background: var(--color-brand-orange);
+    animation: cursorColorLoop var(--duration-cursor-loop) var(--ease) infinite;
+    transition:
+      opacity var(--duration-crossfade) var(--ease),
+      transform var(--duration-crossfade) var(--ease);
+  }
+
+  .custom-cursor__shape {
+    inline-size: 13px;
+    block-size: 13px;
+    background: var(--color-brand-orange);
+    border-radius: 50%;
+    clip-path: none;
+    animation: cursorColorLoop var(--duration-cursor-loop) var(--ease) infinite;
+    transition:
+      opacity var(--duration-crossfade) var(--ease),
+      transform var(--duration-crossfade) var(--ease);
+  }
+
+  .custom-cursor__hand {
+    inline-size: 26px;
+    block-size: 36px;
+    background-image: url('/images/cursor/cursor-hand.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    image-rendering: pixelated;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+    transition:
+      opacity var(--duration-crossfade) var(--ease),
+      transform var(--duration-crossfade) var(--ease);
+  }
+
+  @keyframes cursorColorLoop {
+    0% {
+      background-color: var(--color-brand-orange);
+      border-radius: 50%;
+      clip-path: none;
+    }
+    33% {
+      background-color: var(--color-accent-solid);
+      border-radius: 0;
+      clip-path: none;
+    }
+    66% {
+      background-color: var(--color-brand-mark);
+      border-radius: 0;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+    100% {
+      background-color: var(--color-brand-orange);
+      border-radius: 50%;
+      clip-path: none;
+    }
+  }
+
+  /* Hover state over interactive elements: shape/glow shrink and
+     fade, the pixel hand crossfades in. */
+  .custom-cursor[data-hot] .custom-cursor__shape {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+
+  .custom-cursor[data-hot] .custom-cursor__glow {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.55);
+  }
+
+  .custom-cursor[data-hot] .custom-cursor__hand {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .custom-cursor {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const follower = document.querySelector<HTMLElement>('[data-custom-cursor]');
+  const wantsCursor =
+    follower &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (follower && wantsCursor) {
+    document.documentElement.setAttribute('data-cursor-active', '');
+
+    const hotSelector = 'a, button, input, select, textarea, label';
+
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        follower.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`;
+        follower.classList.add('is-active');
+
+        const target = event.target as HTMLElement | null;
+        if (target?.closest(hotSelector)) {
+          follower.setAttribute('data-hot', '');
+        } else {
+          follower.removeAttribute('data-hot');
+        }
+      },
+      { passive: true }
+    );
+
+    document.documentElement.addEventListener('pointerleave', () => {
+      follower.classList.remove('is-active');
+    });
+  }
+</script>

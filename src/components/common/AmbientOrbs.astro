@@ -1,0 +1,98 @@
+---
+/**
+ * Ambient orbs — three blurred, drifting radial-gradient shapes that
+ * sit behind page content. Purely decorative: aria-hidden, z-index 0
+ * (page content is lifted to z-index: var(--z-content) in
+ * BaseLayout's <style> block), and CSS-only so there is no JS cost.
+ * prefers-reduced-motion turns the drift off via the global override
+ * in global.css; the explicit rule below is belt-and-braces in case
+ * this component is ever used outside that stylesheet's scope.
+ */
+---
+
+<div class="ambient-orbs" aria-hidden="true">
+  <span class="ambient-orbs__orb ambient-orbs__orb--a"></span>
+  <span class="ambient-orbs__orb ambient-orbs__orb--b"></span>
+  <span class="ambient-orbs__orb ambient-orbs__orb--c"></span>
+</div>
+
+<style>
+  .ambient-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-base);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ambient-orbs__orb {
+    position: absolute;
+    inline-size: 46vw;
+    block-size: 46vw;
+    max-inline-size: 640px;
+    max-block-size: 640px;
+    border-radius: 50%;
+    filter: blur(90px);
+    will-change: transform;
+  }
+
+  .ambient-orbs__orb--a {
+    inset-block-start: -10%;
+    inset-inline-start: -8%;
+    background: var(--color-brand-orange);
+    opacity: 0.14;
+    animation: orbDriftA var(--duration-orb) var(--ease) infinite;
+  }
+
+  .ambient-orbs__orb--b {
+    inset-block-start: 30%;
+    inset-inline-end: -12%;
+    background: var(--color-accent-solid);
+    opacity: 0.19;
+    animation: orbDriftB calc(var(--duration-orb) * 1.1) var(--ease) infinite;
+  }
+
+  .ambient-orbs__orb--c {
+    inset-block-end: -14%;
+    inset-inline-start: 20%;
+    background: var(--color-brand-mark);
+    opacity: 0.12;
+    animation: orbDriftC calc(var(--duration-orb) * 0.85) var(--ease) infinite;
+  }
+
+  @keyframes orbDriftA {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(6vw, 4vh) scale(1.08);
+    }
+  }
+
+  @keyframes orbDriftB {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(-5vw, 6vh) scale(0.94);
+    }
+  }
+
+  @keyframes orbDriftC {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(4vw, -5vh) scale(1.06);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-orbs__orb {
+      animation: none;
+    }
+  }
+</style>
