@@ -27,6 +27,23 @@ html {
   scroll-behavior: smooth;
   /* Keep anchored headings clear of the sticky header. */
   scroll-padding-top: 5.5rem;
+  /* Lime-tinted default-arrow cursor: a real OS cursor image, not a
+     JS-positioned follower — same shape everywhere, no lag, no
+     double-cursor glitches, works identically on every input device.
+     The hotspot (2 2) sits at the arrow's tip. */
+  cursor: var(--cursor-lime);
+}
+
+/* Interactive elements keep the same lime arrow instead of reverting
+   to the browser's native pointer/hand cursor. Text inputs are left
+   alone so the native text (I-beam) cursor still shows where you can
+   actually type. */
+a,
+button,
+label,
+select,
+[role='button'] {
+  cursor: var(--cursor-lime);
 }
 
 body {
@@ -210,7 +227,9 @@ a:hover {
   font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
-  cursor: pointer;
+  /* No cursor: pointer override here — buttons keep the site-wide
+     lime cursor (set on the `button` element selector in this file)
+     instead of reverting to the browser's native hand cursor. */
   transition:
     background-color var(--duration-hover) var(--ease),
     border-color var(--duration-hover) var(--ease),
@@ -238,7 +257,8 @@ a:hover {
 }
 
 .btn--secondary:hover {
-  border-color: var(--color-text);
+  border-color: var(--color-brand-mark);
+  color: var(--color-text);
 }
 
 .btn--ghost {
@@ -313,7 +333,6 @@ a:hover {
   color: var(--color-text);
   font-size: var(--text-sm);
   font-weight: 600;
-  cursor: pointer;
   transition:
     background-color var(--duration-hover) var(--ease),
     color var(--duration-hover) var(--ease),

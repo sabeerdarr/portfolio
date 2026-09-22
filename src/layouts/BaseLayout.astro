@@ -5,7 +5,6 @@ import SEOHead from '@/components/seo/SEOHead.astro';
 import SkipLink from '@/components/common/SkipLink.astro';
 import SiteHeader from '@/components/navigation/SiteHeader.astro';
 import SiteFooter from '@/components/navigation/SiteFooter.astro';
-import CustomCursor from '@/components/common/CustomCursor.astro';
 import AmbientOrbs from '@/components/common/AmbientOrbs.astro';
 import type { Props as SEOProps } from '@/components/seo/SEOHead.astro';
 
@@ -83,7 +82,6 @@ const loadAnalytics = import.meta.env.PROD && analyticsToken.length > 0;
   <body id="top">
     <SkipLink />
     <AmbientOrbs />
-    <CustomCursor />
     <SiteHeader />
     <main id="main-content">
       <slot />
