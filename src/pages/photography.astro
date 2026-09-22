@@ -47,8 +47,8 @@ const structuredData = [
                 <img
                   src={photo.src}
                   alt={photo.alt}
-                  width={photo.orientation === 'portrait' ? 900 : 1440}
-                  height={photo.orientation === 'portrait' ? 1200 : 960}
+                  width={photo.width}
+                  height={photo.height}
                   loading="lazy"
                   decoding="async"
                 />
