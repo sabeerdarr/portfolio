@@ -60,9 +60,9 @@ const rt = readingTime(article.body ?? '');
     position: relative;
     display: flex;
     flex-direction: column;
-    border-block-start: 2px solid var(--color-ink);
+    border-block-start: 2px solid var(--color-text);
     padding-block-start: var(--space-4);
-    transition: border-color var(--duration-base) var(--ease-out);
+    transition: border-color var(--duration-hover) var(--ease);
   }
 
   .article-card:hover {
@@ -72,7 +72,7 @@ const rt = readingTime(article.body ?? '');
   .article-card__media {
     display: block;
     margin-block-end: var(--space-4);
-    border: var(--border-hairline);
+    border: var(--border-hairline) solid var(--color-border);
     border-radius: var(--radius-sm);
     overflow: hidden;
   }
@@ -95,11 +95,10 @@ const rt = readingTime(article.body ?? '');
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
   }
 
   /* Category link sits above the stretched link. */
@@ -119,7 +118,7 @@ const rt = readingTime(article.body ?? '');
   }
 
   .article-card__title a {
-    color: var(--color-ink);
+    color: var(--color-text);
     text-decoration: none;
   }
 
@@ -130,12 +129,12 @@ const rt = readingTime(article.body ?? '');
   }
 
   .article-card__title a:hover {
-    color: color-mix(in srgb, var(--color-accent) 60%, var(--color-ink));
+    color: color-mix(in srgb, var(--color-accent) 60%, var(--color-text));
   }
 
   .article-card__description {
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .article-card__link {

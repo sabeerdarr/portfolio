@@ -52,7 +52,12 @@ const embedUrl = `${site.bookingUrl}?embed=true&layout=month_view`;
           </a>
         </div>
         <div class="contact__booking-frame">
-          <iframe src={embedUrl} title={`Book a 30-minute call with ${site.name}`} loading="lazy"
+          <iframe
+            src={embedUrl}
+            title={`Book a 30-minute call with ${site.name}`}
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
           ></iframe>
         </div>
       </div>

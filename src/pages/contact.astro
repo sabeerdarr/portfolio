@@ -86,7 +86,7 @@ const structuredData = [
     margin-block-start: var(--space-4);
     max-width: 46em;
     font-size: var(--text-lead);
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 
   .contact-grid {
@@ -104,9 +104,9 @@ const structuredData = [
 
   .contact-panel {
     padding: var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface-raised);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-none);
+    background-color: var(--color-surface);
     scroll-margin-top: 5.5rem;
   }
 
@@ -116,8 +116,8 @@ const structuredData = [
 
   .contact-panel__intro {
     margin-block: var(--space-3) var(--space-6);
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .contact-notes {
@@ -125,8 +125,8 @@ const structuredData = [
     gap: var(--space-6);
     margin-block: var(--space-6) var(--space-8);
     padding: var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-none);
     background-color: var(--color-surface);
   }
 
@@ -146,12 +146,12 @@ const structuredData = [
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 
   .contact-notes p {
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 </style>

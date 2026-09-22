@@ -351,7 +351,7 @@ const structuredData = [
 <style>
   .page-hero {
     padding-block: var(--space-8) var(--space-6);
-    border-block-end: var(--border-hairline);
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
   .page-hero h1 {
@@ -362,7 +362,7 @@ const structuredData = [
     margin-block-start: var(--space-4);
     max-width: 48em;
     font-size: var(--text-lead);
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 
   .page-hero__start {
@@ -372,11 +372,11 @@ const structuredData = [
     border-inline-start: 3px solid var(--color-accent);
     background-color: var(--color-surface);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    font-size: var(--text-small);
+    font-size: var(--text-sm);
   }
 
   .service {
-    border-block-end: var(--border-hairline);
+    border-block-end: var(--border-hairline) solid var(--color-border);
     scroll-margin-top: 5.5rem;
   }
 
@@ -392,20 +392,19 @@ const structuredData = [
   }
 
   .service__block h3 {
-    font-family: var(--font-mono);
     font-size: var(--text-label);
     font-weight: 600;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-text-muted);
     margin-block-end: var(--space-3);
   }
 
   .service__block ul,
   .service__block ol {
     padding-inline-start: 1.2rem;
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -440,7 +439,7 @@ const structuredData = [
 
   .service__duration {
     margin-block-start: var(--space-4);
-    font-size: var(--text-small);
+    font-size: var(--text-sm);
   }
 
   .service__price {
@@ -465,8 +464,8 @@ const structuredData = [
   }
 
   .working-grid p {
-    font-size: var(--text-small);
-    color: var(--color-ink-secondary);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 
   .faq {
@@ -476,13 +475,12 @@ const structuredData = [
   }
 
   .faq__item {
-    border-block-end: var(--border-hairline);
+    border-block-end: var(--border-hairline) solid var(--color-border);
   }
 
   .faq__item summary {
     padding-block: var(--space-4);
     font-weight: 600;
-    cursor: pointer;
     list-style-position: outside;
   }
 
@@ -492,22 +490,22 @@ const structuredData = [
 
   .faq__item p {
     padding-block-end: var(--space-5);
-    color: var(--color-ink-secondary);
-    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
     max-width: 60ch;
   }
 
   .services-cta {
     margin-block: var(--space-7);
     padding: var(--space-7) var(--space-6);
-    border: var(--border-hairline);
-    border-radius: var(--radius-lg);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-none);
     background-color: var(--color-surface);
     text-align: center;
   }
 
   .services-cta p {
     margin-block: var(--space-3) var(--space-5);
-    color: var(--color-ink-secondary);
+    color: var(--color-text-muted);
   }
 </style>

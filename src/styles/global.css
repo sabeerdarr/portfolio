@@ -42,6 +42,7 @@ a,
 button,
 label,
 select,
+summary,
 [role='button'] {
   cursor: var(--cursor-lime);
 }
