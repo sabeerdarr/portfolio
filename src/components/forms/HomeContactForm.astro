@@ -2,113 +2,96 @@
 import { site } from '@/config/site';
 
 /**
- * Home page's unified #contact form. Follows the same Formspree
- * pattern as ContactForm.astro (env-var-gated form ID, honest email
- * fallback when unset, fetch-based progressive enhancement,
- * honeypot, live-region status) but with a 3-button pill topic
- * selector (role="group" + aria-pressed) instead of a <select>.
+ * Home page's unified #contact form, delivered via FormSubmit
+ * (formsubmit.co): no account or API key required — the form posts
+ * straight to the recipient's address, and FormSubmit emails that
+ * address a one-time confirmation link on the first real submission.
+ * Uses their /ajax/ endpoint so the existing fetch-based progressive
+ * enhancement (inline success/error status, no page reload) still
+ * works. `_captcha=false` skips FormSubmit's interstitial captcha
+ * page, which only makes sense for the classic (non-AJAX) flow.
  */
-const formId = site.forms.contactFormId;
-const configured = formId.length > 0;
-const action = configured ? `https://formspree.io/f/${formId}` : '';
-
-if (!configured && import.meta.env.DEV) {
-  console.warn(
-    '[contact] PUBLIC_FORMSPREE_CONTACT_FORM_ID is not set — the homepage contact form shows an email fallback.'
-  );
-}
-
+const action = `https://formsubmit.co/ajax/${site.forms.contactRecipient}`;
 const topics = ['A full-time role', 'A project', 'Something else'];
 ---
 
-{
-  configured ? (
-    <form class="home-contact-form" method="POST" action={action} data-contact-form novalidate>
-      <input type="hidden" name="_subject" value="New message via sabeerdarr.com" />
-      {/* Honeypot — hidden from people and assistive tech; bots fill it. */}
-      <p class="home-contact-form__hp" aria-hidden="true">
-        <label>
-          Leave this field empty
-          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
-        </label>
-      </p>
+<form class="home-contact-form" method="POST" action={action} data-contact-form novalidate>
+  <input type="hidden" name="_subject" value="New message via sabeerdarr.com" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  {
+    /* Honeypot — hidden from people and assistive tech; bots fill it.
+      FormSubmit's convention is a field literally named _honey. */
+  }
+  <p class="home-contact-form__hp" aria-hidden="true">
+    <label>
+      Leave this field empty
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
 
-      <p class="home-contact-form__field">
-        <label for="cf-name">Name</label>
-        <input id="cf-name" type="text" name="name" autocomplete="name" placeholder="Your name" />
-      </p>
+  <p class="home-contact-form__field">
+    <label for="cf-name">Name</label>
+    <input id="cf-name" type="text" name="name" autocomplete="name" placeholder="Your name" />
+  </p>
 
-      <p class="home-contact-form__field">
-        <label for="cf-email">Email</label>
-        <input
-          id="cf-email"
-          type="email"
-          name="email"
-          autocomplete="email"
-          placeholder="you@company.com"
-          required
-        />
-      </p>
+  <p class="home-contact-form__field">
+    <label for="cf-email">Email</label>
+    <input
+      id="cf-email"
+      type="email"
+      name="email"
+      autocomplete="email"
+      placeholder="you@company.com"
+      required
+    />
+  </p>
 
-      <div class="home-contact-form__field">
-        <span id="cf-topic-label">I'm contacting you about</span>
-        <div class="chip-group" role="group" aria-labelledby="cf-topic-label" data-topic-group>
-          {topics.map((topic, index) => (
-            <button
-              type="button"
-              class="chip"
-              data-topic-chip
-              aria-pressed={index === 0 ? 'true' : 'false'}
-            >
-              {topic}
-            </button>
-          ))}
-        </div>
-        <input type="hidden" name="topic" value={topics[0]} data-topic-value />
-      </div>
-
-      <p class="home-contact-form__field">
-        <label for="cf-msg">Message</label>
-        <textarea
-          id="cf-msg"
-          name="message"
-          rows="5"
-          placeholder="A few lines about the role or the project"
-          required
-        />
-      </p>
-
-      <p class="home-contact-form__privacy">
-        Your details are used only to reply to this message and are processed by Formspree. See the{' '}
-        <a href="/privacy">privacy notice</a>.
-      </p>
-
-      <p>
-        <button class="btn btn--primary btn--large" type="submit">
-          Send message
-        </button>
-      </p>
-
-      <p class="home-contact-form__status" data-form-status role="status" aria-live="polite" />
-    </form>
-  ) : (
-    <div class="home-contact-form__fallback">
-      <p>The message form isn't connected yet. Email me directly instead:</p>
-      <p>
-        <a
-          class="btn btn--primary"
-          href={`mailto:${site.email}?subject=${encodeURIComponent('Message via sabeerdarr.com')}`}
-        >
-          Email {site.email}
-        </a>
-      </p>
+  <div class="home-contact-form__field">
+    <span id="cf-topic-label">I'm contacting you about</span>
+    <div class="chip-group" role="group" aria-labelledby="cf-topic-label" data-topic-group>
+      {
+        topics.map((topic, index) => (
+          <button
+            type="button"
+            class="chip"
+            data-topic-chip
+            aria-pressed={index === 0 ? 'true' : 'false'}
+          >
+            {topic}
+          </button>
+        ))
+      }
     </div>
-  )
-}
+    <input type="hidden" name="topic" value={topics[0]} data-topic-value />
+  </div>
+
+  <p class="home-contact-form__field">
+    <label for="cf-msg">Message</label>
+    <textarea
+      id="cf-msg"
+      name="message"
+      rows="5"
+      placeholder="A few lines about the role or the project"
+      required></textarea>
+  </p>
+
+  <p class="home-contact-form__privacy">
+    Your details are used only to reply to this message and are processed by FormSubmit. See the{
+      ' '
+    }
+    <a href="/privacy">privacy notice</a>.
+  </p>
+
+  <p>
+    <button class="btn btn--primary btn--large" type="submit"> Send message </button>
+  </p>
+
+  <p class="home-contact-form__status" data-form-status role="status" aria-live="polite"></p>
+</form>
 
 <style>
-  .home-contact-form,
-  .home-contact-form__fallback {
+  .home-contact-form {
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
@@ -245,7 +228,7 @@ const topics = ['A full-time role', 'A project', 'Something else'];
             "Thanks — your message is on its way. I'll reply within two working days.";
           form.reset();
         } else {
-          throw new Error(`Formspree responded ${response.status}`);
+          throw new Error(`FormSubmit responded ${response.status}`);
         }
       } catch {
         status.dataset.state = 'error';

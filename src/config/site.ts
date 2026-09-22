@@ -55,8 +55,14 @@ export const site = {
   forms: {
     employmentFormId: import.meta.env.PUBLIC_FORMSPREE_EMPLOYMENT_FORM_ID ?? '',
     freelanceFormId: import.meta.env.PUBLIC_FORMSPREE_FREELANCE_FORM_ID ?? '',
-    /** Home page's unified #contact form (2026 redesign). */
-    contactFormId: import.meta.env.PUBLIC_FORMSPREE_CONTACT_FORM_ID ?? '',
+    /**
+     * Home page's unified #contact form (2026 redesign). Runs on
+     * FormSubmit (formsubmit.co) rather than Formspree — no account
+     * needed, submissions go straight to this address once the
+     * one-time confirmation email FormSubmit sends on first use is
+     * clicked.
+     */
+    contactRecipient: 'hello@sabeerdarr.com',
   },
 
   /** Cal.com booking link used on the homepage #contact section. */
