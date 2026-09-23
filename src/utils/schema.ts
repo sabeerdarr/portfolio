@@ -37,37 +37,6 @@ export function profilePageSchema(): Record<string, unknown> {
   };
 }
 
-export function blogSchema(): Record<string, unknown> {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Blog',
-    name: `Writing — ${site.name}`,
-    url: new URL('/writing', site.url).href,
-    author: { '@type': 'Person', name: site.name, url: site.url },
-  };
-}
-
-export function blogPostingSchema(options: {
-  title: string;
-  description: string;
-  url: string;
-  image: string;
-  publishedDate: Date;
-  updatedDate?: Date;
-}): Record<string, unknown> {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: options.title,
-    description: options.description,
-    url: options.url,
-    image: new URL(options.image, site.url).href,
-    datePublished: options.publishedDate.toISOString(),
-    ...(options.updatedDate && { dateModified: options.updatedDate.toISOString() }),
-    author: { '@type': 'Person', name: site.name, url: site.url },
-  };
-}
-
 export function creativeWorkSchema(options: {
   title: string;
   description: string;

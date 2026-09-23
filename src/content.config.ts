@@ -73,39 +73,4 @@ const work = defineCollection({
   }),
 });
 
-/**
- * Writing / blog posts. Files live in src/content/blog/.
- */
-export const BLOG_CATEGORIES = [
-  'UX Strategy',
-  'Product Design',
-  'Design Systems',
-  'UX Research',
-  'Freelancing',
-  'Remote Collaboration',
-  'Career',
-  'Case Study Notes',
-] as const;
-
-const blog = defineCollection({
-  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
-  schema: z.object({
-    title: z.string().min(4),
-    description: z.string().min(20, 'Descriptions appear on cards and in meta tags'),
-    publishedDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    author: z.string().default('Sabeer Darr'),
-    category: z.enum(BLOG_CATEGORIES),
-    tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-    featuredImage: z.string().optional(),
-    featuredImageAlt: z.string().optional(),
-    socialImage: z.string().optional(),
-    draft: z.boolean().default(false),
-    canonicalUrl: z.url().optional(),
-    seoTitle: z.string().optional(),
-    seoDescription: z.string().optional(),
-  }),
-});
-
-export const collections = { work, blog };
+export const collections = { work };

@@ -112,23 +112,18 @@ function isActive(href: string): boolean {
     line-height: 1.15;
   }
 
-  /* Recolorable logo mark: a lime ground with the bolt layered on
-     top as a background image (background-image, NOT mask — CSS
-     mask breaks screenshot/PDF export paths). Swapping
-     --color-brand-mark restyles the mark with no new asset. */
   .site-header__logo {
     position: relative;
     display: block;
     inline-size: 2.375rem;
     block-size: 2.375rem;
     flex-shrink: 0;
-    background-color: var(--color-brand-mark);
     border-radius: var(--radius-sm);
   }
 
   .site-header__logo-bolt {
     position: absolute;
-    inset: 22%;
+    inset: 0;
     background-image: url('/images/brand/logo-bolt-mask.png');
     background-repeat: no-repeat;
     background-position: center;

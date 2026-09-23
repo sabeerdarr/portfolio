@@ -98,9 +98,9 @@ export const site = {
   },
 
   /**
-   * Primary navigation. Services, Contact, Writing and Resume are
-   * hidden for now — the pages still exist at their URLs (noindexed)
-   * and can be restored by adding them back here and in footerLinks.
+   * Primary navigation. Services, Contact and Resume are hidden for
+   * now — the pages still exist at their URLs (noindexed) and can be
+   * restored by adding them back here and in footerLinks.
    */
   navigation: [
     { label: 'Home', href: '/' },
